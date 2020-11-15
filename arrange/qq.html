@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            box-sizing: border-box;
+            border-color: grey;
+            font-size: 14px;
+        }
+
+        table tr td {
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+<script>
+    // qq language
+    let qqList = {
+        auto: "自动识别",
+        zh: "中文",
+        en: "英语",
+        jp: "日语",
+        kr: "韩语",
+        fr: "法语",
+        es: "西班牙语",
+        it: "意大利语",
+        de: "德语",
+        tr: "土耳其语",
+        ru: "俄语",
+        pt: "葡萄牙语",
+        vi: "越南语",
+        id: "印尼语",
+        th: "泰语",
+        ms: "马来西亚语",
+        ar: "阿拉伯语",
+        hi: "印地语"
+    }
+    // console.log(qqList)
+
+    // baidu language
+    let bdList = {
+        "auto": {
+            "zhName": "自动检测",
+            "enName": "Auto Detect"
+        },
+        "zh": {
+            "zhName": "中文(简体)",
+            "enName": "Chinese"
+        },
+        "en": {
+            "zhName": "英语",
+            "enName": "English"
+        },
+        "jp": {
+            "zhName": "日语",
+            "enName": "Japanese"
+        },
+        "th": {
+            "zhName": "泰语",
+            "enName": "Thai"
+        },
+        "spa": {
+            "zhName": "西班牙语",
+            "enName": "Spanish"
+        },
+        "ara": {
+            "zhName": "阿拉伯语",
+            "enName": "Arabic"
+        },
+        "fra": {
+            "zhName": "法语",
+            "enName": "French"
+        },
+        "kor": {
+            "zhName": "韩语",
+            "enName": "Korean"
+        },
+        "ru": {
+            "zhName": "俄语",
+            "enName": "Russian"
+        },
+        "de": {
+            "zhName": "德语",
+            "enName": "German"
+        },
+        "pt": {
+            "zhName": "葡萄牙语",
+            "enName": "Portuguese"
+        },
+        "it": {
+            "zhName": "意大利语",
+            "enName": "Italian"
+        },
+        "el": {
+            "zhName": "希腊语",
+            "enName": "Greek"
+        },
+        "nl": {
+            "zhName": "荷兰语",
+            "enName": "Dutch"
+        },
+        "pl": {
+            "zhName": "波兰语",
+            "enName": "Polish"
+        },
+        "fin": {
+            "zhName": "芬兰语",
+            "enName": "Finnish"
+        },
+        "cs": {
+            "zhName": "捷克语",
+            "enName": "Czech"
+        },
+        "bul": {
+            "zhName": "保加利亚语",
+            "enName": "Bulgarian"
+        },
+        "dan": {
+            "zhName": "丹麦语",
+            "enName": "Danish"
+        },
+        "est": {
+            "zhName": "爱沙尼亚语",
+            "enName": "Estonian"
+        },
+        "hu": {
+            "zhName": "匈牙利语",
+            "enName": "Hungarian"
+        },
+        "rom": {
+            "zhName": "罗马尼亚语",
+            "enName": "Romanian"
+        },
+        "slo": {
+            "zhName": "斯洛文尼亚语",
+            "enName": "Slovenian"
+        },
+        "swe": {
+            "zhName": "瑞典语",
+            "enName": "Swedish"
+        },
+        "vie": {
+            "zhName": "越南语",
+            "enName": "Vietnamese"
+        },
+        "yue": {
+            "zhName": "中文(粤语)",
+            "enName": "Cantonese"
+        },
+        "cht": {
+            "zhName": "中文(繁体)",
+            "enName": "Traditional Chinese"
+        },
+        "wyw": {
+            "zhName": "中文(文言文)",
+            "enName": "Classical Chinese"
+        },
+        "afr": {
+            "zhName": "南非荷兰语",
+            "enName": "Afrikaans"
+        },
+        "alb": {
+            "zhName": "阿尔巴尼亚语",
+            "enName": "Albanian"
+        },
+        "amh": {
+            "zhName": "阿姆哈拉语",
+            "enName": "Amharic"
+        },
+        "arm": {
+            "zhName": "亚美尼亚语",
+            "enName": "Armenian"
+        },
+        "asm": {
+            "zhName": "阿萨姆语",
+            "enName": "Assamese"
+        },
+        "ast": {
+            "zhName": "阿斯图里亚斯语",
+            "enName": "Asturian"
+        },
+        "aze": {
+            "zhName": "阿塞拜疆语",
+            "enName": "Azerbaijani"
+        },
+        "baq": {
+            "zhName": "巴斯克语",
+            "enName": "Basque"
+        },
+        "bel": {
+            "zhName": "白俄罗斯语",
+            "enName": "Belarusian"
+        },
+        "ben": {
+            "zhName": "孟加拉语",
+            "enName": "Bengali"
+        },
+        "bos": {
+            "zhName": "波斯尼亚语",
+            "enName": "Bosnian"
+        },
+        "bur": {
+            "zhName": "缅甸语",
+            "enName": "Burmese"
+        },
+        "cat": {
+            "zhName": "加泰罗尼亚语",
+            "enName": "Catalan"
+        },
+        "ceb": {
+            "zhName": "宿务语",
+            "enName": "Cebuano"
+        },
+        "hrv": {
+            "zhName": "克罗地亚语",
+            "enName": "Croatian"
+        },
+        "epo": {
+            "zhName": "世界语",
+            "enName": "Esperanto"
+        },
+        "fao": {
+            "zhName": "法罗语",
+            "enName": "Faroese"
+        },
+        "fil": {
+            "zhName": "菲律宾语",
+            "enName": "Filipino"
+        },
+        "glg": {
+            "zhName": "加利西亚语",
+            "enName": "Galician"
+        },
+        "geo": {
+            "zhName": "格鲁吉亚语",
+            "enName": "Georgian"
+        },
+        "guj": {
+            "zhName": "古吉拉特语",
+            "enName": "Gujarati"
+        },
+        "hau": {
+            "zhName": "豪萨语",
+            "enName": "Hausa"
+        },
+        "heb": {
+            "zhName": "希伯来语",
+            "enName": "Hebrew"
+        },
+        "hi": {
+            "zhName": "印地语",
+            "enName": "Hindi"
+        },
+        "ice": {
+            "zhName": "冰岛语",
+            "enName": "Icelandic"
+        },
+        "ibo": {
+            "zhName": "伊博语",
+            "enName": "Igbo"
+        },
+        "id": {
+            "zhName": "印尼语",
+            "enName": "Indonesian"
+        },
+        "gle": {
+            "zhName": "爱尔兰语",
+            "enName": "Irish"
+        },
+        "kan": {
+            "zhName": "卡纳达语",
+            "enName": "Kannada"
+        },
+        "kaz": {
+            "zhName": "哈萨克语",
+            "enName": "Kazakh"
+        },
+        "kli": {
+            "zhName": "克林贡语",
+            "enName": "Klingon"
+        },
+        "kur": {
+            "zhName": "库尔德语",
+            "enName": "Kurdish"
+        },
+        "lao": {
+            "zhName": "老挝语",
+            "enName": "Lao"
+        },
+        "lat": {
+            "zhName": "拉丁语",
+            "enName": "Latin"
+        },
+        "lav": {
+            "zhName": "拉脱维亚语",
+            "enName": "Latvian"
+        },
+        "lit": {
+            "zhName": "立陶宛语",
+            "enName": "Lithuanian"
+        },
+        "ltz": {
+            "zhName": "卢森堡语",
+            "enName": "Luxembourgish"
+        },
+        "mac": {
+            "zhName": "马其顿语",
+            "enName": "Macedonian"
+        },
+        "mg": {
+            "zhName": "马拉加斯语",
+            "enName": "Malagasy"
+        },
+        "may": {
+            "zhName": "马来语",
+            "enName": "Malay"
+        },
+        "mal": {
+            "zhName": "马拉雅拉姆语",
+            "enName": "Malayalam"
+        },
+        "mlt": {
+            "zhName": "马耳他语",
+            "enName": "Maltese"
+        },
+        "mar": {
+            "zhName": "马拉地语",
+            "enName": "Marathi"
+        },
+        "nep": {
+            "zhName": "尼泊尔语",
+            "enName": "Nepali"
+        },
+        "nno": {
+            "zhName": "新挪威语",
+            "enName": "Nynorsk"
+        },
+        "per": {
+            "zhName": "波斯语",
+            "enName": "Persian"
+        },
+        "srd": {
+            "zhName": "萨丁尼亚语",
+            "enName": "Sardinian"
+        },
+        "srp": {
+            "zhName": "塞尔维亚语(拉丁文)",
+            "enName": "Serbian"
+        },
+        "sin": {
+            "zhName": "僧伽罗语",
+            "enName": "Sinhala"
+        },
+        "sk": {
+            "zhName": "斯洛伐克语",
+            "enName": "Slovak"
+        },
+        "som": {
+            "zhName": "索马里语",
+            "enName": "Somali"
+        },
+        "swa": {
+            "zhName": "斯瓦希里语",
+            "enName": "Swahili"
+        },
+        "tgl": {
+            "zhName": "他加禄语",
+            "enName": "Tagalog"
+        },
+        "tgk": {
+            "zhName": "塔吉克语",
+            "enName": "Tajik"
+        },
+        "tam": {
+            "zhName": "泰米尔语",
+            "enName": "Tamil"
+        },
+        "tat": {
+            "zhName": "鞑靼语",
+            "enName": "Tatar"
+        },
+        "tel": {
+            "zhName": "泰卢固语",
+            "enName": "Telugu"
+        },
+        "tr": {
+            "zhName": "土耳其语",
+            "enName": "Turkish"
+        },
+        "tuk": {
+            "zhName": "土库曼语",
+            "enName": "Turkmen"
+        },
+        "ukr": {
+            "zhName": "乌克兰语",
+            "enName": "Ukrainian"
+        },
+        "urd": {
+            "zhName": "乌尔都语",
+            "enName": "Urdu"
+        },
+        "uzb": {
+            "zhName": "乌兹别克语",
+            "enName": "Uzbek"
+        },
+        "oci": {
+            "zhName": "奥克语",
+            "enName": "Occitan"
+        },
+        "kir": {
+            "zhName": "吉尔吉斯语",
+            "enName": "Kyrgyz"
+        },
+        "pus": {
+            "zhName": "普什图语",
+            "enName": "Pashto"
+        },
+        "hkm": {
+            "zhName": "高棉语",
+            "enName": "Khmer"
+        },
+        "ht": {
+            "zhName": "海地语",
+            "enName": "Haitian Creole"
+        },
+        "nob": {
+            "zhName": "书面挪威语",
+            "enName": "Bokmål"
+        },
+        "pan": {
+            "zhName": "旁遮普语",
+            "enName": "Punjabi"
+        },
+        "arq": {
+            "zhName": "阿尔及利亚阿拉伯语",
+            "enName": "Algerian Arabic"
+        },
+        "bis": {
+            "zhName": "比斯拉马语",
+            "enName": "Bislama"
+        },
+        "frn": {
+            "zhName": "加拿大法语",
+            "enName": "Canadian French"
+        },
+        "hak": {
+            "zhName": "哈卡钦语",
+            "enName": "Hakha Chin"
+        },
+        "hup": {
+            "zhName": "胡帕语",
+            "enName": "Hupa"
+        },
+        "ing": {
+            "zhName": "印古什语",
+            "enName": "Ingush"
+        },
+        "lag": {
+            "zhName": "拉特加莱语",
+            "enName": "Latgalian"
+        },
+        "mau": {
+            "zhName": "毛里求斯克里奥尔语",
+            "enName": "Mauritian Creole"
+        },
+        "mot": {
+            "zhName": "黑山语",
+            "enName": "Montenegrin"
+        },
+        "pot": {
+            "zhName": "巴西葡萄牙语",
+            "enName": "Brazilian Portuguese"
+        },
+        "ruy": {
+            "zhName": "卢森尼亚语",
+            "enName": "Rusyn"
+        },
+        "sec": {
+            "zhName": "塞尔维亚-克罗地亚语",
+            "enName": "Serbo-Croatian"
+        },
+        "sil": {
+            "zhName": "西里西亚语",
+            "enName": "Silesian"
+        },
+        "tua": {
+            "zhName": "突尼斯阿拉伯语",
+            "enName": "Tunisian Arabic"
+        },
+        "ach": {
+            "zhName": "亚齐语",
+            "enName": "Achinese"
+        },
+        "aka": {
+            "zhName": "阿肯语",
+            "enName": "Akan"
+        },
+        "arg": {
+            "zhName": "阿拉贡语",
+            "enName": "Aragonese"
+        },
+        "aym": {
+            "zhName": "艾马拉语",
+            "enName": "Aymara"
+        },
+        "bal": {
+            "zhName": "俾路支语",
+            "enName": "Baluchi"
+        },
+        "bak": {
+            "zhName": "巴什基尔语",
+            "enName": "Bashkir"
+        },
+        "bem": {
+            "zhName": "本巴语",
+            "enName": "Bemba"
+        },
+        "ber": {
+            "zhName": "柏柏尔语",
+            "enName": "Berber languages"
+        },
+        "bho": {
+            "zhName": "博杰普尔语",
+            "enName": "Bhojpuri"
+        },
+        "bli": {
+            "zhName": "比林语",
+            "enName": "Blin"
+        },
+        "bre": {
+            "zhName": "布列塔尼语",
+            "enName": "Breton"
+        },
+        "chr": {
+            "zhName": "切罗基语",
+            "enName": "Cherokee"
+        },
+        "nya": {
+            "zhName": "齐切瓦语",
+            "enName": "Chichewa"
+        },
+        "chv": {
+            "zhName": "楚瓦什语",
+            "enName": "Chuvash"
+        },
+        "cor": {
+            "zhName": "康瓦尔语",
+            "enName": "Cornish"
+        },
+        "cos": {
+            "zhName": "科西嘉语",
+            "enName": "Corsican"
+        },
+        "cre": {
+            "zhName": "克里克语",
+            "enName": "Creek"
+        },
+        "cri": {
+            "zhName": "克里米亚鞑靼语",
+            "enName": "Crimean Tatar"
+        },
+        "div": {
+            "zhName": "迪维希语",
+            "enName": "Divehi"
+        },
+        "eno": {
+            "zhName": "古英语",
+            "enName": "Old English"
+        },
+        "frm": {
+            "zhName": "中古法语",
+            "enName": "Middle French"
+        },
+        "fri": {
+            "zhName": "弗留利语",
+            "enName": "Friulian"
+        },
+        "ful": {
+            "zhName": "富拉尼语",
+            "enName": "Fulani"
+        },
+        "gla": {
+            "zhName": "盖尔语",
+            "enName": "Gaelic"
+        },
+        "lug": {
+            "zhName": "卢干达语",
+            "enName": "Luganda"
+        },
+        "gra": {
+            "zhName": "古希腊语",
+            "enName": "Ancient Greek"
+        },
+        "grn": {
+            "zhName": "瓜拉尼语",
+            "enName": "Guarani"
+        },
+        "haw": {
+            "zhName": "夏威夷语",
+            "enName": "Hawaiian"
+        },
+        "hil": {
+            "zhName": "希利盖农语",
+            "enName": "Hiligaynon"
+        },
+        "ido": {
+            "zhName": "伊多语",
+            "enName": "Ido"
+        },
+        "ina": {
+            "zhName": "因特语",
+            "enName": "Interlingua "
+        },
+        "iku": {
+            "zhName": "伊努克提图特语",
+            "enName": "Inuktitut"
+        },
+        "jav": {
+            "zhName": "爪哇语",
+            "enName": "Javanese"
+        },
+        "kab": {
+            "zhName": "卡拜尔语",
+            "enName": "Kabyle"
+        },
+        "kal": {
+            "zhName": "格陵兰语",
+            "enName": "Kalaallisut"
+        },
+        "kau": {
+            "zhName": "卡努里语",
+            "enName": "Kanuri"
+        },
+        "kas": {
+            "zhName": "克什米尔语",
+            "enName": "Kashmiri"
+        },
+        "kah": {
+            "zhName": "卡舒比语",
+            "enName": "Kashubian"
+        },
+        "kin": {
+            "zhName": "卢旺达语",
+            "enName": "Kinyarwanda"
+        },
+        "kon": {
+            "zhName": "刚果语",
+            "enName": "Kongo"
+        },
+        "kok": {
+            "zhName": "孔卡尼语",
+            "enName": "Konkani"
+        },
+        "lim": {
+            "zhName": "林堡语",
+            "enName": "Limburgish"
+        },
+        "lin": {
+            "zhName": "林加拉语",
+            "enName": "Lingala"
+        },
+        "loj": {
+            "zhName": "逻辑语",
+            "enName": "Lojban"
+        },
+        "log": {
+            "zhName": "低地德语",
+            "enName": "Low German"
+        },
+        "los": {
+            "zhName": "下索布语",
+            "enName": "Lower Sorbian"
+        },
+        "mai": {
+            "zhName": "迈蒂利语",
+            "enName": "Maithili"
+        },
+        "glv": {
+            "zhName": "曼克斯语",
+            "enName": "Manx"
+        },
+        "mao": {
+            "zhName": "毛利语",
+            "enName": "Maori"
+        },
+        "mah": {
+            "zhName": "马绍尔语",
+            "enName": "Marshallese"
+        },
+        "nbl": {
+            "zhName": "南恩德贝莱语",
+            "enName": "Southern Ndebele"
+        },
+        "nea": {
+            "zhName": "那不勒斯语",
+            "enName": "Neapolitan"
+        },
+        "nqo": {
+            "zhName": "西非书面语",
+            "enName": "N'Ko"
+        },
+        "sme": {
+            "zhName": "北方萨米语",
+            "enName": "Northern Sami"
+        },
+        "nor": {
+            "zhName": "挪威语",
+            "enName": "Norwegian"
+        },
+        "oji": {
+            "zhName": "奥杰布瓦语",
+            "enName": "Ojibwa"
+        },
+        "ori": {
+            "zhName": "奥里亚语",
+            "enName": "Oriya"
+        },
+        "orm": {
+            "zhName": "奥罗莫语",
+            "enName": "Oromo"
+        },
+        "oss": {
+            "zhName": "奥塞梯语",
+            "enName": "Ossetian"
+        },
+        "pam": {
+            "zhName": "邦板牙语",
+            "enName": "Pampanga"
+        },
+        "pap": {
+            "zhName": "帕皮阿门托语",
+            "enName": "Papiamento"
+        },
+        "ped": {
+            "zhName": "北索托语",
+            "enName": "Northern Sotho"
+        },
+        "que": {
+            "zhName": "克丘亚语",
+            "enName": "Quechua"
+        },
+        "roh": {
+            "zhName": "罗曼什语",
+            "enName": "Romansh"
+        },
+        "ro": {
+            "zhName": "罗姆语",
+            "enName": "Romany"
+        },
+        "sm": {
+            "zhName": "萨摩亚语",
+            "enName": "Samoan"
+        },
+        "san": {
+            "zhName": "梵语",
+            "enName": "Sanskrit"
+        },
+        "sco": {
+            "zhName": "苏格兰语",
+            "enName": "Scots"
+        },
+        "sha": {
+            "zhName": "掸语",
+            "enName": "Shan"
+        },
+        "sna": {
+            "zhName": "修纳语",
+            "enName": "Shona"
+        },
+        "snd": {
+            "zhName": "信德语",
+            "enName": "Sindhi"
+        },
+        "sol": {
+            "zhName": "桑海语",
+            "enName": "Songhai languages"
+        },
+        "sot": {
+            "zhName": "南索托语",
+            "enName": "Southern Sotho"
+        },
+        "syr": {
+            "zhName": "叙利亚语",
+            "enName": "Syriac"
+        },
+        "tet": {
+            "zhName": "德顿语",
+            "enName": "Tetum"
+        },
+        "tir": {
+            "zhName": "提格利尼亚语",
+            "enName": "Tigrinya"
+        },
+        "tso": {
+            "zhName": "聪加语",
+            "enName": "Tsonga"
+        },
+        "twi": {
+            "zhName": "契维语",
+            "enName": "Twi"
+        },
+        "ups": {
+            "zhName": "高地索布语",
+            "enName": "Upper Sorbian"
+        },
+        "ven": {
+            "zhName": "文达语",
+            "enName": "Venda"
+        },
+        "wln": {
+            "zhName": "瓦隆语",
+            "enName": "Walloon"
+        },
+        "wel": {
+            "zhName": "威尔士语",
+            "enName": "Welsh"
+        },
+        "fry": {
+            "zhName": "西弗里斯语",
+            "enName": "Western Frisian"
+        },
+        "wol": {
+            "zhName": "沃洛夫语",
+            "enName": "Wolof"
+        },
+        "xho": {
+            "zhName": "科萨语",
+            "enName": "Xhosa"
+        },
+        "yid": {
+            "zhName": "意第绪语",
+            "enName": "Yiddish"
+        },
+        "yor": {
+            "zhName": "约鲁巴语",
+            "enName": "Yoruba"
+        },
+        "zaz": {
+            "zhName": "扎扎其语",
+            "enName": "Zaza"
+        },
+        "zul": {
+            "zhName": "祖鲁语",
+            "enName": "Zulu"
+        },
+        "sun": {
+            "zhName": "巽他语",
+            "enName": "BasaSunda"
+        },
+        "hmn": {
+            "zhName": "苗语",
+            "enName": "Hmong"
+        },
+        "src": {
+            "zhName": "塞尔维亚语(西里尔文)",
+            "enName": "Serb(Cyrillic)"
+        }
+    }
+
+    // baidu language list
+    let bdToObj = function (name) {
+        let i = 0
+        let o = {}
+        for (let k in bdList) {
+            i++
+            let n = bdList[k][name]
+            if (n) o[n] = k
+        }
+        console.log(JSON.stringify(o))
+        console.log(i)
+        return o
+    }
+    let bdObj = bdToObj('zhName')
+
+    let err = 0
+    let a1 = [], a2 = [], ae = []
+    for (let k in qqList) {
+        let v = qqList[k]
+        if (bdList[k]) {
+            // key 一样的情况
+            a1.push({key: k, qqName: v, bdName: bdList[k].zhName})
+        } else if (bdObj[v]) {
+            // 中文名 一样的情况
+            a2.push({bdKey: bdObj[v], qqKey: k, name: v})
+        } else {
+            // 都没有的情况
+            err++
+            ae.push({key: k, name: v})
+        }
+    }
+    // console.log(JSON.stringify(a3))
+    console.log('err:', err)
+
+    let obj = {} // 最终的对应表
+    // key 一致的数据
+    document.write(`<table style="color:green">`)
+    a1.forEach((v, k) => {
+        obj[v.key] = v.key
+        document.write(`<tr><td>${k + 1}</td><td>${v.key}</td><td>${v.key}</td><td>${v.qqName}</td><td>${v.bdName}</td></tr>`)
+    })
+    document.write(`</table>`)
+
+    // name 一致的数据
+    document.write(`<table>`)
+    a2.forEach((v, k) => {
+        obj[v.bdKey] = v.qqKey
+        document.write(`<tr><td>${k + 1}</td><td>${v.bdKey}</td><td>${v.qqKey}</td><td>${v.name}</td></tr>`)
+    })
+    document.write(`</table>`)
+
+    // 都没有的情况
+    document.write(`<table style="color:red">`)
+    ae.forEach((v, k) => {
+        obj[v.key] = v.key
+        document.write(`<tr><td>${k + 1}</td><td>${v.key}</td><td>${v.key}</td><td>${v.name}</td></tr>`)
+    })
+    document.write(`</table>`)
+
+    // document.write(`<hr>`)
+    console.log(JSON.stringify(obj))
+</script>
+</body>
+</html>
