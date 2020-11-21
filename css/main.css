@@ -47,7 +47,7 @@ a:hover {
 .main {
     margin: 0 auto;
     padding: 10px;
-    min-width: 500px;
+    min-width: 300px;
     /*max-width: 1000px;*/
     font-size: 15px;
     line-height: 1.8;
@@ -79,6 +79,33 @@ input[type=radio], input[type=checkbox] {
     margin: 0 5px 0 5px;
     position: relative;
     bottom: -4px;
+}
+
+.mt_1 {
+    margin-top: 10px;
+}
+
+.dmx_button {
+    background: #4395ff;
+    border: 1px solid #3589ff;
+    border-radius: 4px;
+    color: #fff;
+    height: 28px;
+    line-height: 28px;
+    padding: 2px 15px;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.dmx_button:hover {
+    box-shadow: 2px 2px 2px 0 #d0d7de;
+}
+
+.popup_box {
+    margin: 8px;
+    width: 120px;
+    font-size: 14px;
 }
 
 /* ==================== setting ==================== */
@@ -182,17 +209,4 @@ input[type=radio], input[type=checkbox] {
 
 #speak_button {
     float: right;
-    background: #4395ff;
-    border: 1px solid #3589ff;
-    border-radius: 4px;
-    color: #fff;
-    height: 28px;
-    line-height: 28px;
-    margin-top: 10px;
-    padding: 2px 15px;
-    cursor: pointer;
-}
-
-#speak_button:hover {
-    box-shadow: 2px 2px 2px 0 #d0d7de;
 }
