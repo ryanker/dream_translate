@@ -1,0 +1,198 @@
+html, body, p, h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #F1F4F6;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    /*background-color: #E2E4E6;*/
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #bdc3c7;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #9da5ac;
+}
+
+::-webkit-scrollbar-thumb:active {
+    background-color: #2c3e50;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+a:hover {
+    color: #1a73e8;
+}
+
+.fx:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+
+.main {
+    margin: 0 auto;
+    padding: 10px;
+    min-width: 500px;
+    /*max-width: 1000px;*/
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+label {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+    line-height: 1.6;
+    /*user-select: none;*/
+}
+
+label u {
+    text-decoration: none;
+    margin-left: 20px;
+    color: #a2a2a2;
+    font-size: 14px;
+}
+
+.label_block label {
+    display: block;
+    margin: 0;
+}
+
+input[type=radio], input[type=checkbox] {
+    width: 18px;
+    height: 18px;
+    margin: 0 5px 0 5px;
+    position: relative;
+    bottom: -4px;
+}
+
+/* ==================== setting ==================== */
+.navigate u {
+    display: block;
+    float: left;
+    text-decoration: none;
+    background: #fff;
+    border: 1px solid #D5D7DF;
+    margin-left: -1px;
+    padding: 6px 10px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.navigate u:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.navigate u:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+.navigate u:hover {
+    color: #1a73e8;
+}
+
+.navigate u.active {
+    color: #fff;
+    background-color: #409eff;
+    border-color: #409eff;
+}
+
+.setting_box {
+    padding: 0 3px;
+    display: none;
+}
+
+.setting_option {
+    margin-top: 15px;
+}
+
+.setting_option .option_title {
+    position: relative;
+}
+
+.setting_option .option_title:after {
+    position: absolute;
+    top: 50%;
+    display: block;
+    content: '';
+    width: 100%;
+    border-bottom: 1px solid #b9b9b9;
+}
+
+.setting_option b {
+    z-index: 1;
+    position: relative;
+    background: #F1F4F6;
+    padding-right: 5px;
+}
+
+.setting_option .option_box {
+    padding-top: 10px;
+}
+
+.setting_option .second_box {
+    margin: 10px 0 0 5px;
+}
+
+/* ==================== setting ==================== */
+#speak_input {
+    display: block;
+    width: calc(100% - 20px);
+    border-radius: 4px;
+    border: 1px solid #cfd0d2;
+    background: #fff;
+    color: #4e5053;
+    min-height: 88px;
+    line-height: 22px;
+    padding: 5px 10px;
+    font-size: 15px;
+    outline: none;
+    overflow: auto;
+}
+
+#speak_input:focus {
+    border-color: #409eff;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}
+
+.speak_box select {
+    margin: 10px 10px 0 0;
+    height: 30px;
+    max-width: 160px;
+    padding: 3px;
+    font-size: 15px;
+    border: 1px solid #cfd0d2;
+    border-radius: 4px;
+}
+
+#speak_button {
+    float: right;
+    background: #4395ff;
+    border: 1px solid #3589ff;
+    border-radius: 4px;
+    color: #fff;
+    height: 28px;
+    line-height: 28px;
+    margin-top: 10px;
+    padding: 2px 15px;
+    cursor: pointer;
+}
+
+#speak_button:hover {
+    box-shadow: 2px 2px 2px 0 #d0d7de;
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Setting</title>
+    <link rel="stylesheet" href="../css/content.css">
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="main">
+    <div id="navigate" class="navigate fx">
+        <u target="base_box" class="active">基本设置</u>
+        <u target="translate_box">翻译设置</u>
+        <u target="dictionary_box">词典设置</u>
+        <u target="search_box">搜索设置</u>
+        <u target="help_box">联系作者</u>
+    </div>
+
+    <div id="base_box" class="setting_box">
+        <div class="setting_option">
+            <div class="option_title"><b>划词功能</b></div>
+            <div class="option_box label_block">
+                <label><input type="radio" name="scribble" value="off">关闭划词</label>
+                <label><input type="radio" name="scribble" value="direct">直接显示<u>选择文字后，即显示结果</u></label>
+                <label><input type="radio" name="scribble" value="clickIcon">点击图标<u>选择文字后，先显示图标，点击图标再显示结果</u></label>
+            </div>
+        </div>
+        <div class="setting_option">
+            <div class="option_title"><b>对话框位置</b></div>
+            <div class="option_box">
+                <label><input type="radio" name="position" value="rightDown">右下角</label>
+                <label><input type="radio" name="position" value="follow">跟随选区</label>
+            </div>
+        </div>
+    </div>
+
+    <div id="translate_box" class="setting_box">
+        <div class="setting_option">
+            <div class="option_title"><b>启用翻译</b></div>
+            <div id="setting_translate_list" class="option_box"></div>
+            <div id="setting_translate_sort" class="second_box"></div>
+        </div>
+
+        <div class="setting_option">
+            <div class="option_title"><b>自动朗读</b></div>
+            <div id="setting_translate_tts_list" class="option_box"></div>
+            <div id="setting_translate_tts_sort" class="second_box"></div>
+            <div id="setting_translate_reader" class="second_box">
+                朗读：
+                <label><input type="radio" name="translateReader" value="source">原文</label>
+                <label><input type="radio" name="translateReader" value="target">译文</label>
+            </div>
+        </div>
+    </div>
+
+    <div id="dictionary_box" class="setting_box">
+        <div class="setting_option">
+            <div class="option_title"><b>启用词典</b></div>
+            <div id="setting_dictionary_list" class="option_box"></div>
+            <div id="setting_dictionary_sort" class="second_box"></div>
+        </div>
+
+        <div class="setting_option">
+            <div class="option_title"><b>自动朗读</b></div>
+            <div id="setting_dictionary_sound_list" class="option_box"></div>
+            <div id="setting_dictionary_sound_sort" class="second_box"></div>
+            <div id="setting_dictionary_reader" class="second_box">
+                朗读：
+                <label><input type="radio" name="dictionaryReader" value="us">美音</label>
+                <label><input type="radio" name="dictionaryReader" value="uk">英音</label>
+            </div>
+        </div>
+    </div>
+
+    <div id="search_box" class="setting_box">
+        <div class="setting_option">
+            <div class="option_title"><b>启用搜索</b></div>
+            <div id="setting_search_list" class="option_box"></div>
+            <div id="setting_search_sort" class="second_box"></div>
+        </div>
+    </div>
+
+    <div id="help_box" class="setting_box">
+        <div class="setting_option">
+            <div class="option_title"><b>联系作者</b></div>
+            <div class="option_box">
+                如果您有任何建议和问题反馈，请邮件发送到 Dream39999@gmail.com
+            </div>
+        </div>
+        <div class="setting_option">
+            <div class="option_title"><b>此程序的诞生</b></div>
+            <div class="option_box">
+                本想找一款支持划词后自动朗读的程序，一直没找到喜欢的，要么功能不能满足，要么太复杂，索性就自己花时间写了此程序。
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../js/setting.js" type="text/javascript"></script>
+</html>
