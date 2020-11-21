@@ -51,6 +51,9 @@ $('speak_button').addEventListener('click', function () {
     if (pitch) options.pitch = Number(pitch)
     speak(text, options)
 })
+document.addEventListener('keyup', function (e) {
+    if (e.key === 'Escape') chrome.tts.stop()
+})
 
 function $(id) {
     return document.getElementById(id)
@@ -58,16 +61,36 @@ function $(id) {
 
 function speak(text, options) {
     // console.log(text, options)
-    chrome.tts.speak(text, options)
+    if (text) {
+        if (text.length < 500) {
+            chrome.tts.speak(text, options)
+        } else {
+            let arr = text.split('\n')
+            arr.forEach((v, k) => {
+                v = v.trim()
+                if (!v) return
+                // console.log(v, k)
+                if (k === 0) {
+                    chrome.tts.speak(v, options)
+                } else {
+                    options.enqueue = true
+                    chrome.tts.speak(v, options)
+                }
+            })
+        }
+    }
 }
 
 function loadConf() {
     let s = localStorage.getItem('speakConf')
     if (!s) return
     conf = JSON.parse(s)
-    if (conf.voiceName) selectValue($('speak_voice'), conf.voiceName)
-    if (conf.rate) selectValue($('speak_rate'), conf.rate)
-    if (conf.pitch) selectValue($('speak_pitch'), conf.pitch)
+    // if (conf.voiceName) selectValue($('speak_voice'), conf.voiceName)
+    // if (conf.rate) selectValue($('speak_rate'), conf.rate)
+    // if (conf.pitch) selectValue($('speak_pitch'), conf.pitch)
+    if (conf.voiceName) $('speak_voice').value = conf.voiceName
+    if (conf.rate) $('speak_rate').value = conf.rate
+    if (conf.pitch) $('speak_pitch').value = conf.pitch
 }
 
 function setConf(key, value) {
