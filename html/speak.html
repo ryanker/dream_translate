@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Setting</title>
+    <link rel="stylesheet" href="../css/content.css">
+    <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div class="main main_trans">
+    <div id="speak_input" contenteditable="true"></div>
+    <div class="speak_box fx">
+        <select id="speak_voice">
+            <option value="">朗读名称</option>
+        </select>
+        <select id="speak_rate">
+            <option value="">朗读速度</option>
+            <option value="0.5">0.5X</option>
+            <option value="0.75">0.75X</option>
+            <option value="1">1X</option>
+            <option value="1.25">1.25X</option>
+            <option value="1.5">1.5X</option>
+            <option value="2">2X</option>
+            <option value="2.5">2.5X</option>
+            <option value="3">3X</option>
+        </select>
+        <select id="speak_pitch">
+            <option value="">朗读音高</option>
+            <option value="0.5">0.5</option>
+            <option value="0.75">0.75</option>
+            <option value="1">1</option>
+            <option value="1.25">1.25</option>
+            <option value="1.5">1.5</option>
+            <option value="2">2</option>
+        </select>
+        <div id="speak_button">朗读</div>
+    </div>
+</div>
+</body>
+<script src="../js/speak.js" type="text/javascript"></script>
+</html>
