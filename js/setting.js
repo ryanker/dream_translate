@@ -155,7 +155,7 @@ function bindValue(name, value) {
                     }
                 }
             } else {
-                value = val
+                value = this.checked ? val : ''
             }
             bg.setSetting(name, value)
         })
