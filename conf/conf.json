@@ -1,0 +1,65 @@
+{
+  "setting": {
+    "scribble": "direct",
+    "position": "rightDown",
+    "allowSelect": "",
+    "translateList": [
+      "baidu",
+      "google",
+      "youdao"
+    ],
+    "translateTTSList": [
+      "google",
+      "baidu",
+      "youdao"
+    ],
+    "translateReader": "source",
+    "dictionaryList": [
+      "longman",
+      "dictcn"
+    ],
+    "dictionarySoundList": [
+      "dictcn"
+    ],
+    "dictionaryReader": "us",
+    "searchList": [
+      "baidu",
+      "google"
+    ]
+  },
+  "translateList": {
+    "baidu": "百度翻译",
+    "google": "谷歌翻译",
+    "youdao": "有道翻译",
+    "bing": "微软翻译",
+    "qq": "腾讯翻译",
+    "alibaba": "阿里翻译",
+    "sogou": "搜狗翻译"
+  },
+  "translateTTSList": {
+    "baidu": "百度翻译",
+    "google": "谷歌翻译",
+    "youdao": "有道翻译",
+    "bing": "微软翻译",
+    "qq": "腾讯翻译",
+    "sogou": "搜狗翻译"
+  },
+  "dictionaryList": {
+    "longman": "朗文词典",
+    "merriam": "韦伯词典",
+    "cambridge": "剑桥词典",
+    "dictcn": "海词词典"
+  },
+  "dictionarySoundList": {
+    "longman": "朗文词典",
+    "merriam": "韦伯词典",
+    "dictcn": "海词词典"
+  },
+  "searchList": {
+    "baidu": "百度搜索",
+    "google": "谷歌搜索",
+    "so": "360搜索",
+    "sogou": "搜狗搜索",
+    "bing": "必应搜索"
+  }
+}
