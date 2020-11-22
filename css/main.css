@@ -85,21 +85,61 @@ input[type=radio], input[type=checkbox] {
     margin-top: 10px;
 }
 
+.mt_2 {
+    margin-top: 20px;
+}
+
 .dmx_button {
     background: #4395ff;
     border: 1px solid #3589ff;
     border-radius: 4px;
     color: #fff;
-    height: 28px;
-    line-height: 28px;
-    padding: 2px 15px;
+    line-height: 1;
+    padding: 8px 12px;
     font-size: 14px;
+    white-space: nowrap;
     text-align: center;
+    outline: none;
+    box-sizing: border-box;
+    user-select: none;
     cursor: pointer;
+    transition: .1s;
 }
 
 .dmx_button:hover {
-    box-shadow: 2px 2px 2px 0 #d0d7de;
+    box-shadow: 2px 2px 5px 0 #d0d7de;
+}
+
+.dmx_button:active {
+    opacity: .7;
+}
+
+.dmx_button_default {
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    color: #606266;
+}
+
+.dmx_button_success {
+    background-color: #67c23a;
+    border-color: #67c23a;
+    color: #fff;
+}
+
+.dmx_button_warning {
+    background-color: #e6a23c;
+    border-color: #e6a23c;
+    color: #fff;
+}
+
+.dmx_button_danger {
+    background-color: #ef473a;
+    border-color: #dd1419;
+    color: #fff;
+}
+
+.dmx_inline {
+    display: inline-block;
 }
 
 .popup_box {

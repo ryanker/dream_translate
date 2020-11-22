@@ -19,6 +19,7 @@ function init() {
     // 初始值
     setValue('scribble', setting.scribble)
     setValue('position', setting.position)
+    setValue('allowSelect', setting.allowSelect)
     setValue('translateList', setting.translateList)
     setValue('translateTTSList', setting.translateTTSList)
     setValue('translateReader', setting.translateReader)
@@ -30,6 +31,7 @@ function init() {
     // 绑定值
     bindValue('scribble', setting.scribble)
     bindValue('position', setting.position)
+    bindValue('allowSelect', setting.allowSelect)
     bindValue('translateList', setting.translateList)
     bindValue('translateTTSList', setting.translateTTSList)
     bindValue('translateReader', setting.translateReader)
@@ -48,6 +50,18 @@ function init() {
     // 绑定是否显示"朗读"参数
     bindShow('setting_translate_reader', 'translateTTSList', setting.translateTTSList)
     bindShow('setting_dictionary_reader', 'dictionarySoundList', setting.dictionarySoundList)
+
+    // 重置设置
+    $('resetSetting').addEventListener('click', function () {
+        bg.resetSetting(() => {
+            fetch('../conf/conf.json').then(r => r.json()).then(r => {
+                bg.setting = Object.assign({}, r.setting)
+                bg.setSettingAll(bg.setting, () => {
+                    location.reload()
+                })
+            })
+        })
+    })
 }
 
 function $(id) {
@@ -80,14 +94,6 @@ function rmClass(el, className) {
 function hasClass(el, className) {
     if (!el.className) return false
     return (` ${el.className.trim()} `).indexOf(` ${className.trim()} `) > -1
-}
-
-function setSetting(name, value) {
-    setting[name] = value
-    // localStorage.setItem('setting', JSON.stringify(setting))
-    chrome.storage.sync.set({'setting': setting}, function () {
-        // console.log('setting:', setting)
-    })
 }
 
 function navigate(navId, contentSel) {
@@ -151,8 +157,7 @@ function bindValue(name, value) {
             } else {
                 value = val
             }
-            // console.log(value)
-            setSetting(name, value)
+            bg.setSetting(name, value)
         })
     })
 }

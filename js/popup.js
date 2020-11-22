@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     N('scribble').forEach(el => {
         el.addEventListener('change', function () {
             let val = this.value
-            setSetting('scribble', val)
+            bg.setSetting('scribble', val)
             bg.setBrowserAction(val === 'off' ? 'OFF' : '')
         })
     })
@@ -27,9 +27,4 @@ function $(id) {
 
 function N(id) {
     return document.getElementsByName(id)
-}
-
-function setSetting(name, value) {
-    setting[name] = value
-    chrome.storage.sync.set({'setting': setting})
 }
