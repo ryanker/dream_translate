@@ -11,9 +11,21 @@ chrome.tts.getVoices(function (voices) {
         }
     }
 
+    // 排序
+    let kArr = Object.keys(arr)
+    // console.log(kArr.length)
+    kArr = kArr.sort()
+    let list = {}
+    if (arr['zh-CN']) list['zh-CN'] = arr['zh-CN'] // 中文简体放最前面
+    kArr.forEach(k => {
+        if (k === 'zh-CN') return
+        list[k] = arr[k]
+    })
+    // console.log(list)
+
     fetch('../conf/langSpeak.json').then(r => r.json()).then(langList => {
         let el = $('speak_voice')
-        for (const [key, val] of Object.entries(arr)) {
+        for (const [key, val] of Object.entries(list)) {
             val.forEach(v => {
                 let op = document.createElement('option')
                 op.value = v.voiceName
