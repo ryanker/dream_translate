@@ -137,7 +137,7 @@ function bingTranslate() {
             let map = this.langMapReverse
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
-            let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: null, data: []}
+            let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: this.lanTTS, data: []}
             let srcArr = q.split('\n')
             let tarArr = []
             let arr = r && r[0] && r[0].translations
