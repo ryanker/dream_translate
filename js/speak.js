@@ -13,6 +13,7 @@ chrome.tts.getVoices(function (voices) {
 
     // 排序
     let kArr = Object.keys(arr)
+    // console.log(JSON.stringify(kArr.sort()))
     // console.log(kArr.length)
     kArr = kArr.sort()
     let list = {}
