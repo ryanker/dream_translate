@@ -11,19 +11,18 @@ chrome.tts.getVoices(function (voices) {
         }
     }
 
-    let el = $('speak_voice')
-    let j = 0
-    for (const [key, val] of Object.entries(arr)) {
-        j++
-        val.forEach(v => {
-            let op = document.createElement('option')
-            op.value = v.voiceName
-            op.innerText = `${key} | ${v.voiceName}${v.remote ? ' | 远程' : ''}`
-            el.appendChild(op)
-        })
-    }
-    // console.log('languages:', j)
-    loadConf()
+    fetch('../conf/langSpeak.json').then(r => r.json()).then(langList => {
+        let el = $('speak_voice')
+        for (const [key, val] of Object.entries(arr)) {
+            val.forEach(v => {
+                let op = document.createElement('option')
+                op.value = v.voiceName
+                op.innerText = `${langList[key] ? langList[key].zhName : key} | ${v.voiceName}${v.remote ? ' | 远程' : ''}`
+                el.appendChild(op)
+            })
+        }
+        loadConf()
+    })
 })
 
 $('speak_voice').addEventListener('change', function () {
@@ -81,25 +80,25 @@ function speak(text, options) {
     }
 }
 
-function loadConf() {
-    let s = localStorage.getItem('speakConf')
-    if (!s) return
-    conf = JSON.parse(s)
-    // if (conf.voiceName) selectValue($('speak_voice'), conf.voiceName)
-    // if (conf.rate) selectValue($('speak_rate'), conf.rate)
-    // if (conf.pitch) selectValue($('speak_pitch'), conf.pitch)
-    if (conf.voiceName) $('speak_voice').value = conf.voiceName
-    if (conf.rate) $('speak_rate').value = conf.rate
-    if (conf.pitch) $('speak_pitch').value = conf.pitch
-}
-
 function setConf(key, value) {
     conf[key] = value
     localStorage.setItem('speakConf', JSON.stringify(conf))
 }
 
-function selectValue(el, value) {
+function loadConf() {
+    let s = localStorage.getItem('speakConf')
+    if (!s) return
+    conf = JSON.parse(s)
+    if (conf.voiceName) $('speak_voice').value = conf.voiceName
+    if (conf.rate) $('speak_rate').value = conf.rate
+    if (conf.pitch) $('speak_pitch').value = conf.pitch
+    // if (conf.voiceName) selectValue($('speak_voice'), conf.voiceName)
+    // if (conf.rate) selectValue($('speak_rate'), conf.rate)
+    // if (conf.pitch) selectValue($('speak_pitch'), conf.pitch)
+}
+
+/*function selectValue(el, value) {
     el.querySelectorAll('option').forEach(v => {
         if (v.value === value) v.selected = true
     })
-}
+}*/

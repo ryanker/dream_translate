@@ -1,0 +1,366 @@
+{
+  "ar-AE": {
+    "zhName": "阿拉伯语(阿拉伯联合酋长国)",
+    "enName": "Arabic(United Arab Emirates)"
+  },
+  "ar-BH": {
+    "zhName": "阿拉伯语(巴林)",
+    "enName": "Arabic(Bahrain)"
+  },
+  "ar-EG": {
+    "zhName": "阿拉伯语(埃及)",
+    "enName": "Arabic(Egypt)"
+  },
+  "ar-IQ": {
+    "zhName": "阿拉伯语(伊拉克)",
+    "enName": "Arabic(Iraq)"
+  },
+  "ar-JO": {
+    "zhName": "阿拉伯语(约旦)",
+    "enName": "Arabic(Jordan)"
+  },
+  "ar-KW": {
+    "zhName": "阿拉伯语(科威特)",
+    "enName": "Arabic(Kuwait)"
+  },
+  "ar-LB": {
+    "zhName": "阿拉伯语(黎巴嫩)",
+    "enName": "Arabic(Lebanon)"
+  },
+  "ar-OM": {
+    "zhName": "阿拉伯语(阿曼)",
+    "enName": "Arabic(Oman)"
+  },
+  "ar-QA": {
+    "zhName": "阿拉伯语(卡塔尔)",
+    "enName": "Arabic(Qatar)"
+  },
+  "ar-SA": {
+    "zhName": "阿拉伯语(沙特阿拉伯)",
+    "enName": "Arabic(Saudi Arabia)"
+  },
+  "ar-SY": {
+    "zhName": "阿拉伯语(叙利亚)",
+    "enName": "Arabic(Syria)"
+  },
+  "bg-BG": {
+    "zhName": "保加利亚语(保加利亚)",
+    "enName": "Bulgarian(Bulgaria)"
+  },
+  "ca-ES": {
+    "zhName": "加泰罗尼亚语(西班牙)",
+    "enName": "Catalan(Spain)"
+  },
+  "cs-CZ": {
+    "zhName": "捷克语(捷克共和国)",
+    "enName": "Czech(Czech Republic)"
+  },
+  "da-DK": {
+    "zhName": "丹麦语(丹麦)",
+    "enName": "Danish(Denmark)"
+  },
+  "de-AT": {
+    "zhName": "德语(奥地利)",
+    "enName": "German(Austria)"
+  },
+  "de-CH": {
+    "zhName": "德语(瑞士)",
+    "enName": "German(Switzerland)"
+  },
+  "de-DE": {
+    "zhName": "德语(德国)",
+    "enName": "German(Germany)"
+  },
+  "el-GR": {
+    "zhName": "希腊语(希腊)",
+    "enName": "Greek(Greece)"
+  },
+  "en": {
+    "zhName": "英语",
+    "enName": "English"
+  },
+  "en-AU": {
+    "zhName": "英语(澳大利亚)",
+    "enName": "English(Australia)"
+  },
+  "en-CA": {
+    "zhName": "英语(加拿大)",
+    "enName": "English(Canada)"
+  },
+  "en-GB": {
+    "zhName": "英语(英国)",
+    "enName": "English(United Kingdom)"
+  },
+  "en-HK": {
+    "zhName": "英语(香港)",
+    "enName": "English(Hong Kong)"
+  },
+  "en-IE": {
+    "zhName": "英语(爱尔兰)",
+    "enName": "English(Ireland)"
+  },
+  "en-IN": {
+    "zhName": "英语(印度)",
+    "enName": "English(India)"
+  },
+  "en-NZ": {
+    "zhName": "英语(新西兰)",
+    "enName": "English(New Zealand)"
+  },
+  "en-PH": {
+    "zhName": "英语(菲律宾)",
+    "enName": "English(Philippines)"
+  },
+  "en-SG": {
+    "zhName": "英语(新加坡)",
+    "enName": "English(Singapore)"
+  },
+  "en-US": {
+    "zhName": "英语(美国)",
+    "enName": "English(United States)"
+  },
+  "en-ZA": {
+    "zhName": "英语(南非)",
+    "enName": "English(South Africa)"
+  },
+  "es-AR": {
+    "zhName": "西班牙语(阿根廷)",
+    "enName": "Spanish(Argentina)"
+  },
+  "es-BO": {
+    "zhName": "西班牙语(玻利维亚)",
+    "enName": "Spanish(Bolivia)"
+  },
+  "es-CL": {
+    "zhName": "西班牙语(智利)",
+    "enName": "Spanish(Chile)"
+  },
+  "es-CO": {
+    "zhName": "西班牙语(哥伦比亚)",
+    "enName": "Spanish(Colombia)"
+  },
+  "es-CR": {
+    "zhName": "西班牙语(哥斯达黎加)",
+    "enName": "Spanish(Costa Rica)"
+  },
+  "es-CU": {
+    "zhName": "西班牙语(古巴)",
+    "enName": "Spanish(Cuba)"
+  },
+  "es-DO": {
+    "zhName": "西班牙语(多米尼加共和国)",
+    "enName": "Spanish(Dominican Republic)"
+  },
+  "es-EC": {
+    "zhName": "西班牙语(厄瓜多尔)",
+    "enName": "Spanish(Ecuador)"
+  },
+  "es-ES": {
+    "zhName": "西班牙语(西班牙)",
+    "enName": "Spanish(Spain)"
+  },
+  "es-GT": {
+    "zhName": "西班牙语(危地马拉)",
+    "enName": "Spanish(Guatemala)"
+  },
+  "es-HN": {
+    "zhName": "西班牙语(洪都拉斯)",
+    "enName": "Spanish(Honduras)"
+  },
+  "es-MX": {
+    "zhName": "西班牙语(墨西哥)",
+    "enName": "Spanish(Mexico)"
+  },
+  "es-NI": {
+    "zhName": "西班牙(尼加拉瓜)",
+    "enName": "Spanish(Nicaragua)"
+  },
+  "es-PA": {
+    "zhName": "西班牙语(巴拿马)",
+    "enName": "Spanish(Panama)"
+  },
+  "es-PE": {
+    "zhName": "西班牙语(秘鲁)",
+    "enName": "Spanish(Peru)"
+  },
+  "es-PR": {
+    "zhName": "西班牙语(波多黎各)",
+    "enName": "Spanish(Puerto Rico)"
+  },
+  "es-PY": {
+    "zhName": "西班牙语(巴拉圭)",
+    "enName": "Spanish(Paraguay)"
+  },
+  "es-SV": {
+    "zhName": "西班牙语(萨尔瓦多)",
+    "enName": "Spanish(El Salvador)"
+  },
+  "es-US": {
+    "zhName": "西班牙语(美国)",
+    "enName": "Spanish(USA)"
+  },
+  "es-UY": {
+    "zhName": "西班牙语(乌拉圭)",
+    "enName": "Spanish(Uruguay)"
+  },
+  "es-VE": {
+    "zhName": "西班牙语(委内瑞拉)",
+    "enName": "Spanish(Venezuela)"
+  },
+  "et-EE": {
+    "zhName": "爱沙尼亚语(爱沙尼亚)",
+    "enName": "Estonian(Estonia)"
+  },
+  "fi-FI": {
+    "zhName": "芬兰语(芬兰)",
+    "enName": "Finnish(Finland)"
+  },
+  "fr-CA": {
+    "zhName": "法语(加拿大)",
+    "enName": "French(Canada)"
+  },
+  "fr-CH": {
+    "zhName": "法语(瑞士)",
+    "enName": "French(Switzerland)"
+  },
+  "fr-FR": {
+    "zhName": "法语(法国)",
+    "enName": "French(France)"
+  },
+  "ga-IE": {
+    "zhName": "爱尔兰语(爱尔兰)",
+    "enName": "Irish(Ireland)"
+  },
+  "gu-IN": {
+    "zhName": "古吉拉特语(印度)",
+    "enName": "Gujarati(Indian)"
+  },
+  "he-IL": {
+    "zhName": "希伯来语(以色列)",
+    "enName": "Hebrew(Israel)"
+  },
+  "hi-IN": {
+    "zhName": "印地语(印度)",
+    "enName": "Hindi(India)"
+  },
+  "hr-HR": {
+    "zhName": "克罗地亚语(克罗地亚)",
+    "enName": "Croatian(Croatia)"
+  },
+  "hu-HU": {
+    "zhName": "匈牙利语(匈牙利)",
+    "enName": "Hungarian(Hungary)"
+  },
+  "id-ID": {
+    "zhName": "印度尼西亚语(印度尼西亚)",
+    "enName": "Indonesian(Indonesia)"
+  },
+  "it-IT": {
+    "zhName": "意大利语(意大利)",
+    "enName": "Italian(Italy)"
+  },
+  "ja-JP": {
+    "zhName": "日语(日本)",
+    "enName": "Japanese(Japan)"
+  },
+  "ko-KR": {
+    "zhName": "韩语(韩国)",
+    "enName": "Korean(Korea)"
+  },
+  "lt-LT": {
+    "zhName": "立陶宛语(立陶宛)",
+    "enName": "Lithuanian(Lithuania)"
+  },
+  "lv-LV": {
+    "zhName": "拉脱维亚语(拉脱维亚)",
+    "enName": "Latvian(Latvia)"
+  },
+  "mr-IN": {
+    "zhName": "马拉地语(印度)",
+    "enName": "Marathi(India)"
+  },
+  "ms-MY": {
+    "zhName": "马来语(马来西亚)",
+    "enName": "Malay(Malaysia)"
+  },
+  "mt-MT": {
+    "zhName": "马耳他语(马耳他)",
+    "enName": "Maltese(Malta)"
+  },
+  "nb-NO": {
+    "zhName": "挪威语(博克马尔语，挪威)",
+    "enName": "Norwegian(Bokmål, Norway)"
+  },
+  "nl-BE": {
+    "zhName": "荷兰语(比利时)",
+    "enName": "Dutch(Belgium)"
+  },
+  "nl-NL": {
+    "zhName": "荷兰语(荷兰)",
+    "enName": "Dutch(Netherlands)"
+  },
+  "pl-PL": {
+    "zhName": "波兰语(波兰)",
+    "enName": "Polish(Poland)"
+  },
+  "pt-BR": {
+    "zhName": "葡萄牙语(巴西)",
+    "enName": "Portuguese(Brazil)"
+  },
+  "pt-PT": {
+    "zhName": "葡萄牙语(葡萄牙)",
+    "enName": "Portuguese(Portugal)"
+  },
+  "ro-RO": {
+    "zhName": "罗马尼亚语(罗马尼亚)",
+    "enName": "Romanian(Romania)"
+  },
+  "ru-RU": {
+    "zhName": "俄语(俄罗斯)",
+    "enName": "Russian(Russia)"
+  },
+  "sk-SK": {
+    "zhName": "斯洛伐克语(斯洛伐克)",
+    "enName": "Slovak(Slovakia)"
+  },
+  "sl-SI": {
+    "zhName": "斯洛文尼亚语(斯洛文尼亚)",
+    "enName": "Slovenian(Slovenia)"
+  },
+  "sv-SE": {
+    "zhName": "瑞典语(瑞典)",
+    "enName": "Swedish(Sweden)"
+  },
+  "ta-IN": {
+    "zhName": "泰米尔语(印度)",
+    "enName": "Tamil(India)"
+  },
+  "te-IN": {
+    "zhName": "泰卢固语(印度)",
+    "enName": "Telugu(India)"
+  },
+  "th-TH": {
+    "zhName": "泰语(泰国)",
+    "enName": "Thai(Thailand)"
+  },
+  "tr-TR": {
+    "zhName": "土耳其语(土耳其)",
+    "enName": "Turkish(Turkey)"
+  },
+  "vi-VN": {
+    "zhName": "越南语(越南)",
+    "enName": "Vietnamese(Vietnam)"
+  },
+  "zh-CN": {
+    "zhName": "中文(简体)",
+    "enName": "Chinese(Simplified)"
+  },
+  "zh-HK": {
+    "zhName": "中文(粤语)",
+    "enName": "Chinese(Cantonese)"
+  },
+  "zh-TW": {
+    "zhName": "中文(繁体)",
+    "enName": "Chinese(Traditional)"
+  }
+}
