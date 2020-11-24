@@ -19,7 +19,7 @@ function alibabaTranslate() {
         },
         langMapReverse: {},
         pairMap: {
-            "auto": ["en", "zh", "ru", "es", "fr", "ar", "tr", "pt", "th", "id", "vi"],
+            "auto": ["en"],
             "en": ["zh", "ru", "es", "fr", "ar", "tr", "pt", "th", "id", "vi"],
             "zh": ["en"],
             "ru": ["en", "es", "tr", "it", "fr", "pt"],
@@ -107,7 +107,7 @@ sec-fetch-site: same-origin`
             lan = this.langMap[lan] || 'en'
             return new Promise((resolve) => {
                 // 阿里云 TTS 有点慢，发音效果也不是太理想，懒得解密了，偷懒直接用搜狗的。
-                resolve(`https://fanyi.sogou.com/reventondc/synthesis?text=${encodeURIComponent(q)}&speed=1&lang=${lan}&from=translateweb&speaker=1`)
+                resolve(`https://fanyi.sogou.com/reventondc/synthesis?text=${encodeURIComponent(q)}&speed=1&lang=${lan}&from=translateweb&speaker=3`)
             })
         },
         link(q, srcLan, tarLan) {
