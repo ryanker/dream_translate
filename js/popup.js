@@ -15,8 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     $('allow_select').addEventListener('click', function () {
         chrome.tabs.query({active: true, currentWindow: true}, tabs => {
             // alert(JSON.stringify(tabs))
-            if (!tabs[0] || !tabs[0].url) return
-            chrome.tabs.sendMessage(tabs[0].id, {action: 'allowSelect'})
+            tabs[0] && tabs[0].url && bg.sendMessage(tabs[0].id, {action: 'allowSelect'})
         })
     })
 })
