@@ -759,6 +759,8 @@ function dmxDialog(options) {
             el.style.top = top + 'px'
             el.style.height = height + 'px'
             typeof o.onResize === 'function' && o.onResize({height: height})
+        } else {
+            mid = null
         }
     }
     let _e = function (e) {
@@ -767,6 +769,8 @@ function dmxDialog(options) {
         if (width > o.minWidth && e.clientX < docW - (elW - (clientX - elX))) {
             el.style.width = width + 'px'
             typeof o.onResize === 'function' && o.onResize({width: width})
+        } else {
+            mid = null
         }
     }
     let _s = function (e) {
@@ -775,6 +779,8 @@ function dmxDialog(options) {
         if (height > o.minHeight && e.clientY < docH - (elH - (clientY - elY))) {
             el.style.height = height + 'px'
             typeof o.onResize === 'function' && o.onResize({height: height})
+        } else {
+            mid = null
         }
     }
     let _w = function (e) {
@@ -784,6 +790,8 @@ function dmxDialog(options) {
             el.style.left = left + 'px'
             el.style.width = width + 'px'
             typeof o.onResize === 'function' && o.onResize({width: width})
+        } else {
+            mid = null
         }
     }
     let onMousemove = function (e) {
