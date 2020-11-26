@@ -51,7 +51,7 @@ chrome.tts.getVoices(function (voices) {
 
 chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
     // debug('sender', sender)
-    debug(sender.tab ? "来自内容脚本：" + sender.tab.url : "来自扩展程序")
+    debug(sender.tab ? `from: ${sender.tab.url}` : `from extensions`)
     debug('request', m)
     sendResponse('received')
     if (!sender.tab) return

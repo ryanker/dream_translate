@@ -13,19 +13,9 @@ loadDialogConf()
 loadSetting(function (setting) {
     if (setting.allowSelect === 'on') allowUserSelect()
 })
-chrome.storage.local.get(['conf', 'dialogCSS', 'languageList'], function (r) {
-    conf = r.conf
-    dialogCSS = r.dialogCSS
-    languageList = JSON.parse(r.languageList)
-    debug('conf:', r.conf)
-    // debug('dialogCSS:', r.dialogCSS)
-    // debug('languageList:', JSON.stringify(languageList))
-})
 document.addEventListener('DOMContentLoaded', function () {
     debug('loaded content.js')
-    setTimeout(() => {
-        init()
-    }, 500)
+    init()
 })
 
 let msgList = {translate: {}, dictionary: {}, search: {}}
@@ -48,6 +38,18 @@ chrome.runtime.onMessage.addListener(function (m) {
 })
 
 function init() {
+    chrome.storage.local.get(['conf', 'dialogCSS', 'languageList'], function (r) {
+        conf = r.conf
+        dialogCSS = r.dialogCSS
+        languageList = JSON.parse(r.languageList)
+        debug('conf:', r.conf)
+        // debug('dialogCSS:', r.dialogCSS)
+        // debug('languageList:', JSON.stringify(languageList))
+        dialogInit()
+    })
+}
+
+function dialogInit() {
     // 初始对话框
     let dialogChange = false
     dialog = dmxDialog({
