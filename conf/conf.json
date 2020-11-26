@@ -36,12 +36,12 @@
     "sogou": "搜狗翻译"
   },
   "translateTTSList": {
-    "baidu": "百度翻译",
-    "google": "谷歌翻译",
-    "youdao": "有道翻译",
-    "bing": "微软翻译",
-    "qq": "腾讯翻译",
-    "sogou": "搜狗翻译"
+    "baidu": "百度朗读",
+    "google": "谷歌朗读",
+    "youdao": "有道朗读",
+    "bing": "微软朗读",
+    "qq": "腾讯朗读",
+    "sogou": "搜狗朗读"
   },
   "dictionaryList": {
     "longman": "朗文词典",

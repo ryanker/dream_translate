@@ -46,7 +46,6 @@ function init() {
     bindSortHTML('展示顺序：', 'setting_search_sort', 'searchList', setting.searchList, conf.searchList)
 
     // 绑定是否显示"朗读"参数
-    bindShow('setting_translate_reader', 'translateTTSList', setting.translateTTSList)
     bindShow('setting_dictionary_reader', 'dictionarySoundList', setting.dictionarySoundList)
 
     // 重置设置
