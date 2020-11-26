@@ -1,16 +1,7 @@
-let conf = {}
-chrome.tts.getVoices(function (voices) {
-    let arr = {}
-    for (let i = 0; i < voices.length; i++) {
-        // console.log('Voice ' + i + ':', JSON.stringify(voices[i]))
-        let v = voices[i]
-        if (!arr[v.lang]) {
-            arr[v.lang] = [{voiceName: v.voiceName, remote: v.remote}]
-        } else {
-            arr[v.lang].push({voiceName: v.voiceName, remote: v.remote})
-        }
-    }
+let bg = chrome.extension.getBackgroundPage()
+let conf = {};
 
+(function (arr) {
     // 排序
     let kArr = Object.keys(arr)
     // console.log(JSON.stringify(kArr.sort()))
@@ -36,7 +27,7 @@ chrome.tts.getVoices(function (voices) {
         }
         loadConf()
     })
-})
+})(bg.voiceList)
 
 $('speak_voice').addEventListener('change', function () {
     setConf('voiceName', this.value)

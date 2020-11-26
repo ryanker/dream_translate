@@ -206,11 +206,19 @@ function googleTranslate() {
             lan = this.langMap[lan] || 'en'
             return new Promise((resolve, reject) => {
                 if (!this.token.tkk) reject('google tkk empty!')
-                let tk = this.sign(q, this.token.tkk)
                 // 备用 See:
                 // https://cloud.google.com/text-to-speech
                 // https://cloud.google.com/translate/docs/basic/translating-text#translate_translate_text-drest
-                resolve(`https://translate.google.cn/translate_tts?ie=UTF-8&q=${encodeURIComponent(q)}&tl=${lan}&total=1&idx=0&textlen=${q.length}&tk=${tk}&client=webapp&prev=input`)
+                let getUrl = (s) => {
+                    let tk = this.sign(s, this.token.tkk)
+                    return `https://translate.google.cn/translate_tts?ie=UTF-8&q=${encodeURIComponent(s)}&tl=${lan}&total=1&idx=0&textlen=${s.length}&tk=${tk}&client=webapp&prev=input`
+                }
+                let r = []
+                let arr = sliceStr(q, 128)
+                arr.forEach(text => {
+                    r.push(getUrl(text))
+                })
+                resolve(r)
             })
         },
         link(q, srcLan, tarLan) {

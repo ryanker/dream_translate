@@ -1,0 +1,60 @@
+{
+  "name": "梦想划词翻译 - 聚合词典搜索",
+  "description": "聚合谷歌、百度、有道、腾讯、微软和阿里等划词翻译和朗读引擎，并聚合多款词典和搜索引擎。",
+  "version": "1.0",
+  "manifest_version": 2,
+  "icons": {
+    "256": "icon/256.png"
+  },
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "js/content.js"
+      ],
+      "css": [
+        "css/content.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "browser_action": {
+    "default_popup": "html/popup.html",
+    "default_title": "梦想划词翻译",
+    "default_icon": "icon/256.png"
+  },
+  "web_accessible_resources": [
+    "css/*",
+    "html/*"
+  ],
+  "permissions": [
+    "storage",
+    "clipboardWrite",
+    "clipboardRead",
+    "cookies",
+    "contextMenus",
+    "webRequest",
+    "webRequestBlocking",
+    "tts",
+    "<all_urls>"
+  ],
+  "homepage_url": "http://www.dreamenglish.cn",
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+X",
+        "mac": "MacCtrl+Shift+X"
+      },
+      "description": "打开设置"
+    }
+  }
+}
+
+

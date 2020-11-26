@@ -49,11 +49,11 @@ function init() {
     bindShow('setting_dictionary_reader', 'dictionarySoundList', setting.dictionarySoundList)
 
     // 重置设置
-    $('resetSetting').addEventListener('click', function () {
-        bg.resetSetting(() => {
+    $('clearSetting').addEventListener('click', function () {
+        bg.clearSetting(() => {
             fetch('../conf/conf.json').then(r => r.json()).then(r => {
                 bg.setting = Object.assign({}, r.setting)
-                bg.setSettingAll(bg.setting, () => {
+                bg.saveSetting(bg.setting, () => {
                     location.reload()
                 })
             })

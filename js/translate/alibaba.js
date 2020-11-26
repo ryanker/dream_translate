@@ -107,7 +107,15 @@ sec-fetch-site: same-origin`
             lan = this.langMap[lan] || 'en'
             return new Promise((resolve) => {
                 // 阿里云 TTS 有点慢，发音效果也不是太理想，懒得解密了，偷懒直接用搜狗的。
-                resolve(`https://fanyi.sogou.com/reventondc/synthesis?text=${encodeURIComponent(q)}&speed=1&lang=${lan}&from=translateweb&speaker=3`)
+                let getUrl = (s) => {
+                    return `https://fanyi.sogou.com/reventondc/synthesis?text=${encodeURIComponent(s)}&speed=1&lang=${lan}&from=translateweb&speaker=3`
+                }
+                let r = []
+                let arr = sliceStr(q, 128)
+                arr.forEach(text => {
+                    r.push(getUrl(text))
+                })
+                resolve(r)
             })
         },
         link(q, srcLan, tarLan) {

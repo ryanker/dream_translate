@@ -1,7 +1,7 @@
 {
   "setting": {
     "scribble": "direct",
-    "position": "rightDown",
+    "position": "fixed",
     "allowSelect": "",
     "translateList": [
       "baidu",
@@ -41,7 +41,8 @@
     "youdao": "有道朗读",
     "bing": "微软朗读",
     "qq": "腾讯朗读",
-    "sogou": "搜狗朗读"
+    "sogou": "搜狗朗读",
+    "local": "本地朗读"
   },
   "dictionaryList": {
     "longman": "朗文词典",
@@ -68,7 +69,7 @@
     "dan": "da-DK",
     "de": "de-DE",
     "el": "el-GR",
-    "en": "es-US",
+    "en": "en-US",
     "fin": "fi-FI",
     "frn": "fr-CA",
     "fra": "fr-FR",

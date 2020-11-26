@@ -114,7 +114,15 @@ function baiduTranslate() {
                 if (!inArray(lan, this.lanTTS)) reject('This language is not supported!')
                 if (lan === 'yue') lan = 'cte' // 粤语
                 // https://tts.baidu.com/text2audio?tex=%E6%98%8E(ming2)%E7%99%BD(bai2)&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100
-                resolve(`https://fanyi.baidu.com/gettts?lan=${lan}&text=${encodeURIComponent(q)}&spd=3&source=web`)
+                let getUrl = (s) => {
+                    return `https://fanyi.baidu.com/gettts?lan=${lan}&text=${encodeURIComponent(s)}&spd=3&source=web`
+                }
+                let r = []
+                let arr = sliceStr(q, 128)
+                arr.forEach(text => {
+                    r.push(getUrl(text))
+                })
+                resolve(r)
             })
         },
         link(q, srcLan, tarLan) {

@@ -278,10 +278,18 @@ function youdaoTranslate() {
         tts(q, lan) {
             return new Promise((resolve, reject) => {
                 if (!inArray(lan, this.lanTTS)) reject('This language is not supported!')
-                let arr = {en: "eng", zh: 'zh-CHS', jp: "jap", kor: "ko", fra: "fr"}
-                let le = arr[lan] || arr.en
+                let lanArr = {en: "eng", zh: 'zh-CHS', jp: "jap", kor: "ko", fra: "fr"}
+                let le = lanArr[lan] || lanArr.en
                 // resolve(`http://tts.youdao.com/fanyivoice?word=${encodeURIComponent(q)}&le=eng&keyfrom=speaker-target`)
-                resolve(`https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(q)}&le=${le}`)
+                let getUrl = (s) => {
+                    return `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(s)}&le=${le}`
+                }
+                let r = []
+                let arr = sliceStr(q, 128)
+                arr.forEach(text => {
+                    r.push(getUrl(text))
+                })
+                resolve(r)
             })
         },
         link(q, srcLan, tarLan) {
