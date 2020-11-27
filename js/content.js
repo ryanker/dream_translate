@@ -34,6 +34,10 @@ chrome.runtime.onMessage.addListener(function (m) {
         allowUserSelect()
     } else if (m.action === 'loadSetting') {
         loadSetting()
+    } else if (m.action === 'contextMenus') {
+        let text = getSelection().toString().trim()
+        text && queryInit(text)
+        dialog.show()
     }
 })
 

@@ -36,6 +36,15 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 })
 
+// 添加上下文菜单
+chrome.contextMenus.create({
+    "title": "梦想翻译“%s”",
+    "contexts": ["selection"],
+    "onclick": function (info, tab) {
+        tab && sendMessage(tab.id, {action: 'contextMenus', text: info.selectionText})
+    }
+})
+
 // 获得所有语音的列表
 chrome.tts.getVoices(function (voices) {
     for (let i = 0; i < voices.length; i++) {
