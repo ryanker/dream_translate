@@ -577,7 +577,7 @@ function alert(message, type) {
         setTimeout(() => {
             el.removeChild(m)
         }, 300)
-    }, 3000)
+    }, 2500)
 }
 
 function createTextarea() {
