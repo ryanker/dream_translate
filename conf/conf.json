@@ -3,6 +3,7 @@
     "scribble": "direct",
     "position": "fixed",
     "allowSelect": "",
+    "autoCopy": "",
     "translateList": [
       "baidu",
       "google",

@@ -248,6 +248,12 @@ function onQuery(e) {
     }
     debug(s)
 
+    // 自动复制功能
+    if (setting.autoCopy === 'on') {
+        execCopy(s)
+        alert('复制成功', 'success')
+    }
+
     if (setting.scribble === 'direct') {
         queryInit(s)
         dialog.show(setting.position === 'fixed' ? {} : {left: e.clientX + 30, top: e.clientY - 60})

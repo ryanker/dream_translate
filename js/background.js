@@ -195,8 +195,8 @@ async function audioPlay(url) {
             if (blobUrl) URL.revokeObjectURL(blobUrl) // 释放内存
             resolve()
         }
-        aud.onerror = function () {
-            reject('play error!')
+        aud.onerror = function (err) {
+            reject(err)
         }
         aud.play().catch(e => {
             reject(e)
