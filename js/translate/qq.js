@@ -127,25 +127,18 @@ Sec-Fetch-Site: same-origin`
             tarLan = this.langMap[tarLan] || 'zh'
             if (!inArray(tarLan, this.pairMap[srcLan])) tarLan = this.pairMap[srcLan][0]
             return new Promise((resolve, reject) => {
-                if (!this.token.qtv) reject('qq qtv empty!')
-                if (!this.token.qtk) reject('qq qtk empty!')
+                setTimeout(this.removeListenerRequest, 200)
                 let qtv = this.token.qtv
                 let qtk = this.token.qtk
-
-                this.addListenerRequest()
                 let uuid = 'translate_uuid' + (new Date).getTime()
                 let p = `source=${srcLan}&target=${tarLan}&sourceText=${encodeURIComponent(q)}&qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}&sessionUuid=${uuid}`
                 httpPost({url: 'https://fanyi.qq.com/api/translate', body: p}).then(r => {
-                    this.removeListenerRequest()
-                    this.getToken()
                     if (r) {
                         resolve(this.unify(r, q, srcLan, tarLan))
                     } else {
                         reject('qq translate error!')
                     }
                 }).catch(e => {
-                    this.removeListenerRequest()
-                    this.getToken()
                     reject(e)
                 })
             })
@@ -165,14 +158,11 @@ Sec-Fetch-Site: same-origin`
             })
             return ret
         },
-        async query(q, srcLan, tarLan, noCache) {
-            let t = Math.floor(Date.now() / 36e5)
-            let d = this.token.date
-            if (noCache || !d || Number(d) !== t) {
-                await this.getToken().catch(err => {
-                    console.warn(err)
-                })
-            }
+        async query(q, srcLan, tarLan) {
+            this.addListenerRequest()
+            await this.getToken().catch(err => {
+                debug('qq getToken error:', err)
+            })
             return this.trans(q, srcLan, tarLan)
         },
         setCookie(name, value) {

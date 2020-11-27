@@ -277,6 +277,10 @@ function loadJs(obj, type) {
     }
 }
 
+function sleep(delay) {
+    return new Promise(r => setTimeout(r, delay))
+}
+
 function inArray(val, arr) {
     // return arr.indexOf(val) !== -1
     return arr.includes(val)
