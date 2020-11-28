@@ -1,5 +1,10 @@
+'use strict'
+
 let bg = chrome.extension.getBackgroundPage()
-let conf = bg.conf
+let conf = Object.assign({}, bg.conf)
+let voiceList = bg.voiceList
+let localTTSConf = bg.localTTSConf
+let ttsList = conf.ttsList
 let setting = bg.setting
 document.addEventListener('DOMContentLoaded', function () {
     init()
@@ -50,17 +55,11 @@ function init() {
     // 绑定是否显示"朗读"参数
     bindShow('setting_dictionary_reader', 'dictionarySoundList', setting.dictionarySoundList)
 
+    // 本地 TTS 设置
+    localTtsSetting()
+
     // 重置设置
-    $('clearSetting').addEventListener('click', function () {
-        bg.clearSetting(() => {
-            fetch('../conf/conf.json').then(r => r.json()).then(r => {
-                bg.setting = Object.assign({}, r.setting)
-                bg.saveSetting(bg.setting, () => {
-                    location.reload()
-                })
-            })
-        })
-    })
+    $('clearSetting').addEventListener('click', clearSetting)
 }
 
 function $(id) {
@@ -194,9 +193,98 @@ function bindShow(id, name, value) {
 
 function settingBoxHTML(id, name, obj) {
     let s = ''
-    for (let k in obj) {
-        if (obj.hasOwnProperty(k)) s += `<label><input type="checkbox" name="${name}" value="${k}">${obj[k]}</label>`
-    }
+    Object.keys(obj).forEach(v => {
+        s += `<label><input type="checkbox" name="${name}" value="${v}">${obj[v]}</label>`
+    })
     let el = $(id)
     el.innerHTML = s
+}
+
+function clearSetting() {
+    bg.clearSetting(() => {
+        fetch('../conf/conf.json').then(r => r.json()).then(r => {
+            bg.setting = Object.assign({}, r.setting)
+            bg.saveSetting(bg.setting, () => {
+                location.reload()
+            })
+        })
+    })
+}
+
+function localTtsSetting() {
+    let bEl = document.querySelector('[name="translateTTSList"][value="local"]')
+    let lEl = $('local_tts_list')
+    let dEl = $('local_tts_dialog')
+    dEl.querySelector('.dialog_back').onclick = function () {
+        dEl.style.display = 'none'
+    }
+
+    let specialLang = ['en', 'es', 'nl']
+    let kArr = Object.keys(voiceList)
+    kArr = kArr.sort()
+    let list = {}
+    kArr.forEach(k => {
+        let v = voiceList[k]
+        for (let i = 0; i < specialLang.length; i++) {
+            let lan = specialLang[i]
+            if (k === lan || (new RegExp(`^${lan}-`)).test(k)) {
+                if (!list[lan]) list[lan] = []
+                v.forEach(val => list[lan].push(val))
+                return
+            }
+        }
+        list[k] = v
+    })
+
+    let ttsKeys = Object.values(ttsList)
+    fetch('../conf/langSpeak.json').then(r => r.json()).then(langList => {
+        // 语言设置
+        let s1 = '', s2 = ''
+        for (const [key, val] of Object.entries(list)) {
+            let preName = langList[key] ? langList[key].zhName : key
+            let select = `<select key="${key}"><option value="">默认</option>`
+            val.forEach(v => {
+                let name = v.voiceName + (v.remote ? ' | 远程' : '')
+                if (specialLang.includes(key)) name = (langList[v.lang] ? langList[v.lang].zhName : v.lang) + ' | ' + name
+                select += `<option value="${v.voiceName}">${name}</option>`
+            })
+            select += '</select>'
+            let row = `<div class="fx mt_1"><div class="local_list_name">${preName}</div>${select}</div>`
+            if (ttsKeys.includes(key) || specialLang.includes(key)) {
+                s1 += row
+            } else {
+                s2 += row
+            }
+        }
+        lEl.insertAdjacentHTML('beforeend', `<div class="lang_list">${s1}</div><div class="lang_list_err">${s2}</div>`)
+
+        // 绑定事件
+        let sEl = dEl.querySelectorAll('select')
+        sEl.forEach(fn => {
+            fn.onchange = function () {
+                bg.setLocalConf(fn.getAttribute('key'), this.value)
+            }
+        })
+        $('local_tts_reset_setting').onclick = function () {
+            bg.resetLocalConf()
+            sEl.forEach(fn => {
+                fn.value = ''
+            })
+        }
+
+        // 初始值
+        for (let [k, v] of Object.entries(localTTSConf)) {
+            let vEl = dEl.querySelector(`select[key="${k}"]`)
+            if (vEl) vEl.value = v
+        }
+
+        // 打开设置
+        let i = document.createElement('i')
+        i.className = 'dmx-icon dmx-icon-setting'
+        i.onclick = function (e) {
+            e.preventDefault()
+            dEl.style.display = 'block'
+        }
+        bEl.parentNode.appendChild(i)
+    })
 }

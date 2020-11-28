@@ -81,6 +81,16 @@ input[type=radio], input[type=checkbox] {
     bottom: -4px;
 }
 
+select {
+    min-width: 100px;
+    max-width: 160px;
+    height: 30px;
+    padding: 3px;
+    font-size: 15px;
+    border: 1px solid #cfd0d2;
+    border-radius: 4px;
+}
+
 .mt_1 {
     margin-top: 10px;
 }
@@ -216,7 +226,66 @@ input[type=radio], input[type=checkbox] {
     margin: 10px 0 0 5px;
 }
 
-/* ==================== setting ==================== */
+.dmx-icon-setting {
+    margin-left: 5px;
+    color: #7b848c;
+    cursor: pointer;
+}
+
+#local_tts_dialog {
+    display: none;
+    z-index: 99;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #F1F4F6;
+    overflow: auto;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#local_tts_dialog select {
+    float: left;
+}
+
+#local_tts_reset_setting {
+    margin-left: 240px;
+}
+
+.local_list_name {
+    display: inline-block;
+    float: left;
+    min-width: 230px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.local_list_box {
+    display: inline-block;
+}
+
+.lang_list {
+    color: #9da5ac;
+}
+
+.lang_list_err {
+    color: #FF416C;
+}
+
+.dialog_back {
+    position: fixed;
+    left: 10px;
+    top: 2px;
+    cursor: pointer;
+}
+
+.dialog_back .dmx-icon {
+    font-size: 20px;
+}
+
+/* ==================== speak ==================== */
 #speak_input {
     display: block;
     width: calc(100% - 20px);
@@ -239,12 +308,6 @@ input[type=radio], input[type=checkbox] {
 
 .speak_box select {
     margin: 10px 10px 0 0;
-    height: 30px;
-    max-width: 160px;
-    padding: 3px;
-    font-size: 15px;
-    border: 1px solid #cfd0d2;
-    border-radius: 4px;
 }
 
 #speak_button {

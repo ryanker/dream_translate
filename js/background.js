@@ -2,8 +2,9 @@
 
 let isDebug = true
 let aud = new Audio()
-var conf, setting, sdk = {}, voiceList = {}
+var conf, setting, sdk = {}, voiceList = {}, localTTSConf = {}
 document.addEventListener('DOMContentLoaded', function () {
+    loadLocalConf()
     fetch('../conf/conf.json').then(r => r.json()).then(r => {
         conf = r
         loadSetting(function (result) {
@@ -50,11 +51,8 @@ chrome.tts.getVoices(function (voices) {
     for (let i = 0; i < voices.length; i++) {
         // debug('Voice ' + i + ':', JSON.stringify(voices[i]))
         let v = voices[i]
-        if (!voiceList[v.lang]) {
-            voiceList[v.lang] = [{voiceName: v.voiceName, remote: v.remote}]
-        } else {
-            voiceList[v.lang].push({voiceName: v.voiceName, remote: v.remote})
-        }
+        if (!voiceList[v.lang]) voiceList[v.lang] = []
+        voiceList[v.lang].push({lang: v.lang, voiceName: v.voiceName, remote: v.remote})
     }
 })
 
@@ -139,7 +137,21 @@ function soundPlay(name, text, lang) {
             if (!k || !voiceList[k]) reject('不支持这种语言')
 
             let options = {}
-            options.lang = k
+            if (localTTSConf['speak_rate']) options.rate = Number(localTTSConf['speak_rate'])
+            if (localTTSConf['speak_pitch']) options.pitch = Number(localTTSConf['speak_pitch'])
+            if (localTTSConf[k]) {
+                options.voiceName = localTTSConf[k]
+            } else if (['en-US', 'es-ES', 'nl-NL'].includes(k)) {
+                let a = {'en-US': 'en', 'es-ES': 'es', 'nl-NL': 'nl'}
+                let k = a[k]
+                if (localTTSConf[k]) {
+                    options.voiceName = localTTSConf[k]
+                } else {
+                    options.lang = k
+                }
+            } else {
+                options.lang = k
+            }
             let arr = sliceStr(text, 128)
             let lastKey = arr.length - 1
             arr.forEach((v, k) => {
@@ -149,6 +161,7 @@ function soundPlay(name, text, lang) {
                         if (k === lastKey) resolve()
                     } else if (e.type === 'error') {
                         debug('tts.speak error:', e.errorMessage)
+                        reject(e.errorMessage)
                     }
                 }
                 if (k === 0) {
@@ -264,6 +277,21 @@ function clearSetting(callback) {
     chrome.storage.sync.clear(function () {
         callback && callback(chrome.runtime.lastError)
     })
+}
+
+function loadLocalConf() {
+    let s = localStorage.getItem('localTTSConf')
+    if (s) localTTSConf = JSON.parse(s)
+}
+
+function setLocalConf(k, v) {
+    localTTSConf[k] = v
+    localStorage.setItem('localTTSConf', JSON.stringify(cfg))
+}
+
+function resetLocalConf() {
+    localStorage.removeItem('localTTSConf')
+    localTTSConf = {}
 }
 
 function currentTabMessage(message) {

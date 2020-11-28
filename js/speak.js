@@ -29,21 +29,26 @@ let conf = {};
     })
 })(bg.voiceList)
 
-$('speak_voice').addEventListener('change', function () {
+let voiceEl = $('speak_voice')
+let rateEl = $('speak_rate')
+let pitchEl = $('speak_pitch')
+let inputEl = $('speak_input')
+let buttonEl = $('speak_button')
+voiceEl.addEventListener('change', function () {
     setConf('voiceName', this.value)
 })
-$('speak_rate').addEventListener('change', function () {
+rateEl.addEventListener('change', function () {
     setConf('rate', this.value)
 })
-$('speak_pitch').addEventListener('change', function () {
+pitchEl.addEventListener('change', function () {
     setConf('pitch', this.value)
 })
-$('speak_input').addEventListener('paste', function (e) {
+inputEl.addEventListener('paste', function (e) {
     e.stopPropagation()
     e.preventDefault()
     this.innerText = (e.clipboardData || window.clipboardData).getData('Text')
 })
-$('speak_button').addEventListener('click', function () {
+buttonEl.addEventListener('click', function () {
     let text = $('speak_input').innerText
     let voiceName = $('speak_voice').value
     let rate = $('speak_rate').value
@@ -65,22 +70,14 @@ function $(id) {
 function speak(text, options) {
     // console.log(text, options)
     if (text) {
-        if (text.length < 500) {
-            chrome.tts.speak(text, options)
-        } else {
-            let arr = text.split('\n')
-            arr.forEach((v, k) => {
-                v = v.trim()
-                if (!v) return
-                // console.log(v, k)
-                if (k === 0) {
-                    chrome.tts.speak(v, options)
-                } else {
-                    options.enqueue = true
-                    chrome.tts.speak(v, options)
-                }
-            })
-        }
+        let arr = bg.sliceStr(text, 128)
+        arr.forEach((v, k) => {
+            if (k === 0) {
+                chrome.tts.speak(v, options)
+            } else {
+                chrome.tts.speak(v, Object.assign({enqueue: true}, options))
+            }
+        })
     }
 }
 
@@ -93,9 +90,9 @@ function loadConf() {
     let s = localStorage.getItem('speakConf')
     if (!s) return
     conf = JSON.parse(s)
-    if (conf.voiceName) $('speak_voice').value = conf.voiceName
-    if (conf.rate) $('speak_rate').value = conf.rate
-    if (conf.pitch) $('speak_pitch').value = conf.pitch
+    if (conf.voiceName) voiceEl.value = conf.voiceName
+    if (conf.rate) rateEl.value = conf.rate
+    if (conf.pitch) pitchEl.value = conf.pitch
     // if (conf.voiceName) selectValue($('speak_voice'), conf.voiceName)
     // if (conf.rate) selectValue($('speak_rate'), conf.rate)
     // if (conf.pitch) selectValue($('speak_pitch'), conf.pitch)

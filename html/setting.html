@@ -34,7 +34,7 @@
         </div>
         <div class="setting_option">
             <div class="option_title"><b>实用功能</b></div>
-            <div class="option_box">
+            <div class="option_box label_block">
                 <label><input type="checkbox" name="allowSelect" value="on">自动解限<u>自动解除访问页面选中文本和右键限制</u></label>
                 <label><input type="checkbox" name="autoCopy" value="on">自动复制<u>选择文字后，自动复制选中内容</u></label>
             </div>
@@ -96,6 +96,39 @@
                 本想找一款支持划词后自动朗读的程序，一直没找到喜欢的，要么功能不能满足，要么太复杂，索性就自己花时间写了此程序。
             </div>
         </div>
+    </div>
+    <div id="local_tts_dialog" style="display:none">
+        <div class="dialog_back"><i class="dmx-icon dmx-icon-arrow-left"></i></div>
+        <div class="fx">
+            <div class="local_list_name">朗读速度</div>
+            <select key="speak_rate">
+                <option value="">默认</option>
+                <option value="0.5">0.5X</option>
+                <option value="0.75">0.75X</option>
+                <option value="1">1X</option>
+                <option value="1.25">1.25X</option>
+                <option value="1.5">1.5X</option>
+                <option value="1.75">1.75X</option>
+                <option value="2">2X</option>
+                <option value="2.5">2.5X</option>
+                <option value="3">3X</option>
+            </select>
+        </div>
+        <div class="fx mt_1">
+            <div class="local_list_name">朗读音高</div>
+            <select key="speak_pitch">
+                <option value="">默认</option>
+                <option value="0.5">0.5</option>
+                <option value="0.75">0.75</option>
+                <option value="1">1</option>
+                <option value="1.25">1.25</option>
+                <option value="1.5">1.5</option>
+                <option value="1.75">1.75</option>
+                <option value="2">2</option>
+            </select>
+        </div>
+        <div id="local_tts_list"></div>
+        <div id="local_tts_reset_setting" class="dmx_button dmx_button_default dmx_inline mt_1">恢复默认设置</div>
     </div>
 </div>
 </body>

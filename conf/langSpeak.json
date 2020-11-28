@@ -123,6 +123,10 @@
     "zhName": "英语(南非)",
     "enName": "English(South Africa)"
   },
+  "es": {
+    "zhName": "西班牙语",
+    "enName": "Spanish"
+  },
   "es-AR": {
     "zhName": "西班牙语(阿根廷)",
     "enName": "Spanish(Argentina)"
@@ -172,7 +176,7 @@
     "enName": "Spanish(Mexico)"
   },
   "es-NI": {
-    "zhName": "西班牙(尼加拉瓜)",
+    "zhName": "西班牙语(尼加拉瓜)",
     "enName": "Spanish(Nicaragua)"
   },
   "es-PA": {
@@ -290,6 +294,10 @@
   "nb-NO": {
     "zhName": "挪威语(博克马尔语，挪威)",
     "enName": "Norwegian(Bokmål, Norway)"
+  },
+  "nl": {
+    "zhName": "荷兰语",
+    "enName": "Dutch"
   },
   "nl-BE": {
     "zhName": "荷兰语(比利时)",
