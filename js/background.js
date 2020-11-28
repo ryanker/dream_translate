@@ -134,7 +134,7 @@ function soundPlay(name, text, lang) {
     return new Promise((resolve, reject) => {
         if (name === 'local') {
             let k = conf.ttsList[lang]
-            if (!k || !voiceList[k]) reject('不支持这种语言')
+            if (!k || !voiceList[k]) return reject('不支持这种语言')
 
             let options = {}
             if (localTTSConf['speak_rate']) options.rate = Number(localTTSConf['speak_rate'])
@@ -173,7 +173,7 @@ function soundPlay(name, text, lang) {
             return
         }
         sdkInit(`${name}Translate`, sd => {
-            if (!sd) reject('sdkInit error')
+            if (!sd) return reject('sdkInit error')
             sd.tts(text, lang).then(val => {
                 if (Array.isArray(val)) {
                     (async function () {
@@ -211,7 +211,7 @@ async function audioPlay(url) {
             blobUrl = URL.createObjectURL(url)
             aud.src = blobUrl
         } else {
-            reject('Audio url error:', url)
+            return reject('Audio url error:', url)
         }
         aud.onended = function () {
             if (blobUrl) URL.revokeObjectURL(blobUrl) // 释放内存
