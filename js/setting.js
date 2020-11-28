@@ -281,6 +281,7 @@ function localTtsSetting() {
         // 打开设置
         let i = document.createElement('i')
         i.className = 'dmx-icon dmx-icon-setting'
+        i.title = '本地朗读设置'
         i.onclick = function (e) {
             e.preventDefault()
             dEl.style.display = 'block'
