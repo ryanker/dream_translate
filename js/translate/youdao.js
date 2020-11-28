@@ -229,7 +229,7 @@ function youdaoTranslate() {
             tarLan = this.langMap[tarLan] || 'zh-CHS'
             if (srcLan !== 'zh-CHS') tarLan = 'zh-CHS' // 有道只支持单一中文互换翻译
             return new Promise((resolve, reject) => {
-                if (!this.token.token) reject('youdao token empty!')
+                if (!this.token.token) return reject('youdao token empty!')
                 this.addListenerRequest()
                 let bv = this.md5(navigator.appVersion), ts = '' + (new Date).getTime(),
                     salt = ts + Math.floor(10 * Math.random())
@@ -277,7 +277,7 @@ function youdaoTranslate() {
         },
         tts(q, lan) {
             return new Promise((resolve, reject) => {
-                if (!inArray(lan, this.lanTTS)) reject('This language is not supported!')
+                if (!inArray(lan, this.lanTTS)) return reject('This language is not supported!')
                 let lanArr = {en: "eng", zh: 'zh-CHS', jp: "jap", kor: "ko", fra: "fr"}
                 let le = lanArr[lan] || lanArr.en
                 // resolve(`http://tts.youdao.com/fanyivoice?word=${encodeURIComponent(q)}&le=eng&keyfrom=speaker-target`)

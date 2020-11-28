@@ -44,8 +44,8 @@ function baiduTranslate() {
                 httpGet('https://fanyi.baidu.com/').then(r => {
                     let arr = r.match(/window\.gtk\s=\s'([^']+)';/)
                     let tArr = r.match(/token:\s'([^']+)'/)
-                    if (!arr) reject('baidu gtk empty!')
-                    if (!tArr) reject('baidu token empty!')
+                    if (!arr) return reject('baidu gtk empty!')
+                    if (!tArr) return reject('baidu token empty!')
                     let token = {gtk: arr[1], token: tArr[1], date: Math.floor(Date.now() / 36e5)}
                     this.setToken(token)
                     resolve(token)
@@ -56,8 +56,8 @@ function baiduTranslate() {
         },
         trans(q, srcLan, tarLan) {
             return new Promise((resolve, reject) => {
-                if (!this.token.gtk) reject('baidu gtk empty!')
-                if (!this.token.token) reject('baidu token empty!')
+                if (!this.token.gtk) return reject('baidu gtk empty!')
+                if (!this.token.token) return reject('baidu token empty!')
                 let sign = this.sign(q, this.token.gtk)
                 let token = this.token.token
                 let p = new URLSearchParams(`from=${srcLan}&to=${tarLan}&query=${q}&simple_means_flag=3&sign=${sign}&token=${token}&domain=common`)
@@ -111,7 +111,7 @@ function baiduTranslate() {
         },
         tts(q, lan) {
             return new Promise((resolve, reject) => {
-                if (!inArray(lan, this.lanTTS)) reject('This language is not supported!')
+                if (!inArray(lan, this.lanTTS)) return reject('This language is not supported!')
                 if (lan === 'yue') lan = 'cte' // 粤语
                 // https://tts.baidu.com/text2audio?tex=%E6%98%8E(ming2)%E7%99%BD(bai2)&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100
                 let getUrl = (s) => {

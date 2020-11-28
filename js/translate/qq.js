@@ -82,8 +82,8 @@ function qqTranslate() {
                 /*httpGet('https://fanyi.qq.com/').then(r => {
                     let arr = r.match(/var qtv = "([^"]+)";/)
                     let tArr = r.match(/var qtk = "([^"]+)";/)
-                    if (!arr) reject('qq gtk empty!')
-                    if (!tArr) reject('qq token empty!')
+                    if (!arr) return reject('qq gtk empty!')
+                    if (!tArr) return reject('qq token empty!')
                     let token = {qtv: arr[1], qtk: tArr[1], date: Math.floor(Date.now() / 36e5)}
                     this.setToken(token)
                     resolve(token)

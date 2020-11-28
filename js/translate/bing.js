@@ -99,8 +99,8 @@ function bingTranslate() {
                 httpGet('https://cn.bing.com/translator').then(r => {
                     let arr = r.match(/,IG:"([^"]+)",/)
                     let tArr = r.match(/_iid="([^"]+)"/)
-                    if (!arr) reject('bing IG empty!')
-                    if (!tArr) reject('bing IID empty!')
+                    if (!arr) return reject('bing IG empty!')
+                    if (!tArr) return reject('bing IID empty!')
                     let token = {ig: arr[1], iid: tArr[1], num: 0, date: Math.floor(Date.now() / 36e5)}
                     this.setToken(token)
                     resolve(token)
@@ -113,8 +113,8 @@ function bingTranslate() {
             srcLan = this.langMap[srcLan] || 'auto-detect'
             tarLan = this.langMap[tarLan] || 'zh-Hans'
             return new Promise((resolve, reject) => {
-                if (!this.token.ig) reject('bing ig empty!')
-                if (!this.token.iid) reject('bing iid empty!')
+                if (!this.token.ig) return reject('bing ig empty!')
+                if (!this.token.iid) return reject('bing iid empty!')
                 let ig = this.token.ig
                 let iid = this.token.iid
                 let num = ++this.token.num
@@ -184,11 +184,11 @@ function bingTranslate() {
                 bul: {lang: 'bg-BG', gender: 'Male', name: 'bg-BG-Ivan'},
             }
             return new Promise((resolve, reject) => {
-                if (!inArray(lan, this.lanTTS)) reject('This language is not supported!')
+                if (!inArray(lan, this.lanTTS)) return reject('This language is not supported!')
                 let l = arr[lan] || arr.en
 
-                if (!this.token.ig) reject('bing ig empty!')
-                if (!this.token.iid) reject('bing iid empty!')
+                if (!this.token.ig) return reject('bing ig empty!')
+                if (!this.token.iid) return reject('bing iid empty!')
                 let ig = this.token.ig
                 let iid = this.token.iid
                 let num = this.token.num
