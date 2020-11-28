@@ -36,8 +36,10 @@ chrome.runtime.onMessage.addListener(function (m) {
         loadSetting()
     } else if (m.action === 'contextMenus') {
         let text = getSelection().toString().trim()
-        text && queryInit(text)
-        dialog.show()
+        if (text) {
+            queryInit(text)
+            dialog.show()
+        }
     }
 })
 
