@@ -152,7 +152,7 @@ function googleTranslate() {
                 httpGet('https://translate.google.cn/translate_a/element.js', 'text').then(r => {
                     // let arr = r.match(/tkk:'(\d+\.\d+)'/)
                     let arr = r.match(/_ctkk='(\d+\.\d+)'/)
-                    if (!arr) reject('google tkk empty!')
+                    if (!arr) return reject('google tkk empty!')
                     let token = {tkk: arr[1]}
                     this.setToken(token)
                     resolve(token)
@@ -165,7 +165,8 @@ function googleTranslate() {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh-CN'
             return new Promise((resolve, reject) => {
-                if (!this.token.tkk) reject('google tkk empty!')
+                if (q.length > 1000) return reject('The text is too large!')
+                if (!this.token.tkk) return reject('google tkk empty!')
                 let tk = this.sign(q, this.token.tkk)
                 let url = `https://translate.google.cn/translate_a/single?client=webapp&sl=${srcLan}&tl=${tarLan}&hl=${navigator.language}&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=sos&dt=ss&dt=t&otf=1&ssel=0&tsel=0&kc=1&tk=${tk}&q=${encodeURIComponent(q)}`
                 httpGet(url, 'json').then(r => {
@@ -205,7 +206,7 @@ function googleTranslate() {
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'
             return new Promise((resolve, reject) => {
-                if (!this.token.tkk) reject('google tkk empty!')
+                if (!this.token.tkk) return reject('google tkk empty!')
                 // 备用 See:
                 // https://cloud.google.com/text-to-speech
                 // https://cloud.google.com/translate/docs/basic/translating-text#translate_translate_text-drest

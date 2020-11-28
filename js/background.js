@@ -143,7 +143,7 @@ function soundPlay(name, text, lang) {
                 options.voiceName = localTTSConf[k]
             } else if (['en-US', 'es-ES', 'nl-NL'].includes(k)) {
                 let a = {'en-US': 'en', 'es-ES': 'es', 'nl-NL': 'nl'}
-                let k = a[k]
+                k = a[k]
                 if (localTTSConf[k]) {
                     options.voiceName = localTTSConf[k]
                 } else {
@@ -286,7 +286,7 @@ function loadLocalConf() {
 
 function setLocalConf(k, v) {
     localTTSConf[k] = v
-    localStorage.setItem('localTTSConf', JSON.stringify(cfg))
+    localStorage.setItem('localTTSConf', JSON.stringify(localTTSConf))
 }
 
 function resetLocalConf() {
