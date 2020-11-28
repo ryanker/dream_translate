@@ -308,8 +308,15 @@ function getRangeBound() {
 }
 
 function translateCaseInit() {
+    let el = $('case_list')
+    let list = setting.translateList
+    if (list.length < 1) {
+        el.innerHTML = `<div class="case case_content"><i class="dmx-icon dmx-icon-info"></i> 您未启用任何翻译模块</div>`
+        return
+    }
+
     let s = ''
-    setting.translateList.forEach(name => {
+    list.forEach(name => {
         s += `<div class="case" id="${name}_translate_case">
     <div class="case_top fx">
         <div class="case_left case_language"></div>
@@ -322,10 +329,10 @@ function translateCaseInit() {
     <div class="case_content"><div class="dmx_loading"></div></div>
 </div>`
     })
-    $('case_list').innerHTML = s
+    el.innerHTML = s
 
     // 绑定事件
-    setting.translateList.forEach(name => {
+    list.forEach(name => {
         let caseEl = $(`${name}_translate_case`)
         let copyEl = caseEl.querySelector('.case_copy')
         let bilingualEl = caseEl.querySelector('.case_bilingual')
