@@ -66,6 +66,7 @@ sec-fetch-site: same-origin`
             tarLan = this.langMap[tarLan] || 'zh'
             if (!inArray(tarLan, this.pairMap[srcLan])) tarLan = this.pairMap[srcLan][0]
             return new Promise((resolve, reject) => {
+                if (q.length > 5000) return reject('The text is too large!')
                 this.addListenerRequest()
                 let url = `https://translate.alibaba.com/translationopenseviceapp/trans/TranslateTextAddAlignment.do`
                 let p = new URLSearchParams(`srcLanguage=${srcLan}&tgtLanguage=${tarLan}&srcText=${q}&viewType=&source=&bizType=message`)

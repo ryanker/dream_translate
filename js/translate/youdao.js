@@ -229,6 +229,7 @@ function youdaoTranslate() {
             tarLan = this.langMap[tarLan] || 'zh-CHS'
             if (srcLan !== 'zh-CHS') tarLan = 'zh-CHS' // 有道只支持单一中文互换翻译
             return new Promise((resolve, reject) => {
+                if (q.length > 5000) return reject('The text is too large!')
                 if (!this.token.token) return reject('youdao token empty!')
                 this.addListenerRequest()
                 let bv = this.md5(navigator.appVersion), ts = '' + (new Date).getTime(),

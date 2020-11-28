@@ -113,6 +113,7 @@ function bingTranslate() {
             srcLan = this.langMap[srcLan] || 'auto-detect'
             tarLan = this.langMap[tarLan] || 'zh-Hans'
             return new Promise((resolve, reject) => {
+                if (q.length > 5000) return reject('The text is too large!')
                 if (!this.token.ig) return reject('bing ig empty!')
                 if (!this.token.iid) return reject('bing iid empty!')
                 let ig = this.token.ig

@@ -56,6 +56,7 @@ function baiduTranslate() {
         },
         trans(q, srcLan, tarLan) {
             return new Promise((resolve, reject) => {
+                if (q.length > 5000) return reject('The text is too large!')
                 if (!this.token.gtk) return reject('baidu gtk empty!')
                 if (!this.token.token) return reject('baidu token empty!')
                 let sign = this.sign(q, this.token.gtk)

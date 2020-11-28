@@ -127,6 +127,7 @@ Sec-Fetch-Site: same-origin`
             tarLan = this.langMap[tarLan] || 'zh'
             if (!inArray(tarLan, this.pairMap[srcLan])) tarLan = this.pairMap[srcLan][0]
             return new Promise((resolve, reject) => {
+                if (q.length > 5000) return reject('The text is too large!')
                 setTimeout(this.removeListenerRequest, 200)
                 let qtv = this.token.qtv
                 let qtk = this.token.qtk
