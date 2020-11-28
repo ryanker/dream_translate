@@ -248,16 +248,17 @@ select {
 
 #local_tts_dialog select {
     float: left;
+    max-width: 220px;
 }
 
 #local_tts_reset_setting {
-    margin-left: 240px;
+    margin-left: 230px;
 }
 
 .local_list_name {
     display: inline-block;
     float: left;
-    min-width: 230px;
+    min-width: 220px;
     text-align: right;
     padding-right: 10px;
 }
