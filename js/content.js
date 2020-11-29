@@ -1,7 +1,7 @@
 'use strict'
 
 let isDebug = true
-let dialog, shadow, setting, conf, dialogCSS, languageList, iconBut, iconText
+let dialog, shadow, setting, conf, dialogCSS, languageList, iconBut, iconText, extPath
 let dialogConf = {
     width: 500,
     height: 470,
@@ -540,7 +540,8 @@ function $(id) {
 // let id = chrome.i18n.getMessage('@@extension_id')
 // let id = chrome.runtime.id
 function getURL(s) {
-    return chrome.runtime.getURL(s)
+    if (!extPath) extPath = chrome.runtime.getURL('')
+    return extPath + s
 }
 
 function loadSetting(callback) {
