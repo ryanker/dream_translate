@@ -42,8 +42,8 @@
     "youdao": "有道朗读",
     "bing": "微软朗读",
     "qq": "腾讯朗读",
-    "alibaba": "阿里翻译",
     "sogou": "搜狗朗读",
+    "frdic": "欧陆朗读",
     "local": "本地朗读"
   },
   "dictionaryList": {

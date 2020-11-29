@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
         loadSetting(function (result) {
             setting = Object.assign({}, conf.setting, result.setting)
             saveSetting(setting)
-            loadJs(conf.translateList, 'translate')
+            let jsArr = uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList)))
+            loadJs(jsArr, 'translate')
             if (setting.scribble === 'off') setBrowserAction('OFF')
         })
 
@@ -112,7 +113,7 @@ async function autoSoundPlay(tabId, text, lang, list, arr) {
             url: `https://fanyi.baidu.com/langdetect`,
             body: `query=${encodeURIComponent(text)}`
         }).then(r => {
-            if (r.lan) lang = r.lan
+            if (r && r.lan) lang = r.lan
         }).catch(err => {
             debug(err)
         })
@@ -132,49 +133,10 @@ async function autoSoundPlay(tabId, text, lang, list, arr) {
 
 function soundPlay(name, text, lang) {
     return new Promise((resolve, reject) => {
-        if (name === 'local') {
-            let k = conf.ttsList[lang]
-            if (!k || !voiceList[k]) return reject('不支持这种语言')
-
-            let options = {}
-            if (localTTSConf['speak_rate']) options.rate = Number(localTTSConf['speak_rate'])
-            if (localTTSConf['speak_pitch']) options.pitch = Number(localTTSConf['speak_pitch'])
-            if (localTTSConf[k]) {
-                options.voiceName = localTTSConf[k]
-            } else if (['en-US', 'es-ES', 'nl-NL'].includes(k)) {
-                let a = {'en-US': 'en', 'es-ES': 'es', 'nl-NL': 'nl'}
-                k = a[k]
-                if (localTTSConf[k]) {
-                    options.voiceName = localTTSConf[k]
-                } else {
-                    options.lang = k
-                }
-            } else {
-                options.lang = k
-            }
-            let arr = sliceStr(text, 128)
-            let lastKey = arr.length - 1
-            arr.forEach((v, k) => {
-                options.onEvent = function (e) {
-                    // console.log('onEvent:', lastKey, k, v, e.type, options)
-                    if (e.type === 'end') {
-                        if (k === lastKey) resolve()
-                    } else if (e.type === 'error') {
-                        debug('tts.speak error:', e.errorMessage)
-                        reject(e.errorMessage)
-                    }
-                }
-                if (k === 0) {
-                    chrome.tts.speak(v, options)
-                } else {
-                    chrome.tts.speak(v, Object.assign({enqueue: true}, options))
-                }
-            })
-            return
-        }
         sdkInit(`${name}Translate`, sd => {
             if (!sd) return reject('sdkInit error')
             sd.tts(text, lang).then(val => {
+                if (name === 'local') return resolve()
                 if (Array.isArray(val)) {
                     (async function () {
                         let ok = false
@@ -305,13 +267,13 @@ function debug(...data) {
     isDebug && console.log('[DMX DEBUG]', ...data)
 }
 
-function loadJs(obj, type) {
-    for (let k in obj) {
+function loadJs(arr, type) {
+    arr.forEach(k => {
         let el = document.createElement("script")
         el.type = 'text/javascript'
         el.src = `/js/${type || 'translate'}/${k}.js`
         document.head.appendChild(el)
-    }
+    })
 }
 
 function sleep(delay) {
@@ -321,6 +283,10 @@ function sleep(delay) {
 function inArray(val, arr) {
     // return arr.indexOf(val) !== -1
     return arr.includes(val)
+}
+
+function uniqueArray(arr) {
+    return [...new Set(arr)]
 }
 
 function objectReverse(obj) {
