@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
         el.addEventListener('change', function () {
             let val = this.value
             bg.setSetting('scribble', val)
-            bg.setBrowserAction(val === 'off' ? 'OFF' : '')
         })
     })
 

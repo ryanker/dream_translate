@@ -221,6 +221,7 @@ function setSetting(name, value) {
         debug('setting:', setting)
         currentTabMessage({action: 'loadSetting'})
     })
+    if (name === 'scribble') setBrowserAction(value === 'off' ? 'OFF' : '')
 }
 
 function saveSetting(setting, callback) {
