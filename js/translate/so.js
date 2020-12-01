@@ -87,7 +87,7 @@ Sec-Fetch-Site: same-origin`
                         arr['zh'] = r.speak_url
                         arr['en'] = r.tSpeak_url
                     }
-                    resolve(`https://fanyi.sos.com` + (isEn ? arr['en'] : arr['zh']))
+                    resolve(`https://fanyi.so.com` + (isEn ? arr['en'] : arr['zh']))
                 } else {
                     reject('speak url empty')
                 }
