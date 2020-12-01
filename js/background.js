@@ -89,13 +89,15 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
             autoSoundPlay(tabId, m.text, m.srcLan, conf.translateTTSList, setting.translateTTSList)
         }, 300)
     } else if (m.action === 'translateTTS') {
-        let list = conf.translateTTSList
+        let list = conf.translateList
+        let tList = conf.translateTTSList
         let message = {action: m.action, name: m.name, type: m.type, status: 'end'}
         soundPlay(m.name, m.text, m.lang).then(() => {
             sendMessage(tabId, message)
         }).catch(err => {
             debug(`${m.name} sound error:`, err)
-            sendMessage(tabId, Object.assign({}, message, {error: `${list[m.name]}出错`}))
+            let errMsg = `${tList[m.name] ? tList[m.name] : list[m.name] + '朗读'}出错`
+            sendMessage(tabId, Object.assign({}, message, {error: errMsg}))
         })
     } else if (m.action === 'dictionary') {
     } else if (m.action === 'search') {
