@@ -35,12 +35,16 @@ chrome.runtime.onMessage.addListener(function (m) {
     } else if (m.action === 'loadSetting') {
         loadSetting()
     } else if (m.action === 'contextMenus') {
-        let text = getSelection().toString().trim()
-        if (text) {
-            queryInit(text)
+        if (m.text) {
+            queryInit(m.text)
             dialog.show()
         }
     }
+})
+
+window.addEventListener("message", function (m) {
+    let d = m.data
+    onQuery(d.text, d.clientX, d.clientY)
 })
 
 function init() {
@@ -87,7 +91,10 @@ function dialogInit() {
     }
 
     // 鼠标事件
-    document.addEventListener('mouseup', onQuery)
+    document.addEventListener('mouseup', function (e) {
+        let text = getSelection().toString().trim()
+        onQuery(text, e.clientX, e.clientY)
+    })
 
     // 鼠标图标
     iconBut = $('dmx_mouse_icon')
@@ -245,30 +252,29 @@ function sendMessage(message) {
     })
 }
 
-function onQuery(e) {
+function onQuery(text, clientX, clientY) {
     if (setting.scribble === 'off') return
-    let s = getSelection().toString().trim()
-    if (!s) {
+    if (!text) {
         iconBut.style.display = 'none'
         return
     }
-    debug(s)
+    debug(text)
 
     // 自动复制功能
     if (setting.autoCopy === 'on') {
-        execCopy(s)
+        execCopy(text)
         alert('复制成功', 'success')
     }
 
     if (setting.scribble === 'direct') {
-        queryInit(s)
-        dialog.show(setting.position === 'fixed' ? {} : {left: e.clientX + 30, top: e.clientY - 60})
+        queryInit(text)
+        dialog.show(setting.position === 'fixed' ? {} : {left: clientX + 30, top: clientY - 60})
     } else if (setting.scribble === 'clickIcon') {
-        iconText = s
-        let x = e.clientX + 10
-        let y = e.clientY - 45
-        x = x + 42 < document.documentElement.clientWidth ? x : e.clientX - 42
-        y = y > 10 ? y : e.clientY + 10
+        iconText = text
+        let x = clientX + 10
+        let y = clientY - 45
+        x = x + 42 < document.documentElement.clientWidth ? x : clientX - 42
+        y = y > 10 ? y : clientY + 10
         iconBut.style.transform = `translate(${x}px, ${y}px)`
         iconBut.style.display = 'flex'
     }
