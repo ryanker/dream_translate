@@ -303,7 +303,8 @@ function sliceStr(text, maxLen) {
         r.push(text)
     } else {
         // 根据优先级截取字符串，详细符号见：https://zh.wikipedia.org/wiki/%E6%A0%87%E7%82%B9%E7%AC%A6%E5%8F%B7
-        let separators = `.。!！?？;；-－－＿…～﹏﹏,，：/、·"`
+        let separators = `?!;.-…,/"`
+        separators += `？！；。－－＿～﹏·，：、`
         separators += `“”﹃﹄「」﹁﹂『』﹃﹄（）［］〔〕【】《》〈〉()[]{}`
         let separatorArr = [...separators]
         let arr = text.split('\n')
