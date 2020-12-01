@@ -92,7 +92,7 @@ function dialogInit() {
 
     // 鼠标事件
     document.addEventListener('mouseup', function (e) {
-        let text = getSelection().toString().trim()
+        let text = window.getSelection().toString().trim()
         onQuery(text, e.clientX, e.clientY)
     })
 
@@ -310,7 +310,7 @@ function queryInit(text) {
 }
 
 function getRangeBound() {
-    return (window.getSelection || document.getSelection)().getRangeAt(0).getBoundingClientRect()
+    return window.getSelection().getRangeAt(0).getBoundingClientRect()
 }
 
 function translateCaseInit() {
