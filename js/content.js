@@ -44,7 +44,7 @@ chrome.runtime.onMessage.addListener(function (m) {
 
 window.addEventListener("message", function (m) {
     let d = m.data
-    onQuery(d.text, d.clientX, d.clientY)
+    if (d.text && typeof d.clientX === 'number' && typeof d.clientY === 'number') onQuery(d.text, d.clientX, d.clientY)
 })
 
 function init() {
