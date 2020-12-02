@@ -62,7 +62,7 @@ function init() {
 
 function dialogInit() {
     // 初始对话框
-    let dialogChange = false
+    let isChange = false
     dialog = dmxDialog({
         cssText: dialogCSS,
         width: dialogConf.width,
@@ -72,15 +72,18 @@ function dialogInit() {
             const {width, height} = style
             if (width) dialogConf.width = width
             if (height) dialogConf.height = height
-            dialogChange = true
+            isChange = true
         }
     })
-    shadow = dialog.shadow // 影子元素
+
+    // 影子元素
+    shadow = dialog.shadow
+
     // 保存窗口大小
     dialog.el.addEventListener('mouseup', function () {
-        if (dialogChange) {
+        if (isChange) {
             saveDialogConf()
-            dialogChange = false
+            isChange = false
         }
     })
 
