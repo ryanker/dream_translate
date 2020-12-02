@@ -2,10 +2,71 @@
 
 function sogouTranslate() {
     return {
+        langMap: {
+            "auto": "auto",
+            "pl": "pl",
+            "de": "de",
+            "ru": "ru",
+            "fil": "fil",
+            "ht": "ht",
+            "nl": "nl",
+            "cs": "cs",
+            "ro": "ro",
+            "mg": "mg",
+            "pt": "pt",
+            "sk": "sk",
+            "sm": "sm",
+            "th": "th",
+            "tr": "tr",
+            "el": "el",
+            "hu": "hu",
+            "en": "en",
+            "it": "it",
+            "hi": "hi",
+            "id": "id",
+            "yue": "yue",
+            "ara": "ar",
+            "est": "et",
+            "bul": "bg",
+            "bos": "bs-Latn",
+            "per": "fa",
+            "dan": "da",
+            "fra": "fr",
+            "fin": "fi",
+            "kor": "ko",
+            "kli": "tlh",
+            "hrv": "hr",
+            "lav": "lv",
+            "lit": "lt",
+            "may": "ms",
+            "mlt": "mt",
+            "ben": "bn",
+            "afr": "af",
+            "nor": "no",
+            "jp": "ja",
+            "swe": "sv",
+            "slo": "sl",
+            "srp": "sr-Latn",
+            "src": "sr-Cyrl",
+            "swa": "sw",
+            "wel": "cy",
+            "ukr": "uk",
+            "urd": "ur",
+            "spa": "es",
+            "heb": "he",
+            "vie": "vi",
+            "cat": "ca",
+            "zh": "zh-CHS",
+            "cht": "zh-CHT"
+        },
+        langMapReverse: {},
         init() {
+            this.langMapReverse = objectReverse(this.langMap)
             return this
         },
         trans(q, srcLan, tarLan) {
+            srcLan = this.langMap[srcLan] || 'auto'
+            tarLan = this.langMap[tarLan] || 'zh-CHS'
             return new Promise((resolve, reject) => {
                 let w = chrome.webRequest
 
@@ -105,6 +166,7 @@ function sogouTranslate() {
             return this.trans(q, srcLan, tarLan)
         },
         tts(q, lan) {
+            lan = this.langMap[lan] || 'en'
             return new Promise((resolve) => {
                 let getUrl = (s) => {
                     return `https://fanyi.sogou.com/reventondc/synthesis?text=${encodeURIComponent(s)}&speed=1&lang=${lan}&from=translateweb&speaker=1`
