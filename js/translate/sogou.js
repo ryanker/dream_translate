@@ -68,6 +68,7 @@ function sogouTranslate() {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh-CHS'
             return new Promise((resolve, reject) => {
+                if (q.length > 5000) return reject('The text is too large!')
                 let w = chrome.webRequest
 
                 // 取消 Frame 嵌入限制
