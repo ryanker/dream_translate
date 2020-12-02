@@ -7,6 +7,7 @@ let dialogConf = {
     height: 470,
     source: 'en',
     target: 'zh',
+    action: 'translate',
 }
 let dQuery = {action: '', text: '', source: '', target: ''}
 loadDialogConf()
@@ -121,16 +122,14 @@ function dialogInit() {
             addClass(this, 'active')
 
             let action = this.getAttribute('action')
-            if (action === 'translate') {
-                translateBoxInit()
-            } else if (action === 'dictionary') {
-                dictionaryBoxInit()
-            } else if (action === 'search') {
-                searchBoxInit()
+            let arr = {'translate': translateBoxInit, 'dictionary': dictionaryBoxInit, 'search': searchBoxInit}
+            if (arr[action]) {
+                setDialogConf('action', action)
+                arr[action]()
             }
         })
     })
-    nav.querySelector('.active').click()
+    dialogConf.action && nav.querySelector(`u[action="${dialogConf.action}"]`).click()
 
     // 设置按钮
     $('dmx_setting').addEventListener('click', function () {
