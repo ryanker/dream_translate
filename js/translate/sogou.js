@@ -148,6 +148,9 @@ function sogouTranslate() {
         unify(r, q, srcLan, tarLan) {
             // console.log('sogou:', r, q, srcLan, tarLan)
             if (srcLan === 'auto' && r?.data?.detect?.detect) srcLan = r.data.detect.detect
+            let map = this.langMapReverse
+            srcLan = map[srcLan] || 'auto'
+            tarLan = map[tarLan] || ''
             let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: null, data: []}
             let data = r && r.data
             let tar = data.translate && data.translate.dit
@@ -180,6 +183,8 @@ function sogouTranslate() {
             })
         },
         link(q, srcLan, tarLan) {
+            srcLan = this.langMap[srcLan] || 'auto'
+            tarLan = this.langMap[tarLan] || 'zh-CN'
             return `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
         },
     }

@@ -223,6 +223,8 @@ function googleTranslate() {
             })
         },
         link(q, srcLan, tarLan) {
+            srcLan = this.langMap[srcLan] || 'auto'
+            tarLan = this.langMap[tarLan] || 'zh-CN'
             return `https://translate.google.cn/?sl=${srcLan}&tl=${tarLan}&text=${encodeURIComponent(q)}&op=translate`
         },
     }
