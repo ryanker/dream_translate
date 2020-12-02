@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
         conf = r
         loadSetting(function (result) {
             setting = Object.assign({}, conf.setting, result.setting)
-            saveSetting(setting)
-            let jsArr = uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList)))
-            loadJs(jsArr, 'translate')
             if (setting.scribble === 'off') setBrowserAction('OFF')
+            saveSetting(setting)
+            loadJs(uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList))), 'translate')
+            loadJs(Object.keys(conf.dictionaryList), 'dictionary')
         })
 
         // delete conf.setting
@@ -79,8 +79,7 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
                 })
 
                 // 链接
-                let url = sd.link(m.text, m.srcLan, m.tarLan)
-                sendMessage(tabId, {action: `${m.action}Link`, name: name, link: url})
+                sendMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text, m.srcLan, m.tarLan)})
             })
         })
 
@@ -100,6 +99,22 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
             sendMessage(tabId, Object.assign({}, message, {error: errMsg}))
         })
     } else if (m.action === 'dictionary') {
+        setting.dictionaryList.forEach(name => {
+            sdkInit(`${name}Dictionary`, sd => {
+                if (!sd) return
+
+                // 查词
+                sd.query(m.text).then(r => {
+                    debug(`${name}:`, r)
+                    sendMessage(tabId, {action: m.action, name: name, result: r})
+                }).catch(e => {
+                    sendMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
+                })
+
+                // 链接
+                sendMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text)})
+            })
+        })
     } else if (m.action === 'search') {
     }
 })

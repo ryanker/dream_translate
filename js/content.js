@@ -27,10 +27,11 @@ chrome.runtime.onMessage.addListener(function (m) {
         translateExec(m.name)
     } else if (m.action === 'translateTTS') {
         translateTTSExec(m)
-    } else if (m.action === 'translateLink') {
-        translateLinkExec(m)
     } else if (m.action === 'dictionary') {
+        dictionaryExec(m)
     } else if (m.action === 'search') {
+    } else if (m.action === 'link') {
+        linkExec(m)
     } else if (m.action === 'allowSelect') {
         allowUserSelect()
     } else if (m.action === 'loadSetting') {
@@ -224,8 +225,18 @@ function translateTTSExec(m) {
     if (sEl) (m.status === 'start' ? addClass : rmClass)(sEl, 'active')
 }
 
-function translateLinkExec(m) {
-    let el = $(`${m.name}_translate_case`)
+function dictionaryExec(m) {
+    let el = $(`${m.name}_dictionary_case`)
+    if (!el) return
+    let s = ''
+    let r = m.result
+    if (r) s = r.html
+    if (!s) s = '网络错误，请稍后再试'
+    el.querySelector('.case_content').innerHTML = s
+}
+
+function linkExec(m) {
+    let el = $(`${m.name}_${m.type}_case`)
     if (!el) return
     let sEl = el.querySelector(`.case_link`)
     if (sEl) {
