@@ -164,7 +164,7 @@ function translateExec(name, isBilingual) {
         let title = languageList[lan] ? languageList[lan].zhName : ''
         let arr = {
             'zh': '&#xe675;',
-            'en': '&#xe69f;',
+            'en': '&#xe6a8;',
             'jp': '&#xe6a0;',
             'th': '&#xe69c;',
             'spa': '&#xe6a5;',
