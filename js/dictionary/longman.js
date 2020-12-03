@@ -10,18 +10,40 @@ function longmanDictionary() {
             // let arr = r.match(/<div class="dictionary">([\s\S]*?)<\/div><!-- End of DIV dictionary-->/m)
             // console.log(arr)
             let el = r.querySelector('.dictionary')
-            el.className = 'longman_dict'
-            el.querySelector('.dictionary_intro').remove()
+            let headEl = el.querySelector('.Head')
+
+            // 音标
+            headEl.querySelector('.PronCodes > .AMEVARPRON > .neutral')?.remove()
+            let ukPron = headEl.querySelector('.PronCodes > .PRON')?.innerText?.trim()
+            let usPron = headEl.querySelector('.PronCodes > .AMEVARPRON')?.innerText?.trim()
+            headEl.querySelector('.PronCodes')?.remove()
+            let phonetic = {}
+            if (ukPron) phonetic.uk = ukPron
+            if (usPron) phonetic.us = usPron
+
+            // 发音
+            let sound = []
+            headEl.querySelectorAll('[data-src-mp3]').forEach(e => {
+                let title = e.getAttribute('title')
+                let src = e.getAttribute('data-src-mp3')
+                if (title && src) {
+                    if (title.includes('British')) sound.push({type: 'uk', title: title, url: src})
+                    else if (title.includes('American')) sound.push({type: 'us', title: title, url: src})
+                }
+            })
+
+            // 清理
             el.querySelectorAll('a').forEach(e => {
                 e.removeAttribute('href')
             })
             el.querySelectorAll('[id]').forEach(e => {
                 e.removeAttribute('id')
             })
-            el.querySelectorAll('script').forEach(e => {
+            el.querySelectorAll('script,style,.dictionary_intro').forEach(e => {
                 e.remove()
             })
-            return {type: 'html', text: q, html: el.outerHTML}
+            el.className = 'longman_dict'
+            return {type: 'html', text: q, phonetic: phonetic, sound: sound, html: el.outerHTML}
         },
         query(q) {
             return new Promise((resolve, reject) => {

@@ -79,7 +79,8 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
                 })
 
                 // 链接
-                sendMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text, m.srcLan, m.tarLan)})
+                let url = sd.link(m.text, m.srcLan, m.tarLan)
+                sendMessage(tabId, {action: 'link', type: m.action, name: name, link: url})
             })
         })
 
@@ -114,6 +115,14 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
                 // 链接
                 sendMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text)})
             })
+        })
+    } else if (m.action === 'dictionarySound') {
+        audioPlay(m.url).then(() => {
+            sendMessage(tabId, {action: m.action, name: m.name, type: m.type, status: 'end'})
+        }).catch(err => {
+            debug(`${m.name} sound error:`, err)
+            let title = conf.dictionaryList[m.name] || ''
+            sendMessage(tabId, {action: m.action, name: m.name, type: m.type, error: `${title}发音出错`})
         })
     } else if (m.action === 'search') {
     }
