@@ -18,7 +18,8 @@ function longmanDictionary() {
                 let tEl = el.querySelector('.search_title')
                 if (tEl) html += `<div><b>${tEl.innerText}</b></div>`
                 el.querySelectorAll('.didyoumean > li > a').forEach(e => {
-                    html += `<div data-search="true">${e.innerText}</div>`
+                    let href = e.getAttribute('href')
+                    html += `<div data-search="true" _href="${href}">${e.innerText}</div>`
                 })
                 return {type: 'html', text: q, html: html}
             }
@@ -49,7 +50,13 @@ function longmanDictionary() {
             el.querySelectorAll('[data-src-mp3]').forEach(e => {
                 e.className = 'dmx-icon dmx_ripple'
                 e.setAttribute('data-type', 'more')
-                e.innerHTML = '&#xe67a;'
+                let s = '&#xe67a;'
+                let title = e.getAttribute('title')
+                if (title) {
+                    if (title.includes('British')) s = '&#xe69f;'
+                    else if (title.includes('American')) s = '&#xe674;'
+                }
+                e.innerHTML = s
             })
 
             // 图片
@@ -59,8 +66,10 @@ function longmanDictionary() {
 
             // 清理
             el.querySelectorAll('a').forEach(e => {
-                e.setAttribute('data-search', 'true')
+                let href = e.getAttribute('href')
+                e.setAttribute('_href', href)
                 e.removeAttribute('href')
+                e.setAttribute('data-search', 'true')
             })
             el.querySelectorAll('[id]').forEach(e => {
                 e.removeAttribute('id')
