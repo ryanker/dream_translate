@@ -67,7 +67,8 @@ function longmanDictionary() {
             // 链接
             el.querySelectorAll('a').forEach(e => {
                 let href = e.getAttribute('href')
-                if (e.className === 'crossRef' && href.includes('#')) {
+                let s = q.replace(/\W/g, '-')
+                if (e.className === 'crossRef' && href.includes(`/dictionary/${s}#${s}`)) {
                     e.remove() // 清理掉本页跳转链接
                     return
                 }
