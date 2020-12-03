@@ -756,6 +756,7 @@ a:hover {
     float: right;
     width: 30%;
     max-width: 400px;
+    margin-left: 5px;
 }
 
 .longman_dict .Sense:after {
@@ -1120,7 +1121,7 @@ a:hover {
 .ldoceEntry .GramBox {
     border-radius: 5px;
     border: 1px solid #364395;
-    padding: 15px;
+    padding: 10px;
     margin: 8px 0;
 }
 
@@ -1189,8 +1190,8 @@ a:hover {
     border-radius: 5px;
     border: solid #6f469d 2px;
     padding-left: 4px;
-    padding-right: 20px;
-    margin: 25px 0 10px 0;
+    padding-right: 15px;
+    margin: 10px 0;
     color: white;
     text-transform: uppercase;
     background-color: #6f469d;
@@ -1241,7 +1242,7 @@ a:hover {
 .verbTable .view_less {
     color: black;
     text-align: center;
-    padding: 40px 0 10px;
+    padding: 20px 0 10px;
 }
 
 .verbTable .geo {
@@ -1253,8 +1254,7 @@ a:hover {
 .longman_dict .exaGroup .title {
     color: black;
     font-size: 110%;
-    margin-left: 5px;
-    margin-top: 15px;
+    margin: 10px 0 0 5px;
 }
 
 .longman_dict .Entry .related_topics {
@@ -1279,7 +1279,7 @@ a:hover {
 .bussdictEntry .EXAMPLE,
 .longman_dict .exaGroup .exa {
     color: gray;
-    margin-left: 15px;
+    margin-left: 10px;
 }
 
 .bussdictEntry .supp,
@@ -1292,7 +1292,7 @@ a:hover {
     width: 150px
 }
 
-.longman_dict .wordfams .crossRef {
+.longman_dict a {
     border-bottom: thin dotted gray;
 }
 
@@ -1321,7 +1321,7 @@ a:hover {
 
 .bussdictEntry .SubEntry.embedded {
     margin-top: -5px;
-    margin-left: 25px;
+    margin-left: 20px;
     margin-bottom: 0;
 }
 
@@ -1422,7 +1422,7 @@ a:hover {
 
 .ldoceEntry .Collocate,
 .ldoceEntry .Exponent {
-    margin: 15px 0 0 6px;
+    margin: 15px 0 0 5px;
 }
 
 .ldoceEntry .BADCOLLO {
@@ -1460,8 +1460,7 @@ a:hover {
 }
 
 .bussdictEntry .gramref {
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: 5px 0;
 }
 
 .bussdictEntry .BADCOLLO,
@@ -1498,7 +1497,7 @@ a:hover {
 }
 
 .longman_dict .asset {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .longman_dict .Entry .topics_container {
