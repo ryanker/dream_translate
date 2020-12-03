@@ -204,11 +204,9 @@ function youdaoTranslate() {
             })
         },
         addListenerRequest() {
-            let arr = navigator.userAgent.match(/Chrome\/(\d+)/)
-            let chromeVersion = arr ? Number(arr[1]) : -1
             chrome.webRequest.onBeforeSendHeaders.addListener(this.onChangeHeaders,
                 {urls: ['*://fanyi.youdao.com/*'], types: ['xmlhttprequest']},
-                chromeVersion > 71 ? ['blocking', 'requestHeaders', 'extraHeaders'] : ['blocking', 'requestHeaders'])
+                Object.values(chrome.webRequest.OnBeforeSendHeadersOptions))
         },
         removeListenerRequest() {
             chrome.webRequest.onBeforeSendHeaders.removeListener(this.onChangeHeaders)
