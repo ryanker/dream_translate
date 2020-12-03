@@ -30,6 +30,19 @@ function longmanDictionary() {
                     if (title.includes('British')) sound.push({type: 'uk', title: title, url: src})
                     else if (title.includes('American')) sound.push({type: 'us', title: title, url: src})
                 }
+                e.remove()
+            })
+
+            // 喇叭
+            el.querySelectorAll('[data-src-mp3]').forEach(e => {
+                e.className = 'dmx-icon dmx_ripple'
+                e.setAttribute('data-type', 'more')
+                e.innerHTML = '&#xe67a;'
+            })
+
+            // 图片
+            el.querySelectorAll('img').forEach(e => {
+                e.setAttribute('referrerPolicy', 'no-referrer')
             })
 
             // 清理

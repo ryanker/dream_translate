@@ -225,20 +225,25 @@ function soundResult(m, action) {
     if (m.error) alert(m.error, 'error')
     let el = $(`${m.name}_${action}_case`)
     if (!el) return
-    let sEl = el.querySelector(`[data-type=${m.type}]`)
-    if (sEl) (m.status === 'start' ? addClass : rmClass)(sEl, 'active')
+    if (m.status === 'start') {
+        let sEl = el.querySelector(`[data-type=${m.type}]`)
+        if (sEl) addClass(sEl, 'active')
+    } else if (m.status === 'end') {
+        el.querySelectorAll(`[data-type=${m.type}]`).forEach(e => {
+            rmClass(e, 'active')
+        })
+    }
 }
 
 function dictionaryResult(m) {
     let el = $(`${m.name}_dictionary_case`)
     if (!el) return
-    let s = ''
+    let s = '', pron = ''
     let r = m.result
     if (r) {
-        s = r.html
+        if (r.html) s = r.html
 
         // 音标
-        let pron = ''
         if (r.phonetic) {
             if (r.phonetic.uk && r.phonetic.us) {
                 pron += `[${r.phonetic.uk} $ ${r.phonetic.us}]`
@@ -249,20 +254,21 @@ function dictionaryResult(m) {
 
         // 发音
         r.sound && r.sound.forEach(v => {
-            pron += ` <i class="dmx-icon dmx_ripple${v.isWoman ? ' dmx_pink' : ''}" data-type="${v.type}" data-src="${v.url}" title="${v.title}">${v.type === 'us' ? '&#xe674;' : '&#xe69f;'}</i>`
+            pron += ` <i class="dmx-icon dmx_ripple${v.isWoman ? ' dmx_pink' : ''}" data-type="${v.type}" data-src-mp3="${v.url}" title="${v.title}">${v.type === 'us' ? '&#xe674;' : '&#xe69f;'}</i>`
         })
 
-        let pEl = el.querySelector('.case_pronunciation')
-        pEl.innerHTML = pron
-        pEl.querySelectorAll('[data-src]').forEach(e => {
-            e.addEventListener('click', function () {
-                onActive(e)
-                playSound(m.name, e.getAttribute('data-type'), e.getAttribute('data-src'))
-            })
-        })
     }
     if (!s) s = '网络错误，请稍后再试'
     el.querySelector('.case_content').innerHTML = s
+    el.querySelector('.case_pronunciation').innerHTML = pron
+
+    // 绑定播放音频
+    el.querySelectorAll('[data-src-mp3]').forEach(e => {
+        e.addEventListener('click', function () {
+            onActive(e)
+            playSound(m.name, e.getAttribute('data-type'), e.getAttribute('data-src-mp3'))
+        })
+    })
 }
 
 function linkResult(m) {
