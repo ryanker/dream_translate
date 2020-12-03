@@ -64,9 +64,8 @@ function sogouTranslate() {
             this.langMapReverse = objectReverse(this.langMap)
             return this
         },
-        trans(q, srcLan, tarLan) {
-            srcLan = this.langMap[srcLan] || 'auto'
-            tarLan = this.langMap[tarLan] || 'zh-CHS'
+        // 2020.12.03 刚写完就改版，白破解了！要吐了。。。
+        transOld(q, srcLan, tarLan) {
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
                 let w = chrome.webRequest
@@ -146,6 +145,58 @@ function sogouTranslate() {
                 }
             })
         },
+        trans(q, srcLan, tarLan) {
+            srcLan = this.langMap[srcLan] || 'auto'
+            tarLan = this.langMap[tarLan] || 'zh-CHS'
+            return new Promise((resolve, reject) => {
+                if (q.length > 5000) return reject('The text is too large!')
+
+                let url = this.link(q, srcLan, tarLan)
+                httpGet(url, 'document').then(r => {
+                    let transOld = function () {
+                        this.transOld(q, srcLan, tarLan).then((rOld) => {
+                            resolve(rOld)
+                        }).catch(e => {
+                            reject(e)
+                        })
+                    }
+                    if (!r) {
+                        transOld()
+                        return
+                    }
+
+                    // 获取翻译结果
+                    let data
+                    let sEl = r.querySelectorAll('script')
+                    for (let i = 0; i < sEl.length; i++) {
+                        let el = sEl[i]
+                        if (el.getAttribute('src')) continue
+                        let s = el.textContent
+                        if (!s) continue
+                        let arr = s.match(/window\.__INITIAL_STATE__=(.*?);\(function\(\){var s;/m)
+                        if (arr.length < 2) continue
+                        try {
+                            data = JSON.parse(arr[1])
+                            if (data) break
+                        } catch (e) {
+                            debug('json error!')
+                        }
+                    }
+                    // console.log(data)
+                    if (data?.translate?.translateData?.translate) {
+                        let d = {}
+                        d.data = data.translate.translateData
+                        d.data.keywords = data.translate.keyword
+                        // console.log(d)
+                        resolve(this.unify(d, q, srcLan, tarLan))
+                    } else {
+                        transOld()
+                    }
+                }).catch(e => {
+                    reject(e)
+                })
+            })
+        },
         unify(r, q, srcLan, tarLan) {
             // console.log('sogou:', r, q, srcLan, tarLan)
             if (srcLan === 'auto' && r?.data?.detect?.detect) srcLan = r.data.detect.detect
@@ -185,7 +236,7 @@ function sogouTranslate() {
         },
         link(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
-            tarLan = this.langMap[tarLan] || 'zh-CN'
+            tarLan = this.langMap[tarLan] || 'zh-CHS'
             return `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
         },
     }
