@@ -358,16 +358,18 @@ function queryInit(text) {
     dQuery = {action: action, text: text, source: source, target: target}
 
     let message = null
+    let inpEl = $(`${action}_input`)
+    if (!inpEl) return
     if (action === 'translate') {
-        $(`${action}_input`).innerText = text
+        inpEl.innerText = text
         translateCaseInit()
         message = {action: action, text: text, srcLan: source, tarLan: target}
     } else if (action === 'dictionary') {
-        $(`${action}_input`).value = text
+        inpEl.value = text
         dictionaryCaseInit()
         message = {action: action, text: text}
     } else if (action === 'search') {
-        $(`${action}_input`).value = text
+        inpEl.value = text
         searchCaseInit()
         message = {action: action, text: text}
     }

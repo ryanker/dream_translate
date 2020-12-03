@@ -64,13 +64,19 @@ function longmanDictionary() {
                 e.setAttribute('referrerPolicy', 'no-referrer')
             })
 
-            // 清理
+            // 链接
             el.querySelectorAll('a').forEach(e => {
                 let href = e.getAttribute('href')
+                if (e.className === 'crossRef' && href.includes('#')) {
+                    e.remove() // 清理掉本页跳转链接
+                    return
+                }
                 e.setAttribute('_href', href)
                 e.removeAttribute('href')
                 e.setAttribute('data-search', 'true')
             })
+
+            // 清理
             el.querySelectorAll('[id]').forEach(e => {
                 e.removeAttribute('id')
             })
