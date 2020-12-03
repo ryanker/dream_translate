@@ -10,9 +10,21 @@ function longmanDictionary() {
             // let arr = r.match(/<div class="dictionary">([\s\S]*?)<\/div><!-- End of DIV dictionary-->/m)
             // console.log(arr)
             let el = r.querySelector('.dictionary')
-            let headEl = el.querySelector('.Head')
+            if (!el) {
+                el = r.querySelector('.page_content')
+                if (!el) return {type: 'html', text: q, html: 'Failed to get data!'}
+
+                let html = ''
+                let tEl = el.querySelector('.search_title')
+                if (tEl) html += `<div><b>${tEl.innerText}</b></div>`
+                el.querySelectorAll('.didyoumean > li > a').forEach(e => {
+                    html += `<div data-search="true">${e.innerText}</div>`
+                })
+                return {type: 'html', text: q, html: html}
+            }
 
             // 音标
+            let headEl = el.querySelector('.Head')
             headEl.querySelector('.PronCodes > .AMEVARPRON > .neutral')?.remove()
             let ukPron = headEl.querySelector('.PronCodes > .PRON')?.innerText?.trim()
             let usPron = headEl.querySelector('.PronCodes > .AMEVARPRON')?.innerText?.trim()
@@ -47,6 +59,7 @@ function longmanDictionary() {
 
             // 清理
             el.querySelectorAll('a').forEach(e => {
+                e.setAttribute('data-search', 'true')
                 e.removeAttribute('href')
             })
             el.querySelectorAll('[id]').forEach(e => {
@@ -62,6 +75,8 @@ function longmanDictionary() {
             return new Promise((resolve, reject) => {
                 if (q.length > 100) return reject('The text is too large!')
                 let url = `https://www.ldoceonline.com/search/english/direct/?q=${encodeURIComponent(q)}`
+                // q = q.trim().replace(/\s+/g, ' ').replace(/\W/g, '-')
+                // let url = `https://www.ldoceonline.com/dictionary/${q}`
                 httpGet(url, 'document').then(r => {
                     if (r) {
                         resolve(this.unify(r, q))

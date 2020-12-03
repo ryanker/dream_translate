@@ -269,6 +269,13 @@ function dictionaryResult(m) {
             playSound(m.name, e.getAttribute('data-type'), e.getAttribute('data-src-mp3'))
         })
     })
+
+    // 绑定点击搜索
+    el.querySelectorAll('[data-search=true]').forEach(e => {
+        e.addEventListener('click', function () {
+            queryInit(e.innerText?.trim())
+        })
+    })
 }
 
 function linkResult(m) {
@@ -350,17 +357,21 @@ function queryInit(text) {
     if (dQuery.action === action && dQuery.text === text && dQuery.source === source && dQuery.target === target) return
     dQuery = {action: action, text: text, source: source, target: target}
 
+    let message = null
     if (action === 'translate') {
         $(`${action}_input`).innerText = text
         translateCaseInit()
+        message = {action: action, text: text, srcLan: source, tarLan: target}
     } else if (action === 'dictionary') {
         $(`${action}_input`).value = text
         dictionaryCaseInit()
+        message = {action: action, text: text}
     } else if (action === 'search') {
         $(`${action}_input`).value = text
         searchCaseInit()
+        message = {action: action, text: text}
     }
-    sendMessage({action: action, text: text, srcLan: source, tarLan: target}).catch(e => {
+    message && sendMessage(message).catch(e => {
         alert('梦想翻译已更新，请刷新页面激活。', 'error')
     })
 }
