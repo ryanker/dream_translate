@@ -661,6 +661,10 @@ a:hover {
     }
 }
 
+.dmx_pink {
+    color: deeppink;
+}
+
 /* ==================== dictionary ==================== */
 #head {
     z-index: 9;

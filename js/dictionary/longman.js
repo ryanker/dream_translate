@@ -12,7 +12,7 @@ function longmanDictionary() {
             let el = r.querySelector('.dictionary')
             if (!el) {
                 el = r.querySelector('.page_content')
-                if (!el) return {type: 'html', text: q, html: 'Failed to get data!'}
+                if (!el) return {text: q, html: 'Failed to get data!'}
 
                 let html = ''
                 let tEl = el.querySelector('.search_title')
@@ -21,7 +21,7 @@ function longmanDictionary() {
                     let href = e.getAttribute('href')
                     html += `<div data-search="true" _href="${href}">${e.innerText}</div>`
                 })
-                return {type: 'html', text: q, html: html}
+                return {text: q, html: html}
             }
 
             // 音标
@@ -85,7 +85,7 @@ function longmanDictionary() {
                 e.remove()
             })
             el.className = 'longman_dict'
-            return {type: 'html', text: q, phonetic: phonetic, sound: sound, html: el.outerHTML}
+            return {text: q, phonetic: phonetic, sound: sound, html: el.outerHTML}
         },
         query(q) {
             return new Promise((resolve, reject) => {
