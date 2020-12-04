@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
             saveSetting(setting)
             loadJs(uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList))), 'translate')
             loadJs(Object.keys(conf.dictionaryList), 'dictionary')
+            loadJs(Object.keys(conf.searchList), 'search')
         })
 
         // delete conf.setting
@@ -125,6 +126,22 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
             sendMessage(tabId, {action: m.action, name: m.name, type: m.type, error: `${title}发音出错`})
         })
     } else if (m.action === 'search') {
+        setting.searchList.forEach(name => {
+            sdkInit(`${name}Search`, sd => {
+                if (!sd) return
+
+                // 查词
+                sd.query(m.text).then(r => {
+                    debug(`${name}:`, r)
+                    sendMessage(tabId, {action: m.action, name: name, result: r})
+                }).catch(e => {
+                    sendMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
+                })
+
+                // 链接
+                sendMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text)})
+            })
+        })
     }
 })
 

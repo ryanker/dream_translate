@@ -32,6 +32,7 @@ chrome.runtime.onMessage.addListener(function (m) {
     } else if (m.action === 'dictionarySound') {
         soundResult(m, 'dictionary')
     } else if (m.action === 'search') {
+        searchResult(m)
     } else if (m.action === 'link') {
         linkResult(m)
     } else if (m.action === 'allowSelect') {
@@ -276,6 +277,16 @@ function dictionaryResult(m) {
             queryInit(e.innerText?.trim())
         })
     })
+}
+
+function searchResult(m) {
+    let el = $(`${m.name}_search_case`)
+    if (!el) return
+    let s = ''
+    let r = m.result
+    if (r && r.html) s = r.html
+    if (!s) s = '网络错误，请稍后再试'
+    el.querySelector('.case_content').innerHTML = s
 }
 
 function linkResult(m) {
