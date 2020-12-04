@@ -10,9 +10,7 @@
       "youdao"
     ],
     "translateTTSList": [
-      "google",
-      "baidu",
-      "youdao"
+      "google"
     ],
     "dictionaryList": [
       "youdao",
@@ -20,7 +18,7 @@
       "longman"
     ],
     "dictionarySoundList": [
-      "dictcn"
+      "bing"
     ],
     "dictionaryReader": "us",
     "searchList": [
@@ -69,9 +67,11 @@
     "macmillan": "麦克米伦词典"
   },
   "dictionarySoundList": {
+    "youdao": "有道词典",
+    "bing": "必应词典",
+    "dictcn": "海词词典",
     "longman": "朗文词典",
-    "merriam": "韦伯词典",
-    "dictcn": "海词词典"
+    "merriam": "韦伯词典"
   },
   "searchList": {
     "baidu": "百度搜索",
