@@ -15,8 +15,9 @@
       "youdao"
     ],
     "dictionaryList": [
-      "longman",
-      "dictcn"
+      "youdao",
+      "bing",
+      "longman"
     ],
     "dictionarySoundList": [
       "dictcn"
@@ -34,8 +35,8 @@
     "bing": "微软翻译",
     "qq": "腾讯翻译",
     "alibaba": "阿里翻译",
-    "so": "360翻译",
-    "sogou": "搜狗翻译"
+    "sogou": "搜狗翻译",
+    "so": "360翻译"
   },
   "translateTTSList": {
     "baidu": "百度朗读",
