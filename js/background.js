@@ -11,8 +11,15 @@ document.addEventListener('DOMContentLoaded', function () {
             setting = Object.assign({}, conf.setting, result.setting)
             if (setting.scribble === 'off') setBrowserAction('OFF')
             saveSetting(setting)
+
+            // 加载 js
             loadJs(uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList))), 'translate')
             loadJs(Object.keys(conf.dictionaryList), 'dictionary')
+
+            // 添加搜索菜单
+            setting.searchMenus.forEach(name => {
+                addMenu(name)
+            })
         })
 
         // delete conf.setting
@@ -40,12 +47,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 添加上下文菜单
 chrome.contextMenus.create({
-    "title": "梦想翻译“%s”",
-    "contexts": ["selection"],
-    "onclick": function (info, tab) {
+    title: "梦想翻译“%s”",
+    contexts: ["selection"],
+    onclick: function (info, tab) {
         tab && sendMessage(tab.id, {action: 'contextMenus', text: info.selectionText})
     }
 })
+
+function addMenu(name) {
+    let lv = conf.searchList[name]
+    if (!lv) return
+    chrome.contextMenus.create({
+        id: name + '_page',
+        title: lv.title + '首页',
+        contexts: ["page"],
+        onclick: function () {
+            open((new URL(lv.url)).origin + '?tn=dream_translate')
+        }
+    })
+    chrome.contextMenus.create({
+        id: name + '_selection',
+        title: lv.title + "“%s”",
+        contexts: ["selection"],
+        onclick: function (info) {
+            open(lv.url.format(decodeURIComponent(info.selectionText)) + '&tn=dream_translate')
+        }
+    })
+}
+
+function removeMenu(name) {
+    chrome.contextMenus.remove(name + '_page')
+    chrome.contextMenus.remove(name + '_selection')
+}
 
 // 获得所有语音的列表
 chrome.tts.getVoices(function (voices) {

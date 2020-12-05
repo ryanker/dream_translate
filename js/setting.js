@@ -17,6 +17,7 @@ function init() {
     settingBoxHTML('setting_dictionary_list', 'dictionaryList', conf.dictionaryList)
     settingBoxHTML('setting_dictionary_sound_list', 'dictionarySoundList', conf.dictionarySoundList)
     settingBoxHTML('setting_search_list', 'searchList', conf.searchList)
+    settingBoxHTML('setting_search_menus', 'searchMenus', conf.searchList)
 
     // 绑定导航
     navigate('navigate', '.setting_box')
@@ -32,6 +33,7 @@ function init() {
     setValue('dictionarySoundList', setting.dictionarySoundList)
     setValue('dictionaryReader', setting.dictionaryReader)
     setValue('searchList', setting.searchList)
+    setValue('searchMenus', setting.searchMenus)
 
     // 绑定值
     bindValue('scribble', setting.scribble)
@@ -44,6 +46,10 @@ function init() {
     bindValue('dictionarySoundList', setting.dictionarySoundList)
     bindValue('dictionaryReader', setting.dictionaryReader)
     bindValue('searchList', setting.searchList)
+    bindValue('searchMenus', setting.searchMenus)
+
+    // 绑定右键菜单设置
+    bindSearchMenus()
 
     // 绑定顺序展示
     bindSortHTML('展示顺序：', 'setting_translate_sort', 'translateList', setting.translateList, conf.translateList)
@@ -51,6 +57,7 @@ function init() {
     bindSortHTML('展示顺序：', 'setting_dictionary_sort', 'dictionaryList', setting.dictionaryList, conf.dictionaryList)
     bindSortHTML('朗读顺序：', 'setting_dictionary_sound_sort', 'dictionarySoundList', setting.dictionarySoundList, conf.dictionarySoundList)
     bindSortHTML('展示顺序：', 'setting_search_sort', 'searchList', setting.searchList, conf.searchList)
+    bindSortHTML('展示顺序：', 'setting_search_menus_sort', 'searchMenus', setting.searchMenus, conf.searchList)
 
     // 绑定是否显示"朗读"参数
     bindShow('setting_dictionary_reader', 'dictionarySoundList', setting.dictionarySoundList)
@@ -156,6 +163,14 @@ function bindValue(name, value) {
                 value = this.checked ? val : ''
             }
             bg.setSetting(name, value)
+        })
+    })
+}
+
+function bindSearchMenus() {
+    N('searchMenus').forEach(v => {
+        v.addEventListener('change', function () {
+            this.checked ? bg.addMenu(this.value) : bg.removeMenu(this.value)
         })
     })
 }
