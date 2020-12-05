@@ -1,0 +1,751 @@
+.longman_dict .Sense img {
+    float: right;
+    width: 30%;
+    max-width: 400px;
+    margin-left: 5px;
+}
+
+.longman_dict .Sense:after {
+    display: block;
+    content: '';
+    clear: both;
+}
+
+.longman_dict .infls,
+.longman_dict .description,
+.longman_dict .title,
+.longman_dict .url,
+.longman_dict .summary,
+.longman_dict .og,
+.longman_dict .infls,
+.longman_dict .description,
+.longman_dict .title,
+.longman_dict .url,
+.longman_dict .summary,
+.longman_dict .og,
+.longman_dict .assetref,
+.longman_dict .assetref,
+.longman_dict .dictentry,
+.longman_dict .dictionary_intro,
+.longman_dict .topic_intro,
+.longman_dict .exaGroup,
+.longman_dict .exaGroup .exaEntry,
+.longman_dict .exaGroup .title,
+.longman_dict .exaGroup .exa,
+.ldoceEntry .Entry,
+.ldoceEntry .ErrorBox,
+.ldoceEntry .EXAMPLE,
+.ldoceEntry .GramExa,
+.ldoceEntry .PhrVbEntry,
+.ldoceEntry .RunOn,
+.ldoceEntry .Sense,
+.ldoceEntry .Subsense,
+.ldoceEntry .ColloBox,
+.ldoceEntry .ThesBox,
+.ldoceEntry .F2NBox,
+.ldoceEntry .GramBox,
+.ldoceEntry .HEADING.newline,
+.ldoceEntry .Collocate,
+.ldoceEntry .Exponent,
+.ldoceEntry .EXPL,
+.ldoceEntry .COLLEXA,
+.ldoceEntry .THESEXA,
+.ldoceEntry .LearnerItem,
+.ldoceEntry .ColloExa,
+.bussdictEntry .Box,
+.bussdictEntry .Entry,
+.bussdictEntry .ColloExa,
+.bussdictEntry .ErrorBox,
+.bussdictEntry .EXAMPLE,
+.bussdictEntry .GramExa,
+.bussdictEntry .PhrVbEntry,
+.bussdictEntry .Sense,
+.bussdictEntry .Subsense,
+.bussdictEntry .ColloBox,
+.bussdictEntry .ThesBox,
+.bussdictEntry .F2NBox,
+.bussdictEntry .GramBox,
+.bussdictEntry .UsageBox,
+.bussdictEntry .HEADING.newline,
+.bussdictEntry .SECHEADING,
+.bussdictEntry .subheading,
+.bussdictEntry .Collocate.newline,
+.bussdictEntry .Exponent,
+.bussdictEntry .GramBox .EXPL,
+.bussdictEntry .EXPL.newline,
+.bussdictEntry .LearnerItem,
+.bussdictEntry .CompareWord,
+.bussdictEntry .EXP,
+.bussdictEntry .boxheader,
+.bussdictEntry .SubEntry {
+    display: block;
+}
+
+.ldoceEntry .FIELD,
+.ldoceEntry .HWD,
+.ldoceEntry .NOTE,
+.ldoceEntry .Noteprompt,
+.ldoceEntry .PIC,
+.ldoceEntry .PICCAL,
+.ldoceEntry .ACTIV,
+.ldoceEntry .BOX,
+.ldoceEntry .COMMENT,
+.ldoceEntry .USAGE,
+.bussdictEntry .ACTIV,
+.bussdictEntry .COMMENT,
+.bussdictEntry .FIELD,
+.bussdictEntry .HWD,
+.bussdictEntry .NOTE,
+.bussdictEntry .Noteprompt,
+.bussdictEntry .PIC,
+.bussdictEntry .PICCAL,
+.bussdictEntry .FIELDXX,
+.bussdictEntry .USAGE,
+.bussdictEntry .Crossrefto .REFLEX,
+.longman_dict .suppressed,
+.longman_dict .verbTable .view_less,
+.longman_dict .verbTable .next_tenses {
+    display: none;
+}
+
+.bussdictEntry .SubEntry .HWD,
+.bussdictEntry .GramBox.nobox,
+.bussdictEntry .GramBox.nobox .EXPL,
+.bussdictEntry .Collocate.inline {
+    display: inline;
+}
+
+.longman_dict .Crossrefto,
+.longman_dict .assettype,
+.longman_dict .exaGroup .title,
+.longman_dict .exaGroup .NodeW,
+.longman_dict .wordfams,
+.longman_dict .etym .Head,
+.longman_dict .verbTable .lemma,
+.longman_dict .verbTable .Simple_Form .aux,
+.longman_dict .verbTable .col1,
+.longman_dict .verbTable .view_more,
+.longman_dict .verbTable .view_less,
+.longman_dict .verbTable .verb_form,
+.ldoceEntry .ABBR,
+.ldoceEntry .AMEQUIV,
+.ldoceEntry .BREQUIV,
+.ldoceEntry .COLLO,
+.ldoceEntry .COLLOINEXA,
+.ldoceEntry .COMP,
+.ldoceEntry .Crossrefto,
+.ldoceEntry .DERIV,
+.ldoceEntry .FULLFORM,
+.ldoceEntry .GRAM,
+.ldoceEntry .HINTBOLD,
+.ldoceEntry .HINTTITLE,
+.ldoceEntry .HOMNUM,
+.ldoceEntry .HYPHENATION,
+.ldoceEntry .PHRVBHWD,
+.ldoceEntry .LEXUNIT,
+.ldoceEntry .LEXVAR,
+.ldoceEntry .OPP,
+.ldoceEntry .ORTHVAR,
+.ldoceEntry .PASTPART,
+.ldoceEntry .PASTTENSE,
+.ldoceEntry .PLURALFORM,
+.ldoceEntry .POS,
+.ldoceEntry .PRESPART,
+.ldoceEntry .PRESPARTX,
+.ldoceEntry .PROPFORM,
+.ldoceEntry .PROPFORMPREP,
+.ldoceEntry .PTandPP,
+.ldoceEntry .PTandPPX,
+.ldoceEntry .REFHWD,
+.ldoceEntry .REFLEX,
+.ldoceEntry .RELATEDWD,
+.ldoceEntry .SIGNPOST,
+.ldoceEntry .SUPERL,
+.ldoceEntry .SYN,
+.ldoceEntry .T3PERSSING,
+.ldoceEntry .T3PERSSINGX,
+.ldoceEntry .UNCLASSIFIED,
+.ldoceEntry .warning,
+.ldoceEntry .sensenum,
+.ldoceEntry .synopp,
+.ldoceEntry .FREQ,
+.ldoceEntry .AC,
+.ldoceEntry .HEADING,
+.ldoceEntry .heading,
+.ldoceEntry .SECHEADING,
+.ldoceEntry .subheading,
+.ldoceEntry .COLLOC,
+.ldoceEntry .EXP,
+.ldoceEntry .EXPR,
+.ldoceEntry .keycollo,
+.ldoceEntry .THESPROPFORM,
+.ldoceEntry .DEFBOLD,
+.bussdictEntry .GRAM,
+.bussdictEntry .POS,
+.bussdictEntry .ABBR,
+.bussdictEntry .AMEQUIV,
+.bussdictEntry .BREQUIV,
+.bussdictEntry .COLLO,
+.bussdictEntry .COMP,
+.bussdictEntry .COLLOINEXA,
+.bussdictEntry .DERIV,
+.bussdictEntry .FREQ,
+.bussdictEntry .LEVEL,
+.bussdictEntry .FULLFORM,
+.bussdictEntry .HINTBOLD,
+.bussdictEntry .HINTTITLE,
+.bussdictEntry .HOMNUM,
+.bussdictEntry .HYPHENATION,
+.bussdictEntry .LEXUNIT,
+.bussdictEntry .LEXVAR,
+.bussdictEntry .OPP,
+.bussdictEntry .ORTHVAR,
+.bussdictEntry .PASTPART,
+.bussdictEntry .PASTTENSE,
+.bussdictEntry .PHRVBHWD,
+.bussdictEntry .PLURALFORM,
+.bussdictEntry .PRESPART,
+.bussdictEntry .PRESPARTX,
+.bussdictEntry .PROPFORM,
+.bussdictEntry .PROPFORMPREP,
+.bussdictEntry .PTandPP,
+.bussdictEntry .PTandPPX,
+.bussdictEntry .REFLEX,
+.bussdictEntry .RELATEDWD,
+.bussdictEntry .SIGNPOST,
+.bussdictEntry .SUPERL,
+.bussdictEntry .SYN,
+.bussdictEntry .T3PERSSING,
+.bussdictEntry .T3PERSSINGX,
+.bussdictEntry .UNCLASSIFIED,
+.bussdictEntry .THESPROPFORM,
+.bussdictEntry .SECHEADING,
+.bussdictEntry .subheading,
+.bussdictEntry .HEADING,
+.bussdictEntry .heading,
+.bussdictEntry .warning,
+.bussdictEntry .sensenum,
+.bussdictEntry .synopp,
+.bussdictEntry .Gramref,
+.bussdictEntry .COLLOC,
+.bussdictEntry .EXP,
+.bussdictEntry .EXPR,
+.bussdictEntry .keycollo,
+.bussdictEntry .DEFBOLD,
+.bussdictEntry .boxheader,
+.bussdictEntry .SubEntry .HWD {
+    font-weight: bold;
+}
+
+.ldoceEntry .REFHOMNUM,
+.bussdictEntry .REFHOMNUM {
+    vertical-align: super;
+    font-size: 60%;
+}
+
+.bussdictEntry .HOMNUM,
+.longman_dict .etym .Head .HOMNUM {
+    vertical-align: super;
+    font-size: 12pt;
+}
+
+.ldoceEntry .AC,
+.ldoceEntry .synopp {
+    color: #fff;
+    border-color: #f1d600;
+    background-color: #f1d600;
+}
+
+.ldoceEntry .EXPL .cross,
+.ldoceEntry .GramBox .EXPL .dont_say,
+.ldoceEntry .BADEXA {
+    color: red;
+}
+
+.ldoceEntry .FREQ,
+.bussdictEntry .FREQ,
+.bussdictEntry .LEVEL {
+    color: red;
+    border-color: red;
+}
+
+.ldoceEntry .LEVEL {
+    color: red;
+    font-size: 120%;
+}
+
+.ldoceEntry .frequent .HOMNUM,
+.ldoceEntry .HOMNUM {
+    color: red;
+    vertical-align: super;
+    font-size: 12pt;
+}
+
+.ldoceEntry .frequent .HYPHENATION,
+.ldoceEntry .HYPHENATION,
+.ldoceEntry .PHRVBHWD {
+    color: red;
+    font-size: 160%;
+}
+
+.ldoceEntry .warning,
+.bussdictEntry .warning {
+    color: red;
+    font-style: normal;
+}
+
+.ldoceEntry .GramBox .CROSS .neutral {
+    color: red;
+    margin-right: 10px;
+}
+
+.Entry .topic,
+.topicCloud .topic_other {
+    color: red;
+    text-decoration: underline;
+}
+
+.ldoceEntry .GRAM,
+.bussdictEntry .GRAM {
+    color: green;
+    margin: 0 5px 10px 3px;
+}
+
+.ldoceEntry .POS,
+.bussdictEntry .POS {
+    color: green;
+    margin: 0 0 0 10px;
+}
+
+.longman_dict .pos {
+    color: green;
+    font-weight: normal;
+}
+
+.ldoceEntry .REGISTERLAB {
+    color: purple;
+    font-style: italic;
+}
+
+.ldoceEntry .SIGNPOST {
+    background-color: #f18500;
+    color: white;
+    font-size: 79%;
+    text-transform: uppercase;
+    border-radius: 5px;
+    padding: 0 3px;
+    letter-spacing: 1px;
+}
+
+.longman_dict .Crossrefto,
+.ldoceEntry .RELATEDWD {
+    color: blue;
+}
+
+.bussdictEntry .synopp {
+    font-style: normal;
+    color: darkblue;
+}
+
+.longman_dict .assettype,
+.ldoceEntry .Thesref,
+.ldoceEntry .GEO,
+.ldoceEntry .geo,
+.ldoceEntry .GLOSS,
+.ldoceEntry .LINKWORD,
+.ldoceEntry .keycollo,
+.bussdictEntry .LINKWORD,
+.bussdictEntry .COLLOC.key,
+.bussdictEntry .keycollo {
+    color: #364395;
+}
+
+.bussdictEntry .Box,
+.ldoceEntry .ColloBox,
+.ldoceEntry .ThesBox,
+.ldoceEntry .F2NBox,
+.ldoceEntry .GramBox {
+    border-radius: 5px;
+    border: 1px solid #364395;
+    padding: 10px;
+    margin: 8px 0;
+}
+
+.ldoceEntry .HEADING,
+.ldoceEntry .heading,
+.bussdictEntry .SubEntry .HWD {
+    color: #364395;
+    font-size: 120%;
+}
+
+.bussdictEntry .GEO,
+.bussdictEntry .geo,
+.bussdictEntry .REGISTERLAB {
+    color: #364395;
+    font-style: italic;
+}
+
+.bussdictEntry .GLOSS {
+    color: #364395;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.bussdictEntry .PHRVBHWD,
+.bussdictEntry .HEADING,
+.bussdictEntry .heading,
+.bussdictEntry .Gramref {
+    color: #364395;
+    font-size: 120%;
+}
+
+.bussdictEntry .boxheader {
+    background-color: #364395;
+    color: #fff;
+}
+
+.longman_dict .dictionary_intro,
+.longman_dict .topic_intro {
+    background-color: #35a3ff;
+    color: #fff;
+    padding-left: 10px;
+    margin: 5px 0 10px -7px;
+}
+
+.longman_dict .assets_intro,
+.longman_dict .asset_intro {
+    border: 1px solid #f1d600;
+    background-color: #f1d600;
+    color: #fff;
+    font-weight: normal;
+    border-radius: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.longman_dict .verbTable table {
+    background-color: #fae660;
+    margin-bottom: 10px;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.ldoceEntry .SECHEADING,
+.ldoceEntry .subheading {
+    display: table;
+    border-radius: 5px;
+    border: solid #6f469d 2px;
+    padding-left: 4px;
+    padding-right: 15px;
+    margin: 10px 0;
+    color: white;
+    text-transform: uppercase;
+    background-color: #6f469d;
+}
+
+.ldoceEntry .amefile {
+    color: #4693db;
+    font-size: 130%;
+    padding-left: 5px;
+}
+
+.ldoceEntry .brefile {
+    color: #fa6360;
+    font-size: 130%;
+    padding-left: 5px;
+}
+
+.ldoceEntry .neutral,
+.verbTable .aux,
+.verbTable .verb_form,
+.ldoceEntry .sensenum {
+    color: black;
+}
+
+.ldoceEntry .sensenum {
+    font-style: normal;
+}
+
+.longman_dict .GramBox {
+    color: black;
+    background-color: #fff;
+}
+
+.bussdictEntry .Box .EXAMPLE {
+    color: black;
+    display: inline;
+    margin-left: 0;
+    font-style: italic;
+}
+
+.verbTable .lemma {
+    color: black;
+    font-size: 120%;
+    margin: 0 0 0 10px;
+}
+
+.verbTable .view_more,
+.verbTable .view_less {
+    color: black;
+    text-align: center;
+    padding: 20px 0 10px;
+}
+
+.verbTable .geo {
+    color: black;
+    font-style: italic;
+    font-weight: normal;
+}
+
+.longman_dict .exaGroup .title {
+    color: black;
+    font-size: 110%;
+    margin: 10px 0 0 5px;
+}
+
+.longman_dict .Entry .related_topics {
+    color: black;
+    padding: 0 4px 1px 0;
+    font-size: 16px;
+}
+
+.ldoceEntry .COLLEXA,
+.ldoceEntry .THESEXA {
+    color: gray;
+}
+
+.ldoceEntry .exafile {
+    color: gray;
+    font-style: normal;
+    font-size: 120%;
+    padding: 5px;
+}
+
+.ldoceEntry .EXAMPLE,
+.bussdictEntry .EXAMPLE,
+.longman_dict .exaGroup .exa {
+    color: gray;
+    margin-left: 10px;
+}
+
+.bussdictEntry .supp,
+.bussdictEntry .SIGNPOST {
+    background-color: gray;
+}
+
+.longman_dict .verbTable .col2 {
+    color: gray;
+    width: 150px
+}
+
+.longman_dict a {
+    border-bottom: thin dotted gray;
+}
+
+.ldoceEntry .RunOn {
+    margin-bottom: 10px;
+}
+
+.longman_dict .right_col .yellow_box {
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.longman_dict .dictentry,
+.longman_dict .exaGroup .exaEntry,
+.longman_dict .exaGroup .exaGroup,
+.longman_dict .verbTable .entry {
+    margin-bottom: 20px;
+}
+
+.ldoceEntry .Sense,
+.bussdictEntry .Sense,
+.longman_dict .verbTable .entry {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.bussdictEntry .SubEntry.embedded {
+    margin-top: -5px;
+    margin-left: 20px;
+    margin-bottom: 0;
+}
+
+.bussdictEntry .SubEntry {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.longman_dict .yellow_box {
+    margin-top: 20px;
+    display: table;
+}
+
+.ldoceEntry .Entry,
+.bussdictEntry .Entry {
+    font-size: 12pt;
+    text-align: justify;
+    margin-top: 8px;
+}
+
+.ldoceEntry .Subsense,
+.bussdictEntry .ColloExa,
+.bussdictEntry .GramExa,
+.bussdictEntry .Subsense {
+    margin-left: 10px;
+}
+
+.ldoceEntry .PROPFORM,
+.ldoceEntry .PROPFORMPREP,
+.ldoceEntry .COLLO,
+.bussdictEntry .SubEntry {
+    margin-left: 20px;
+}
+
+.ldoceEntry .Crossrefto,
+.ldoceEntry .DERIV {
+    font-size: 120%;
+}
+
+.ldoceEntry .Entry {
+    font-size: 11pt;
+    text-align: justify;
+}
+
+.ldoceEntry .HINTITALIC,
+.ldoceEntry .STRONG,
+.ldoceEntry .GOODCOLLO,
+.bussdictEntry .COLLOINEXA,
+.bussdictEntry .HINTITALIC,
+.bussdictEntry .STRONG,
+.bussdictEntry .COLLEXA,
+.bussdictEntry .THESEXA,
+.bussdictEntry .GOODCOLLO,
+.bussdictEntry .SECHEADING,
+.bussdictEntry .subheading {
+    font-style: italic;
+}
+
+.ldoceEntry .italic,
+.ldoceEntry .infllab,
+.bussdictEntry .italic,
+.bussdictEntry .infllab {
+    font-style: italic;
+    font-weight: normal;
+}
+
+.bussdictEntry .SECHEADING,
+.bussdictEntry .subheading,
+.bussdictEntry .UNDERLINE {
+    text-decoration: underline;
+}
+
+.ldoceEntry .OBJECT {
+    font-weight: normal;
+}
+
+.ldoceEntry .synopp,
+.ldoceEntry .FREQ,
+.ldoceEntry .AC {
+    display: inline-block;
+    font-style: normal;
+    text-transform: uppercase;
+    border-radius: 5px;
+    border: solid 1px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.longman_dict .GramBox .boxheader,
+.longman_dict .ThesBox .heading,
+.longman_dict .ColloBox .heading {
+    line-height: 2em;
+}
+
+.longman_dict .ColloBox .heading {
+    margin: 0 10px 0 0;
+}
+
+.ldoceEntry .Collocate,
+.ldoceEntry .Exponent {
+    margin: 15px 0 0 5px;
+}
+
+.ldoceEntry .BADCOLLO {
+    text-decoration: line-through;
+}
+
+.bussdictEntry .DERIV {
+    font-size: 120%;
+}
+
+.bussdictEntry .HYPHENATION {
+    font-size: 160%;
+}
+
+.bussdictEntry .OBJECT {
+    font-weight: normal;
+}
+
+.bussdictEntry .REFHWD {
+    text-transform: lowercase;
+    font-style: normal;
+    font-variant: small-caps;
+}
+
+.bussdictEntry .neutral {
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+}
+
+.bussdictEntry .sensenum {
+    font-style: normal;
+    margin-right: 5px;
+    margin-left: 3px;
+}
+
+.bussdictEntry .gramref {
+    margin: 5px 0;
+}
+
+.bussdictEntry .BADCOLLO,
+.bussdictEntry .BADEXA {
+    text-decoration: line-through;
+}
+
+.verbTable td {
+    padding: 0 10px;
+}
+
+.verbTable .col1 {
+    color: #333333;
+    padding: 20px 10px 0;
+    font-size: 14px;
+    text-decoration: underline
+}
+
+.verbTable .view_more span,
+.verbTable .view_less span {
+    cursor: pointer;
+}
+
+.verbTable .header {
+    background-color: #333333;
+    color: #fff;
+    padding: 0 0 0 10px;
+    font-size: 120%;
+}
+
+.longman_dict .wordfams .crossRef,
+.longman_dict .wordfams .w {
+    margin: 0 6px;
+}
+
+.longman_dict .asset {
+    margin-top: 20px;
+}
+
+.longman_dict .Entry .topics_container {
+    display: table;
+}

@@ -74,11 +74,42 @@
     "merriam": "韦伯词典"
   },
   "searchList": {
-    "baidu": "百度搜索",
-    "google": "谷歌搜索",
-    "so": "360搜索",
-    "sogou": "搜狗搜索",
-    "bing": "必应搜索"
+    "baidu": {
+      "title": "百度搜索",
+      "menuTitle": "百度一下“%s”",
+      "url": "https://www.baidu.com/s?wd={0}"
+    },
+    "google": {
+      "title": "谷歌搜索",
+      "menuTitle": "谷歌搜索“%s”",
+      "url": "https://www.google.com/search?q={0}"
+    },
+    "so": {
+      "title": "360搜索",
+      "menuTitle": "360搜索“%s”",
+      "url": "https://www.so.com/s?q={0}"
+    },
+    "sogou": {
+      "title": "搜狗搜索",
+      "menuTitle": "搜狗搜索“%s”",
+      "url": "https://www.sogou.com/web?query={0}"
+    },
+    "bing": {
+      "title": "必应搜索",
+      "menuTitle": "必应搜索“%s”",
+      "url": "https://cn.bing.com/search?q={0}"
+    },
+    "wikipedia": {
+      "title": "维基百科",
+      "menuTitle": "维基百科“%s”",
+      "url": "https://zh.wikipedia.org/w/index.php?search={0}"
+    },
+    "baiduBaike": {
+      "title": "百度百科",
+      "menuTitle": "百度百科“%s”",
+      "url": "https://baike.baidu.com/search/word?word={0}",
+      "icon": "baidu"
+    }
   },
   "ttsList": {
     "ara": "ar-SA",

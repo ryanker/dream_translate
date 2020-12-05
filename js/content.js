@@ -31,8 +31,6 @@ chrome.runtime.onMessage.addListener(function (m) {
         dictionaryResult(m)
     } else if (m.action === 'dictionarySound') {
         soundResult(m, 'dictionary')
-    } else if (m.action === 'search') {
-        searchResult(m)
     } else if (m.action === 'link') {
         linkResult(m)
     } else if (m.action === 'allowSelect') {
@@ -51,6 +49,13 @@ window.addEventListener("message", function (m) {
     let d = m.data
     if (d.text && typeof d.clientX === 'number' && typeof d.clientY === 'number') onQuery(d.text, d.clientX, d.clientY)
 })
+
+String.prototype.format = function () {
+    let args = arguments
+    return this.replace(/{(\d+)}/g, function (match, number) {
+        return typeof args[number] != 'undefined' ? args[number] : match
+    })
+}
 
 function init() {
     chrome.storage.local.get(['conf', 'dialogCSS', 'languageList'], function (r) {
@@ -143,12 +148,14 @@ function dialogInit() {
     $('dmx_setting').addEventListener('click', function () {
         navClean()
         settingBoxInit()
+        dQuery.action = 'setting'
     })
 
     // 更多功能
     $('dmx_more').addEventListener('click', function () {
         navClean()
         moreBoxInit()
+        dQuery.action = 'more'
     })
 }
 
@@ -279,16 +286,6 @@ function dictionaryResult(m) {
     })
 }
 
-function searchResult(m) {
-    let el = $(`${m.name}_search_case`)
-    if (!el) return
-    let s = ''
-    let r = m.result
-    if (r && r.html) s = r.html
-    if (!s) s = '网络错误，请稍后再试'
-    el.querySelector('.case_content').innerHTML = s
-}
-
 function linkResult(m) {
     let el = $(`${m.name}_${m.type}_case`)
     if (!el) return
@@ -354,39 +351,34 @@ function onQuery(text, clientX, clientY) {
 }
 
 function queryInit(text) {
-    let nav = $('dmx_navigate')
-    let el = nav.querySelector('.active')
-    if (!el) {
-        nav.querySelector(dialogConf.action ? `u[action="${dialogConf.action}"]` : 'u').click()
-        el = nav.querySelector('.active')
-    }
-    let action = el.getAttribute('action')
-
-    let source = dialogConf.source
-    let target = dialogConf.target
+    let action = S('#dmx_navigate > .active')?.getAttribute('action')
+    if (!action) return
     if (!text) return
-    if (dQuery.action === action && dQuery.text === text && dQuery.source === source && dQuery.target === target) return
-    dQuery = {action: action, text: text, source: source, target: target}
+    if (!checkChange(action, text)) return
 
     let message = null
-    let inpEl = $(`${action}_input`)
-    if (!inpEl) return
     if (action === 'translate') {
-        inpEl.innerText = text
+        $(`translate_input`).innerText = text
         translateCaseInit()
-        message = {action: action, text: text, srcLan: source, tarLan: target}
+        message = {action: action, text: text, srcLan: dialogConf.source, tarLan: dialogConf.target}
     } else if (action === 'dictionary') {
-        inpEl.value = text
+        $(`dictionary_input`).value = text
         dictionaryCaseInit()
         message = {action: action, text: text}
     } else if (action === 'search') {
-        inpEl.value = text
+        $(`search_input`).value = text
         searchCaseInit()
-        message = {action: action, text: text}
     }
     message && sendMessage(message).catch(e => {
         alert('梦想翻译已更新，请刷新页面激活。', 'error')
     })
+}
+
+function checkChange(action, text) {
+    if (dQuery.action === action && dQuery.text === text &&
+        dQuery.source === dialogConf.source && dQuery.target === dialogConf.target) return false
+    dQuery = {action: action, text: text, source: dialogConf.source, target: dialogConf.target}
+    return true
 }
 
 function getRangeBound() {
@@ -457,17 +449,26 @@ function dictionaryCaseInit() {
 
 function searchCaseInit() {
     let s = ''
-    setting.searchList.forEach(name => {
-        s += `<div class="case" id="${name}_search_case">
-        <div class="case_top fx">
-            <div class="case_right">
-                <a class="case_link"><i class="dmx-icon dmx-icon-${name}"></i>${conf.searchList[name]}</a>
-            </div>
-        </div>
-        <div class="case_content"><div class="dmx_loading"></div></div>
-    </div>`
+    let sList = setting.searchList
+    let cList = conf.searchList
+    sList.forEach(name => {
+        s += `<div class="dmx_button" data-search="${name}"><i class="dmx-icon dmx-icon-${name}"></i>${cList[name].title}</div>`
     })
     $('case_list').innerHTML = s
+
+    // 绑定点击事件
+    onD('[data-search]', 'click', function () {
+        let name = this.dataset.search
+        let lv = cList[name]
+        let text = $('search_input').value.trim()
+        if (text) {
+            let u = new URL(lv.url.format(text))
+            u.searchParams.set('tn', 'dream_translate')
+            open(u.toString())
+        } else {
+            open((new URL(lv.url)).origin)
+        }
+    })
 }
 
 function translateBoxInit() {
@@ -485,7 +486,7 @@ function translateBoxInit() {
         <div id="language_dropdown" class="fx">${langList}</div>
     </div>
 </div>
-<div id="case_list" class="main"></div>`)
+<div id="case_list" class="main fx"></div>`)
 
     // 绑定事件
     let sourceEl = $('language_source')
@@ -596,9 +597,17 @@ function dictionaryBoxInit() {
         <div id="search_but"><i class="dmx-icon dmx-icon-search"></i></div>
     </div>
 </div>
-<div id="case_list" class="main"></div>`)
+<div id="case_list" class="main fx"></div>`)
 
-    onSearch($('dictionary_input'), $('search_but'))
+    let inpEl = $('dictionary_input')
+    let butEl = $('search_but')
+    butEl.onclick = function () {
+        let text = inpEl.value.trim()
+        text && queryInit(text)
+    }
+    inpEl.addEventListener('keyup', function (e) {
+        e.key === 'Enter' && butEl.click()
+    })
 }
 
 function searchBoxInit() {
@@ -608,15 +617,12 @@ function searchBoxInit() {
         <div id="search_but"><i class="dmx-icon dmx-icon-search"></i></div>
     </div>
 </div>
-<div id="case_list" class="main"></div>`)
+<div id="case_list" class="main fx"></div>`)
 
-    onSearch($('search_input'), $('search_but'))
-}
-
-function onSearch(inpEl, butEl) {
+    let inpEl = $('search_input')
+    let butEl = $('search_but')
     butEl.onclick = function () {
-        let text = inpEl.value.trim()
-        text && queryInit(text)
+        $('case_list').querySelector('[data-search]')?.click()
     }
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
@@ -633,6 +639,20 @@ function moreBoxInit() {
 
 function $(id) {
     return shadow.getElementById(id)
+}
+
+function S(s) {
+    return shadow.querySelector(s)
+}
+
+function D(s) {
+    return shadow.querySelectorAll(s)
+}
+
+function onD(s, type, listener, options) {
+    D(s).forEach(v => {
+        v.addEventListener(type, listener, options)
+    })
 }
 
 // let id = chrome.i18n.getMessage('@@extension_id')
