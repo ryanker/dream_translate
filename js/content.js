@@ -452,7 +452,8 @@ function searchCaseInit() {
     let sList = setting.searchList
     let cList = conf.searchList
     sList.forEach(name => {
-        s += `<div class="dmx_button" data-search="${name}"><i class="dmx-icon dmx-icon-${name}"></i>${cList[name].title}</div>`
+        let v = cList[name]
+        s += `<div class="dmx_button" data-search="${name}"><i class="dmx-icon dmx-icon-${v.icon || name}"></i>${v.title}</div>`
     })
     $('case_list').innerHTML = s
 
@@ -462,11 +463,9 @@ function searchCaseInit() {
         let lv = cList[name]
         let text = $('search_input').value.trim()
         if (text) {
-            let u = new URL(lv.url.format(text))
-            u.searchParams.set('tn', 'dream_translate')
-            open(u.toString())
+            open(lv.url.format(decodeURIComponent(text)) + '&tn=dream_translate')
         } else {
-            open((new URL(lv.url)).origin)
+            open((new URL(lv.url)).origin + '?tn=dream_translate')
         }
     })
 }

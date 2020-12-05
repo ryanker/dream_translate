@@ -170,12 +170,13 @@ function bindSortHTML(preName, id, name, value, list) {
     })
 }
 
-function sortShow(preName, id, value, list) {
+function sortShow(preName, id, value, obj) {
     let s = ''
     if (value.length > 0) {
         s = preName
         value.forEach((v, k) => {
-            s += `${k > 0 ? ' > ' : ''}${list[v]}`
+            let o = obj[v]
+            s += (k > 0 ? ' > ' : '') + (o.title || o)
         })
     }
     $(id).innerHTML = s
@@ -194,7 +195,8 @@ function bindShow(id, name, value) {
 function settingBoxHTML(id, name, obj) {
     let s = ''
     Object.keys(obj).forEach(v => {
-        s += `<label><input type="checkbox" name="${name}" value="${v}">${obj[v]}</label>`
+        let o = obj[v]
+        s += `<label><input type="checkbox" name="${name}" value="${v}">${o.title || o}</label>`
     })
     let el = $(id)
     el.innerHTML = s

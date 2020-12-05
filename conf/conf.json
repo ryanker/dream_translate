@@ -23,7 +23,12 @@
     "dictionaryReader": "us",
     "searchList": [
       "baidu",
-      "google"
+      "google",
+      "bing",
+      "so",
+      "sogou",
+      "wikipedia",
+      "baiduBaike"
     ]
   },
   "translateList": {
@@ -84,6 +89,11 @@
       "menuTitle": "谷歌搜索“%s”",
       "url": "https://www.google.com/search?q={0}"
     },
+    "bing": {
+      "title": "必应搜索",
+      "menuTitle": "必应搜索“%s”",
+      "url": "https://cn.bing.com/search?q={0}"
+    },
     "so": {
       "title": "360搜索",
       "menuTitle": "360搜索“%s”",
@@ -93,11 +103,6 @@
       "title": "搜狗搜索",
       "menuTitle": "搜狗搜索“%s”",
       "url": "https://www.sogou.com/web?query={0}"
-    },
-    "bing": {
-      "title": "必应搜索",
-      "menuTitle": "必应搜索“%s”",
-      "url": "https://cn.bing.com/search?q={0}"
     },
     "wikipedia": {
       "title": "维基百科",
