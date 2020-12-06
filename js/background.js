@@ -54,9 +54,11 @@ chrome.contextMenus.create({
     }
 })
 
+// chrome.contextMenus.create({id: "separator1", type: "separator", contexts: ['selection']})
 function addMenu(name) {
     let lv = conf.searchList[name]
     if (!lv) return
+
     chrome.contextMenus.create({
         id: name + '_page',
         title: lv.title + '首页',
