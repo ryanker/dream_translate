@@ -162,7 +162,7 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
     }
 })
 
-chrome.tabs.onSelectionChanged.addListener(function (tabId) {
+chrome.tabs.onActivated.addListener(function (tabId) {
     sendMessage(tabId, {action: 'loadSetting'})
 })
 

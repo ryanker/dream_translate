@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "\u003Call_urls>"
       ],
       "js": [
         "js/content.js"
@@ -27,7 +27,7 @@
     {
       "all_frames": true,
       "matches": [
-        "<all_urls>"
+        "\u003Call_urls>"
       ],
       "js": [
         "js/frame.js"
@@ -52,7 +52,7 @@
     "webRequest",
     "webRequestBlocking",
     "tts",
-    "<all_urls>"
+    "\u003Call_urls>"
   ],
   "homepage_url": "http://www.dreamenglish.cn",
   "commands": {
