@@ -162,8 +162,8 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
     }
 })
 
-chrome.tabs.onActivated.addListener(function (tabId) {
-    sendMessage(tabId, {action: 'loadSetting'})
+chrome.tabs.onActivated.addListener(function (tab) {
+    sendMessage(tab.tabId, {action: 'loadSetting'})
 })
 
 async function autoSoundPlay(tabId, text, lang, list, arr) {
