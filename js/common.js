@@ -13,32 +13,57 @@ const B = {
     error: chrome.runtime.lastError,
     storageLocal: chrome.storage.local,
     storageSync: chrome.storage.sync,
+    browserAction: chrome.browserAction,
+    contextMenus: chrome.contextMenus,
+    tabs: chrome.tabs,
+    tts: chrome.tts,
+}
+String.prototype.format = function () {
+    let args = arguments
+    return this.replace(/{(\d+)}/g, function (match, number) {
+        return typeof args[number] != 'undefined' ? args[number] : match
+    })
 }
 
 function storageLocalGet(options) {
-    return apiToPromise(B.storageLocal, 'get', options)
+    return storage('local', 'get', options)
 }
 
 function storageLocalSet(options) {
-    return apiToPromise(B.storageLocal, 'set', options)
+    return storage('local', 'set', options)
 }
 
 function storageSyncGet(options) {
-    return apiToPromise(isChrome ? B.storageSync : B.storageLocal, 'get', options)
+    return storage('sync', 'get', options)
 }
 
 function storageSyncSet(options) {
-    return apiToPromise(isChrome ? B.storageSync : B.storageLocal, 'set', options)
+    return storage('sync', 'set', options)
 }
 
-function apiToPromise(api, type, options) {
+function storage(type, method, options) {
     return new Promise((resolve, reject) => {
         if (isChrome) {
-            api[type](options, function (r) {
-                B.error ? reject(B.error) : resolve(r)
-            })
+            let callback = function (r) {
+                let err = B.error
+                err ? reject(err) : resolve(r)
+            }
+            let api = type === 'sync' ? B.storageSync : B.storageLocal
+            if (method === 'get') {
+                api.get(options, callback)
+            } else if (method === 'set') {
+                api.set(options, callback)
+            }
         } else {
-            api[type](options).then(r => resolve(r)).catch(err => reject(err))
+            let callback = function (r, err) {
+                err ? reject(err) : resolve(r)
+            }
+            let api = browser.storage.local
+            if (method === 'get') {
+                api.get(options).then(callback)
+            } else if (method === 'set') {
+                api.set(options).then(callback)
+            }
         }
     })
 }
@@ -49,11 +74,4 @@ function debug(...data) {
 
 function sleep(delay) {
     return new Promise(r => setTimeout(r, delay))
-}
-
-String.prototype.format = function () {
-    let args = arguments
-    return this.replace(/{(\d+)}/g, function (match, number) {
-        return typeof args[number] != 'undefined' ? args[number] : match
-    })
 }
