@@ -9,6 +9,16 @@ let dialogConf = {
     target: 'zh',
     action: 'translate',
 }
+let B = {
+    // id: chrome.i18n.getMessage('@@extension_id'),
+    id: chrome.runtime.id,
+    onMessage: chrome.runtime.onMessage,
+    sendMessage: chrome.runtime.sendMessage,
+    getURL: chrome.runtime.getURL,
+    error: chrome.runtime.lastError,
+    storageLocal: chrome.storage.local,
+    storageSync: chrome.storage.sync,
+}
 let dQuery = {action: '', text: '', source: '', target: ''}
 loadDialogConf()
 loadSetting(function (setting) {
@@ -20,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 let msgList = {translate: {}, dictionary: {}, search: {}}
-chrome.runtime.onMessage.addListener(function (m) {
+B.onMessage.addListener(function (m) {
     debug(m)
     if (m.action === 'translate') {
         msgList.translate[m.name] = m.result
@@ -58,7 +68,7 @@ String.prototype.format = function () {
 }
 
 function init() {
-    chrome.storage.local.get(['conf', 'dialogCSS', 'languageList'], function (r) {
+    B.storageLocal.get(['conf', 'dialogCSS', 'languageList'], function (r) {
         conf = r.conf
         dialogCSS = r.dialogCSS
         languageList = JSON.parse(r.languageList)
@@ -311,8 +321,8 @@ function playSound(name, type, url) {
 
 function sendMessage(message) {
     return new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage(message, function (response) {
-            let err = chrome.runtime.lastError
+        B.sendMessage(message, function (response) {
+            let err = B.error
             if (err) {
                 reject(err)
             } else {
@@ -654,22 +664,21 @@ function onD(s, type, listener, options) {
     })
 }
 
-// let id = chrome.i18n.getMessage('@@extension_id')
-// let id = chrome.runtime.id
 function getURL(s) {
-    if (!extPath) extPath = chrome.runtime.getURL('')
+    if (!extPath) extPath = B.getURL('')
     return extPath + s
 }
 
 function loadSetting(callback) {
-    chrome.storage.sync.get(['setting'], function (r) {
+    B.storageSync.get(['setting'], function (r) {
         setting = r.setting
         typeof callback === 'function' && callback(setting)
     })
 }
 
 function loadDialogConf(callback) {
-    chrome.storage.sync.get(['dialogConf'], function (r) {
+    B.storageSync.get(['dialogConf'], function (r) {
+        console.log(r)
         dialogConf = Object.assign(dialogConf, r.dialogConf)
         typeof callback === 'function' && callback(dialogConf)
     })
@@ -681,7 +690,7 @@ function setDialogConf(name, value) {
 }
 
 function saveDialogConf() {
-    chrome.storage.sync.set({'dialogConf': dialogConf})
+    B.storageSync.set({'dialogConf': dialogConf})
 }
 
 function debug(...data) {

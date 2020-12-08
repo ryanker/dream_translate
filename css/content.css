@@ -12,7 +12,8 @@
 @font-face {
     font-family: "dmx-icon";
     /*src: url('dmx_icon.woff2') format('woff2');*/
-    src: url('chrome-extension://__MSG_@@extension_id__/css/dmx_icon.woff2') format('woff2');
+    src: url('chrome-extension://__MSG_@@extension_id__/css/dmx_icon.woff2') format('woff2'),
+    url('moz-extension://__MSG_@@extension_id__/css/dmx_icon.woff2') format('woff2');
 }
 
 .dmx-icon {
