@@ -312,6 +312,12 @@ function sendMessage(message) {
 }
 
 function onQuery(text, clientX, clientY) {
+    if (!text) {
+        iconBut.style.display = 'none'
+        return
+    }
+    debug(text)
+
     // 自动复制功能
     if (setting.autoCopy === 'on') {
         execCopy(text)
@@ -319,11 +325,6 @@ function onQuery(text, clientX, clientY) {
     }
 
     if (setting.scribble === 'off') return
-    if (!text) {
-        iconBut.style.display = 'none'
-        return
-    }
-    debug(text)
 
     if (setting.scribble === 'direct') {
         queryInit(text)
