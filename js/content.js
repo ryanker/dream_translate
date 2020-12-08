@@ -1,6 +1,6 @@
 'use strict'
 
-let isDebug = true
+window.isDebug = true
 let dialog, shadow, setting, conf, dialogCSS, languageList, iconBut, iconText, extPath
 let dialogConf = {
     width: 500,
@@ -8,16 +8,6 @@ let dialogConf = {
     source: 'en',
     target: 'zh',
     action: 'translate',
-}
-let B = {
-    // id: chrome.i18n.getMessage('@@extension_id'),
-    id: chrome.runtime.id,
-    onMessage: chrome.runtime.onMessage,
-    sendMessage: chrome.runtime.sendMessage,
-    getURL: chrome.runtime.getURL,
-    error: chrome.runtime.lastError,
-    storageLocal: chrome.storage.local,
-    storageSync: chrome.storage.sync,
 }
 let dQuery = {action: '', text: '', source: '', target: ''}
 loadDialogConf()
@@ -60,15 +50,8 @@ window.addEventListener("message", function (m) {
     if (d.text && typeof d.clientX === 'number' && typeof d.clientY === 'number') onQuery(d.text, d.clientX, d.clientY)
 })
 
-String.prototype.format = function () {
-    let args = arguments
-    return this.replace(/{(\d+)}/g, function (match, number) {
-        return typeof args[number] != 'undefined' ? args[number] : match
-    })
-}
-
 function init() {
-    B.storageLocal.get(['conf', 'dialogCSS', 'languageList'], function (r) {
+    storageLocalGet(['conf', 'dialogCSS', 'languageList']).then(function (r) {
         conf = r.conf
         dialogCSS = r.dialogCSS
         languageList = JSON.parse(r.languageList)
@@ -323,11 +306,7 @@ function sendMessage(message) {
     return new Promise((resolve, reject) => {
         B.sendMessage(message, function (response) {
             let err = B.error
-            if (err) {
-                reject(err)
-            } else {
-                resolve(response)
-            }
+            err ? reject(err) : resolve(response)
         })
     })
 }
@@ -670,31 +649,26 @@ function getURL(s) {
 }
 
 function loadSetting(callback) {
-    B.storageSync.get(['setting'], function (r) {
+    storageSyncGet(['setting']).then(function (r) {
         setting = r.setting
         typeof callback === 'function' && callback(setting)
     })
 }
 
 function loadDialogConf(callback) {
-    B.storageSync.get(['dialogConf'], function (r) {
-        console.log(r)
+    storageSyncGet(['dialogConf']).then(function (r) {
         dialogConf = Object.assign(dialogConf, r.dialogConf)
         typeof callback === 'function' && callback(dialogConf)
     })
 }
 
+function saveDialogConf() {
+    storageSyncSet({'dialogConf': dialogConf})
+}
+
 function setDialogConf(name, value) {
     dialogConf[name] = value
     saveDialogConf()
-}
-
-function saveDialogConf() {
-    B.storageSync.set({'dialogConf': dialogConf})
-}
-
-function debug(...data) {
-    isDebug && console.log('[DMX DEBUG]', ...data)
 }
 
 function alert(message, type) {

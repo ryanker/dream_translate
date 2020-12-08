@@ -8,6 +8,7 @@
   },
   "background": {
     "scripts": [
+      "js/common.js",
       "js/background.js"
     ]
   },
@@ -17,6 +18,7 @@
         "\u003Call_urls>"
       ],
       "js": [
+        "js/common.js",
         "js/content.js"
       ],
       "css": [
