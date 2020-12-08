@@ -324,10 +324,6 @@ function currentTabMessage(message) {
     })
 }
 
-function debug(...data) {
-    isDebug && console.log('[DMX DEBUG]', ...data)
-}
-
 function loadJs(arr, type) {
     arr.forEach(k => {
         let el = document.createElement("script")
@@ -335,10 +331,6 @@ function loadJs(arr, type) {
         el.src = `/js/${type || 'translate'}/${k}.js`
         document.head.appendChild(el)
     })
-}
-
-function sleep(delay) {
-    return new Promise(r => setTimeout(r, delay))
 }
 
 function inArray(val, arr) {
@@ -485,12 +477,5 @@ function httpPost(options) {
             c.setRequestHeader(v.name, v.value)
         })
         c.send(o.body)
-    })
-}
-
-String.prototype.format = function () {
-    let args = arguments
-    return this.replace(/{(\d+)}/g, function (match, number) {
-        return typeof args[number] != 'undefined' ? args[number] : match
     })
 }
