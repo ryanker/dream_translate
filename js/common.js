@@ -7,15 +7,15 @@
  * https://crxdoc-zh.appspot.com/extensions/
  */
 const isDebug = true
-const isChrome = typeof browser === "undefined" || Object.getPrototypeOf(browser) !== Object.prototype
+const isChrome = window.navigator.userAgent.includes("Chrome")
+// const isChrome = typeof browser === "undefined" || Object.getPrototypeOf(browser) !== Object.prototype
 const B = {
     id: chrome.runtime.id,
     root: chrome.runtime.getURL(''),
     onMessage: chrome.runtime.onMessage,
     sendMessage: chrome.runtime.sendMessage,
     error: chrome.runtime.lastError,
-    storageLocal: chrome.storage.local,
-    storageSync: chrome.storage.sync,
+    storage: chrome.storage,
     browserAction: chrome.browserAction,
     contextMenus: chrome.contextMenus,
     tabs: chrome.tabs,
@@ -51,7 +51,7 @@ function storage(type, method, options) {
                 let err = B.error
                 err ? reject(err) : resolve(r)
             }
-            let api = type === 'sync' ? B.storageSync : B.storageLocal
+            let api = type === 'sync' ? B.storage.sync : B.storage.local
             if (method === 'get') {
                 api.get(options, callback)
             } else if (method === 'set') {
@@ -138,7 +138,7 @@ function addMenu(name, title, url) {
     })
     B.contextMenus.create({
         id: name + '_selection',
-        title: lv.title + "“%s”",
+        title: title + "“%s”",
         contexts: ["selection"],
         onclick: function (info) {
             B.tabs.create({url: url.format(decodeURIComponent(info.selectionText)) + '&tn=dream_translate'})

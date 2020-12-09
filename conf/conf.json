@@ -145,5 +145,12 @@
     "zh": "zh-CN",
     "yue": "zh-HK",
     "cht": "zh-TW"
+  },
+  "dialog": {
+    "width": 500,
+    "height": 470,
+    "source": "en",
+    "target": "zh",
+    "action": "translate"
   }
 }

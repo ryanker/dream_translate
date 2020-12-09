@@ -1,38 +1,43 @@
 'use strict'
 
-let dialog, shadow, setting, conf, dialogCSS, languageList, iconBut, iconText, root = B.root
-let dialogConf = {
-    width: 500,
-    height: 470,
-    source: 'en',
-    target: 'zh',
-    action: 'translate',
-}
+let dialog, shadow,
+    setting, conf, dialogConf,
+    languageList,
+    iconBut, iconText,
+    msgList = {},
+    root = B.root
 let dQuery = {action: '', text: '', source: '', target: ''}
-loadDialogConf()
-loadSetting(function (setting) {
-    if (setting.allowSelect === 'on') allowUserSelect()
-})
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     debug('loaded content.js')
-    storageLocalGet(['conf', 'dialogCSS', 'languageList']).then(function (r) {
+
+    let dialogCSS = ''
+    await storageLocalGet(['conf', 'dialogCSS', 'languageList']).then(function (r) {
+        // debug('languageList:', JSON.stringify(languageList))
+        debug('conf:', r.conf)
         conf = r.conf
         dialogCSS = r.dialogCSS
         languageList = JSON.parse(r.languageList)
-        debug('conf:', r.conf)
-        // debug('dialogCSS:', r.dialogCSS)
-        // debug('languageList:', JSON.stringify(languageList))
-        dialogInit()
     })
+
+    await storageSyncGet(['setting', 'dialogConf']).then(function (r) {
+        setting = r.setting
+        dialogConf = Object.assign({}, conf.dialog, r.dialogConf)
+    })
+
+    // 初始对话框
+    initDialog(dialogCSS)
+
+    // 是否开启自动解除选中现在
+    if (setting.allowSelect === 'on') allowUserSelect()
 })
 
-let msgList = {translate: {}, dictionary: {}, search: {}}
+// 监听消息
 B.onMessage.addListener(function (m, sender, sendResponse) {
     sendResponse()
     debug('request:', m)
     debug('sender:', sender)
     if (m.action === 'translate') {
-        msgList.translate[m.name] = m.result
+        msgList[m.name] = m.result
         translateResult(m.name)
     } else if (m.action === 'translateTTS') {
         soundResult(m, 'translate')
@@ -44,8 +49,6 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         linkResult(m)
     } else if (m.action === 'allowSelect') {
         allowUserSelect()
-    } else if (m.action === 'loadSetting') {
-        loadSetting()
     } else if (m.action === 'contextMenus') {
         if (m.text) {
             queryInit(m.text)
@@ -54,13 +57,22 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     }
 })
 
+// 监听 frame 消息
 window.addEventListener("message", function (m) {
     let d = m.data
     if (d.text && typeof d.clientX === 'number' && typeof d.clientY === 'number') onQuery(d.text, d.clientX, d.clientY)
 })
 
-function dialogInit() {
-    // 初始对话框
+// 监听设置修改
+B.storage.onChanged.addListener(function (data) {
+    let keys = Object.keys(data)
+    keys.forEach(k => {
+        if (k === 'setting') setting = data[k].newValue
+    })
+})
+
+// 初始对话框
+function initDialog(dialogCSS) {
     let isChange = false
     dialog = dmxDialog({
         cssText: dialogCSS,
@@ -152,7 +164,7 @@ function dialogInit() {
 function translateResult(name, isBilingual) {
     let el = $(`${name}_translate_case`)
     if (!el) return
-    let r = msgList.translate[name]
+    let r = msgList[name]
     let s = ''
     r && r.data && r.data.forEach(v => {
         if (isBilingual) {
@@ -625,20 +637,6 @@ function D(s) {
 function onD(s, type, listener, options) {
     D(s).forEach(v => {
         v.addEventListener(type, listener, options)
-    })
-}
-
-function loadSetting(callback) {
-    storageSyncGet(['setting']).then(function (r) {
-        setting = r.setting
-        typeof callback === 'function' && callback(setting)
-    })
-}
-
-function loadDialogConf(callback) {
-    storageSyncGet(['dialogConf']).then(function (r) {
-        dialogConf = Object.assign(dialogConf, r.dialogConf)
-        typeof callback === 'function' && callback(dialogConf)
     })
 }
 

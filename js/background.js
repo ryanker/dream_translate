@@ -50,6 +50,14 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 })
 
+// 监听设置修改
+B.storage.onChanged.addListener(function (data) {
+    let keys = Object.keys(data)
+    keys.forEach(k => {
+        if (k === 'setting') setting = data[k].newValue
+    })
+})
+
 // 监听消息
 B.onMessage.addListener(function (m, sender, sendResponse) {
     sendResponse()
