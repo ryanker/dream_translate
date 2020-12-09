@@ -3,6 +3,7 @@
  * 参考：
  * https://github.com/mozilla/webextension-polyfill
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities
+ * https://developer.chrome.com/docs/extensions/reference/
  */
 const isDebug = true
 const isChrome = typeof browser === "undefined" || Object.getPrototypeOf(browser) !== Object.prototype
@@ -69,15 +70,58 @@ function storage(type, method, options) {
     })
 }
 
-function debug(...data) {
-    isDebug && console.log('[DMX DEBUG]', ...data)
+function sendMessage(message) {
+    return new Promise((resolve, reject) => {
+        if (isChrome) {
+            B.sendMessage(message, r => B.error ? reject(B.error) : resolve(r))
+        } else {
+            browser.runtime.sendMessage(message).then((r, err) => err ? reject(err) : resolve(r))
+        }
+    })
 }
 
-function sleep(delay) {
-    return new Promise(r => setTimeout(r, delay))
+function sendTabMessage(tabId, message) {
+    return new Promise((resolve, reject) => {
+        if (isChrome) {
+            B.tabs.sendMessage(tabId, message, r => B.error ? reject(B.error) : resolve(r))
+        } else {
+            browser.tabs.sendMessage(tabId, message).then(r => resolve(r)).catch(err => reject(err))
+        }
+    })
+}
+
+function getActiveTabId() {
+    return new Promise((resolve, reject) => {
+        if (isChrome) {
+            B.tabs.query({currentWindow: true, active: true}, tab => {
+                let tabId = tab[0] && tab[0].url && resolve(tab[0].id)
+                resolve(tabId)
+            })
+        } else {
+            browser.tabs.query({currentWindow: true, active: true}).then(tab => {
+                let tabId = tab[0] && tab[0].url && resolve(tab[0].id)
+                resolve(tabId)
+            }).catch(err => reject(err))
+        }
+    })
 }
 
 // ======== background ========
+function loadLocalConf() {
+    let s = localStorage.getItem('localTTSConf')
+    if (s) localTTSConf = JSON.parse(s)
+}
+
+function setLocalConf(k, v) {
+    localTTSConf[k] = v
+    localStorage.setItem('localTTSConf', JSON.stringify(localTTSConf))
+}
+
+function resetLocalConf() {
+    localStorage.removeItem('localTTSConf')
+    localTTSConf = {}
+}
+
 function addMenu(name, title, url) {
     // {id: "separator1", type: "separator", contexts: ['selection']}
     B.contextMenus.create({
@@ -103,6 +147,11 @@ function removeMenu(name) {
     B.contextMenus.remove(name + '_selection')
 }
 
+function setBrowserAction(text) {
+    B.browserAction.setBadgeText({text: text || ''})
+    B.browserAction.setBadgeBackgroundColor({color: 'red'})
+}
+
 // 获得所有语音的列表
 function getVoices() {
     if (!B.tts || !B.tts.getVoices) return null
@@ -116,4 +165,12 @@ function getVoices() {
         }
     })
     return list
+}
+
+function sleep(delay) {
+    return new Promise(r => setTimeout(r, delay))
+}
+
+function debug(...data) {
+    isDebug && console.log('[DMX DEBUG]', ...data)
 }

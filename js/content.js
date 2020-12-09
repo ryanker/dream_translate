@@ -1,6 +1,6 @@
 'use strict'
 
-let dialog, shadow, setting, conf, dialogCSS, languageList, iconBut, iconText
+let dialog, shadow, setting, conf, dialogCSS, languageList, iconBut, iconText, root = B.root
 let dialogConf = {
     width: 500,
     height: 470,
@@ -15,7 +15,15 @@ loadSetting(function (setting) {
 })
 document.addEventListener('DOMContentLoaded', function () {
     debug('loaded content.js')
-    init()
+    storageLocalGet(['conf', 'dialogCSS', 'languageList']).then(function (r) {
+        conf = r.conf
+        dialogCSS = r.dialogCSS
+        languageList = JSON.parse(r.languageList)
+        debug('conf:', r.conf)
+        // debug('dialogCSS:', r.dialogCSS)
+        // debug('languageList:', JSON.stringify(languageList))
+        dialogInit()
+    })
 })
 
 let msgList = {translate: {}, dictionary: {}, search: {}}
@@ -48,18 +56,6 @@ window.addEventListener("message", function (m) {
     let d = m.data
     if (d.text && typeof d.clientX === 'number' && typeof d.clientY === 'number') onQuery(d.text, d.clientX, d.clientY)
 })
-
-function init() {
-    storageLocalGet(['conf', 'dialogCSS', 'languageList']).then(function (r) {
-        conf = r.conf
-        dialogCSS = r.dialogCSS
-        languageList = JSON.parse(r.languageList)
-        debug('conf:', r.conf)
-        // debug('dialogCSS:', r.dialogCSS)
-        // debug('languageList:', JSON.stringify(languageList))
-        dialogInit()
-    })
-}
 
 function dialogInit() {
     // 初始对话框
@@ -301,15 +297,6 @@ function playSound(name, type, url) {
     })
 }
 
-function sendMessage(message) {
-    return new Promise((resolve, reject) => {
-        B.sendMessage(message, function (response) {
-            let err = B.error
-            err ? reject(err) : resolve(response)
-        })
-    })
-}
-
 function onQuery(text, clientX, clientY) {
     if (!text) {
         iconBut.style.display = 'none'
@@ -368,10 +355,6 @@ function checkChange(action, text) {
         dQuery.source === dialogConf.source && dQuery.target === dialogConf.target) return false
     dQuery = {action: action, text: text, source: dialogConf.source, target: dialogConf.target}
     return true
-}
-
-function getRangeBound() {
-    return window.getSelection().getRangeAt(0).getBoundingClientRect()
 }
 
 function translateCaseInit() {
@@ -618,11 +601,11 @@ function searchBoxInit() {
 }
 
 function settingBoxInit() {
-    dialog.contentHTML(`<iframe class="dmx_iframe" src="${B.root + 'html/setting.html'}" importance="high"></iframe>`)
+    dialog.contentHTML(`<iframe class="dmx_iframe" src="${root + 'html/setting.html'}" importance="high"></iframe>`)
 }
 
 function moreBoxInit() {
-    dialog.contentHTML(`<iframe class="dmx_iframe" src="${B.root + 'html/more.html'}" importance="high"></iframe>`)
+    dialog.contentHTML(`<iframe class="dmx_iframe" src="${root + 'html/more.html'}" importance="high"></iframe>`)
 }
 
 function $(id) {
@@ -796,7 +779,7 @@ function dmxDialog(options) {
     d.style.all = 'initial'
     document.documentElement.appendChild(d)
     let shadow = d.attachShadow({mode: 'closed'})
-    shadow.innerHTML = `<link rel="stylesheet" href="${B.root + 'css/content.css'}">
+    shadow.innerHTML = `<link rel="stylesheet" href="${root + 'css/content.css'}">
 <style>${o.cssText}</style>
 <div id="dmx_dialog">
     <div id="dmx_dialog_title">

@@ -1,98 +1,72 @@
 'use strict'
 
-let isDebug = true
-let aud = new Audio()
-var conf, setting, sdk = {}, voiceList = {}, localTTSConf = {}
-document.addEventListener('DOMContentLoaded', function () {
-    loadLocalConf()
-    fetch('../conf/conf.json').then(r => r.json()).then(r => {
-        conf = r
-        loadSetting(function (result) {
+let conf, setting, sdk = {}, localTTSConf = {}
+document.addEventListener('DOMContentLoaded', init)
+
+function init() {
+    (async () => {
+        let dialogCSS = '', languageList = ''
+        await fetch('../conf/conf.json').then(r => r.json()).then(r => {
+            conf = r
+        })
+        await fetch('../css/dmx_dialog.css').then(r => r.text()).then(s => {
+            dialogCSS += minCss(s)
+        })
+        await fetch('../conf/language.json').then(r => r.text()).then(s => {
+            languageList += s
+        })
+        storageLocalSet({conf, dialogCSS, languageList}).catch(err => debug(`save error: ${err}`))
+
+        await storageSyncGet(['setting']).then(function (result) {
             setting = Object.assign({}, conf.setting, result.setting)
-            if (setting.scribble === 'off') setBrowserAction('OFF')
-            saveSetting(setting)
-
-            // 加载 js
-            loadJs(uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList))), 'translate')
-            loadJs(Object.keys(conf.dictionaryList), 'dictionary')
-
-            // 添加搜索菜单
-            setting.searchMenus.forEach(name => {
-                addMenu(name)
-            })
         })
 
-        // delete conf.setting
-        chrome.storage.local.set({'conf': conf}, function () {
-            debug('conf:', conf)
+        // 初始设置参数
+        storageSyncSet({setting}).catch(err => debug(`save error: ${err}`))
+
+        // 是否显示关闭划词图标
+        if (setting.scribble === 'off') setBrowserAction('OFF')
+
+        // 加载 js
+        loadJs(uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList))), 'translate')
+        loadJs(Object.keys(conf.dictionaryList), 'dictionary')
+
+        // 添加菜单
+        setting.searchMenus.forEach(name => {
+            let v = conf.searchList[name]
+            v && addMenu(name, v.title, v.url)
         })
-    })
+    })()
 
-    fetch('../css/dmx_dialog.css').then(r => r.text()).then(s => {
-        s = s.replace(/\/\*.*?\*\//g, '')
-        s = s.replace(/\s+/g, ' ')
-        s = s.replace(/\s*([:;{}!,])\s*/g, '$1')
-        s = s.replace(/;}/g, '}')
-        chrome.storage.local.set({'dialogCSS': s}, function () {
-            // debug('dialogCSS:', s)
-        })
-    })
+    loadLocalConf()
 
-    fetch('../conf/language.json').then(r => r.text()).then(r => {
-        chrome.storage.local.set({'languageList': r}, function () {
-            // debug('languageList:', r)
-        })
-    })
-})
-
-// 添加上下文菜单
-chrome.contextMenus.create({
-    title: "梦想翻译“%s”",
-    contexts: ["selection"],
-    onclick: function (info, tab) {
-        tab && sendMessage(tab.id, {action: 'contextMenus', text: info.selectionText})
-    }
-})
-
-// chrome.contextMenus.create({id: "separator1", type: "separator", contexts: ['selection']})
-function addMenu(name) {
-    let lv = conf.searchList[name]
-    if (!lv) return
-
-    chrome.contextMenus.create({
-        id: name + '_page',
-        title: lv.title + '首页',
-        contexts: ["page"],
-        onclick: function () {
-            open((new URL(lv.url)).origin + '?tn=dream_translate')
-        }
-    })
-    chrome.contextMenus.create({
-        id: name + '_selection',
-        title: lv.title + "“%s”",
+    // 添加上下文菜单
+    B.contextMenus.create({
+        title: "梦想翻译“%s”",
         contexts: ["selection"],
-        onclick: function (info) {
-            open(lv.url.format(decodeURIComponent(info.selectionText)) + '&tn=dream_translate')
+        onclick: function (info, tab) {
+            tab && sendTabMessage(tab.id, {action: 'contextMenus', text: info.selectionText})
         }
     })
+
+    // 获取朗读声音列表
+    getVoices()
+
+    // 监听事件
+    B.onMessage.addListener(listenMessage)
+    // B.tabActivated.addListener(onActivated)
 }
 
-function removeMenu(name) {
-    chrome.contextMenus.remove(name + '_page')
-    chrome.contextMenus.remove(name + '_selection')
+function minCss(s) {
+    s = s.replace(/\/\*.*?\*\//g, '')
+    s = s.replace(/\s+/g, ' ')
+    s = s.replace(/\s*([:;{}!,])\s*/g, '$1')
+    s = s.replace(/;}/g, '}')
+    s = s.replace(/;}/g, '}')
+    return s
 }
 
-// 获得所有语音的列表
-chrome.tts.getVoices(function (voices) {
-    for (let i = 0; i < voices.length; i++) {
-        // debug('Voice ' + i + ':', JSON.stringify(voices[i]))
-        let v = voices[i]
-        if (!voiceList[v.lang]) voiceList[v.lang] = []
-        voiceList[v.lang].push({lang: v.lang, voiceName: v.voiceName, remote: v.remote})
-    }
-})
-
-chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
+function listenMessage(m, sender, sendResponse) {
     // debug('sender', sender)
     debug(sender.tab ? `from: ${sender.tab.url}` : `from extensions`)
     debug('request', m)
@@ -108,14 +82,14 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
                 // 翻译
                 sd.query(m.text, m.srcLan, m.tarLan).then(r => {
                     debug(`${name}:`, r)
-                    sendMessage(tabId, {action: m.action, name: name, result: r})
+                    sendTabMessage(tabId, {action: m.action, name: name, result: r})
                 }).catch(e => {
-                    sendMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
+                    sendTabMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
                 })
 
                 // 链接
                 let url = sd.link(m.text, m.srcLan, m.tarLan)
-                sendMessage(tabId, {action: 'link', type: m.action, name: name, link: url})
+                sendTabMessage(tabId, {action: 'link', type: m.action, name: name, link: url})
             })
         })
 
@@ -128,11 +102,11 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
         let tList = conf.translateTTSList
         let message = {action: m.action, name: m.name, type: m.type, status: 'end'}
         soundPlay(m.name, m.text, m.lang).then(() => {
-            sendMessage(tabId, message)
+            sendTabMessage(tabId, message)
         }).catch(err => {
             debug(`${m.name} sound error:`, err)
             let errMsg = `${tList[m.name] ? tList[m.name] : list[m.name] + '朗读'}出错`
-            sendMessage(tabId, Object.assign({}, message, {error: errMsg}))
+            sendTabMessage(tabId, Object.assign({}, message, {error: errMsg}))
         })
     } else if (m.action === 'dictionary') {
         setting.dictionaryList.forEach(name => {
@@ -142,29 +116,29 @@ chrome.runtime.onMessage.addListener(function (m, sender, sendResponse) {
                 // 查词
                 sd.query(m.text).then(r => {
                     debug(`${name}:`, r)
-                    sendMessage(tabId, {action: m.action, name: name, result: r})
+                    sendTabMessage(tabId, {action: m.action, name: name, result: r})
                 }).catch(e => {
-                    sendMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
+                    sendTabMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
                 })
 
                 // 链接
-                sendMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text)})
+                sendTabMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text)})
             })
         })
     } else if (m.action === 'dictionarySound') {
         audioPlay(m.url).then(() => {
-            sendMessage(tabId, {action: m.action, name: m.name, type: m.type, status: 'end'})
+            sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, status: 'end'})
         }).catch(err => {
             debug(`${m.name} sound error:`, err)
             let title = conf.dictionaryList[m.name] || ''
-            sendMessage(tabId, {action: m.action, name: m.name, type: m.type, error: `${title}发音出错`})
+            sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, error: `${title}发音出错`})
         })
     }
-})
+}
 
-chrome.tabs.onActivated.addListener(function (tab) {
-    sendMessage(tab.tabId, {action: 'loadSetting'})
-})
+function onActivated(tab) {
+    sendTabMessage(tab.tabId, {action: 'loadSetting'})
+}
 
 async function autoSoundPlay(tabId, text, lang, list, arr) {
     if (lang === 'auto') {
@@ -181,12 +155,12 @@ async function autoSoundPlay(tabId, text, lang, list, arr) {
     for (let k = 0; k < arr.length; k++) {
         let name = arr[k]
         let message = {action: 'translateTTS', name: name, type: 'source', status: 'end'}
-        sendMessage(tabId, Object.assign({}, message, {status: 'start'}))
+        sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
         await soundPlay(name, text, lang).then(() => {
-            sendMessage(tabId, message)
+            sendTabMessage(tabId, message)
         }).catch(err => {
             debug(`${name} sound error:`, err)
-            sendMessage(tabId, Object.assign({}, message, {error: `${list[name]}出错`}))
+            sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name]}出错`}))
         })
     }
 }
@@ -224,37 +198,30 @@ function soundPlay(name, text, lang) {
     })
 }
 
-async function audioPlay(url) {
+function audioPlay(url) {
     return new Promise((resolve, reject) => {
+        if (!window._Audio) window._Audio = new Audio()
+        let a = window._Audio
         let blobUrl = null
         if (typeof url === 'string') {
-            aud.src = url
+            a.src = url
         } else if (typeof url === 'object') {
             blobUrl = URL.createObjectURL(url)
-            aud.src = blobUrl
+            a.src = blobUrl
         } else {
             return reject('Audio url error:', url)
         }
-        aud.onended = function () {
+        a.onended = function () {
             if (blobUrl) URL.revokeObjectURL(blobUrl) // 释放内存
             resolve()
         }
-        aud.onerror = function (err) {
+        a.onerror = function (err) {
             reject(err)
         }
-        aud.play().catch(e => {
+        a.play().catch(e => {
             reject(e)
         })
     })
-}
-
-function sendMessage(tabId, message) {
-    chrome.tabs.sendMessage(tabId, message)
-}
-
-function setBrowserAction(text) {
-    chrome.browserAction.setBadgeText({text: text || ''})
-    chrome.browserAction.setBadgeBackgroundColor({color: 'red'})
 }
 
 function sdkInit(sdkName, callback) {
@@ -269,59 +236,6 @@ function sdkInit(sdkName, callback) {
     }
     sdk[sdkName] = new window[sdkName]().init()
     callback && callback(sdk[sdkName])
-}
-
-function setSetting(name, value) {
-    debug('setSetting:', name, value)
-    setting[name] = value
-    // localStorage.setItem('setting', JSON.stringify(setting))
-    chrome.storage.sync.set({'setting': setting}, function () {
-        debug('setting:', setting)
-        currentTabMessage({action: 'loadSetting'})
-    })
-    if (name === 'scribble') setBrowserAction(value === 'off' ? 'OFF' : '')
-}
-
-function saveSetting(setting, callback) {
-    chrome.storage.sync.set({'setting': setting}, function () {
-        debug('setting:', setting)
-        currentTabMessage({action: 'loadSetting'})
-        callback && callback(chrome.runtime.lastError)
-    })
-}
-
-function loadSetting(callback) {
-    chrome.storage.sync.get(['setting'], function (r) {
-        callback && callback(r)
-    })
-}
-
-function clearSetting(callback) {
-    chrome.storage.sync.clear(function () {
-        callback && callback(chrome.runtime.lastError)
-    })
-}
-
-function loadLocalConf() {
-    let s = localStorage.getItem('localTTSConf')
-    if (s) localTTSConf = JSON.parse(s)
-}
-
-function setLocalConf(k, v) {
-    localTTSConf[k] = v
-    localStorage.setItem('localTTSConf', JSON.stringify(localTTSConf))
-}
-
-function resetLocalConf() {
-    localStorage.removeItem('localTTSConf')
-    localTTSConf = {}
-}
-
-function currentTabMessage(message) {
-    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-        // alert(JSON.stringify(tabs))
-        tabs[0] && tabs[0].url && sendMessage(tabs[0].id, message)
-    })
 }
 
 function loadJs(arr, type) {

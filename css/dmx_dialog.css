@@ -492,6 +492,7 @@ a:hover {
 }
 
 .case {
+    font-size: 16px;
     margin-top: 10px;
     border-radius: 8px;
     background: #ffffff;
