@@ -4,6 +4,7 @@
  * https://github.com/mozilla/webextension-polyfill
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities
  * https://developer.chrome.com/docs/extensions/reference/
+ * https://crxdoc-zh.appspot.com/extensions/
  */
 const isDebug = true
 const isChrome = typeof browser === "undefined" || Object.getPrototypeOf(browser) !== Object.prototype
@@ -83,10 +84,13 @@ function sendMessage(message) {
 function sendTabMessage(tabId, message) {
     return new Promise((resolve, reject) => {
         if (isChrome) {
-            B.tabs.sendMessage(tabId, message, r => B.error ? reject(B.error) : resolve(r))
+            // B.tabs.sendMessage(tabId, message, r => B.error ? reject(B.error) : resolve(r))
+            tabId && B.tabs.sendMessage(tabId, message)
         } else {
-            browser.tabs.sendMessage(tabId, message).then(r => resolve(r)).catch(err => reject(err))
+            // browser.tabs.sendMessage(tabId, message).then(r => resolve(r)).catch(err => reject(err))
+            tabId && browser.tabs.sendMessage(tabId, message).catch(err => debug('send error:', err))
         }
+        resolve()
     })
 }
 

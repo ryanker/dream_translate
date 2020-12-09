@@ -1,9 +1,7 @@
 'use strict'
 
 let conf, setting, sdk = {}, localTTSConf = {}
-document.addEventListener('DOMContentLoaded', init)
-
-function init() {
+document.addEventListener('DOMContentLoaded', function () {
     (async () => {
         let dialogCSS = '', languageList = ''
         await fetch('../conf/conf.json').then(r => r.json()).then(r => {
@@ -20,6 +18,8 @@ function init() {
         await storageSyncGet(['setting']).then(function (result) {
             setting = Object.assign({}, conf.setting, result.setting)
         })
+        debug('init setting:', setting)
+        debug('init conf:', conf)
 
         // 初始设置参数
         storageSyncSet({setting}).catch(err => debug(`save error: ${err}`))
@@ -48,29 +48,13 @@ function init() {
             tab && sendTabMessage(tab.id, {action: 'contextMenus', text: info.selectionText})
         }
     })
+})
 
-    // 获取朗读声音列表
-    getVoices()
-
-    // 监听事件
-    B.onMessage.addListener(listenMessage)
-    // B.tabActivated.addListener(onActivated)
-}
-
-function minCss(s) {
-    s = s.replace(/\/\*.*?\*\//g, '')
-    s = s.replace(/\s+/g, ' ')
-    s = s.replace(/\s*([:;{}!,])\s*/g, '$1')
-    s = s.replace(/;}/g, '}')
-    s = s.replace(/;}/g, '}')
-    return s
-}
-
-function listenMessage(m, sender, sendResponse) {
-    // debug('sender', sender)
-    debug(sender.tab ? `from: ${sender.tab.url}` : `from extensions`)
-    debug('request', m)
-    sendResponse('received')
+// 监听消息
+B.onMessage.addListener(function (m, sender, sendResponse) {
+    sendResponse()
+    debug('request:', m)
+    debug('sender:', sender)
     if (!sender.tab) return
     let tabId = sender.tab.id
 
@@ -134,10 +118,15 @@ function listenMessage(m, sender, sendResponse) {
             sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, error: `${title}发音出错`})
         })
     }
-}
+})
 
-function onActivated(tab) {
-    sendTabMessage(tab.tabId, {action: 'loadSetting'})
+function minCss(s) {
+    s = s.replace(/\/\*.*?\*\//g, '')
+    s = s.replace(/\s+/g, ' ')
+    s = s.replace(/\s*([:;{}!,])\s*/g, '$1')
+    s = s.replace(/;}/g, '}')
+    s = s.replace(/;}/g, '}')
+    return s
 }
 
 async function autoSoundPlay(tabId, text, lang, list, arr) {

@@ -27,8 +27,10 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 let msgList = {translate: {}, dictionary: {}, search: {}}
-B.onMessage.addListener(function (m) {
-    debug(m)
+B.onMessage.addListener(function (m, sender, sendResponse) {
+    sendResponse()
+    debug('request:', m)
+    debug('sender:', sender)
     if (m.action === 'translate') {
         msgList.translate[m.name] = m.result
         translateResult(m.name)
