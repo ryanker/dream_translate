@@ -236,11 +236,6 @@ function loadJs(arr, type) {
     })
 }
 
-function inArray(val, arr) {
-    // return arr.indexOf(val) !== -1
-    return arr.includes(val)
-}
-
 function uniqueArray(arr) {
     return [...new Set(arr)]
 }
@@ -314,71 +309,4 @@ function sliceStr(text, maxLen) {
         })
     }
     return r
-}
-
-function httpGet(url, type, headers) {
-    return new Promise((resolve, reject) => {
-        let c = new XMLHttpRequest()
-        c.responseType = type || 'text'
-        c.timeout = 10000
-        c.onload = function (e) {
-            if (this.status === 200) {
-                resolve(this.response)
-            } else {
-                reject(e)
-            }
-        }
-        c.ontimeout = function (e) {
-            reject('NETWORK_TIMEOUT', e)
-        }
-        c.onerror = function (e) {
-            reject('NETWORK_ERROR', e)
-        }
-        c.open("GET", url)
-        headers && headers.forEach(v => {
-            c.setRequestHeader(v.name, v.value)
-        })
-        c.send()
-    })
-}
-
-function httpPost(options) {
-    let o = Object.assign({
-        url: '',
-        responseType: 'json',
-        type: 'form',
-        body: null,
-        timeout: 20000,
-        headers: [],
-    }, options)
-    return new Promise((resolve, reject) => {
-        let c = new XMLHttpRequest()
-        c.responseType = o.responseType
-        c.timeout = o.timeout
-        c.onload = function (e) {
-            if (this.status === 200 && this.response !== null) {
-                resolve(this.response)
-            } else {
-                reject(e)
-            }
-        }
-        c.ontimeout = function (e) {
-            reject('NETWORK_TIMEOUT', e)
-        }
-        c.onerror = function (e) {
-            reject('NETWORK_ERROR', e)
-        }
-        c.open("POST", o.url)
-        if (o.type === 'form') {
-            c.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-        } else if (o.type === 'json') {
-            c.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
-        } else if (o.type === 'xml') {
-            c.setRequestHeader("Content-Type", "application/ssml+xml")
-        }
-        o.headers.length > 0 && o.headers.forEach(v => {
-            c.setRequestHeader(v.name, v.value)
-        })
-        c.send(o.body)
-    })
 }

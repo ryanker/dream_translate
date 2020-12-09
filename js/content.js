@@ -651,60 +651,6 @@ function setDialogConf(name, value) {
     saveDialogConf()
 }
 
-function alert(message, type) {
-    type = type || 'info'
-    let el = $('dmx_alert')
-    if (!el) {
-        let d = document.createElement('div')
-        d.id = 'dmx_alert'
-        shadow.appendChild(d)
-        el = $('dmx_alert')
-    }
-    let icon = {
-        info: '<i class="dmx-icon dmx-icon-info"></i>',
-        error: '<i class="dmx-icon dmx-icon-close"></i>',
-        success: '<i class="dmx-icon dmx-icon-success"></i>',
-    }
-    let m = document.createElement('div')
-    m.className = `dxm_alert_${type}`
-    m.innerHTML = (icon[type] || '') + message
-    el.appendChild(m)
-    setTimeout(() => {
-        addClass(m, 'an_top')
-    }, 10)
-    setTimeout(() => {
-        addClass(m, 'an_delete')
-        setTimeout(() => {
-            el.removeChild(m)
-        }, 300)
-    }, 2500)
-}
-
-function createTextarea() {
-    let t = document.createElement("textarea")
-    t.style.position = 'fixed'
-    t.style.top = '-200%'
-    document.body.appendChild(t)
-    return t
-}
-
-function execCopy(s) {
-    let t = createTextarea()
-    t.value = s
-    t.select()
-    document.execCommand("copy")
-    document.body.removeChild(t)
-}
-
-function execPaste() {
-    let t = createTextarea()
-    t.focus()
-    document.execCommand("paste")
-    let v = t.value
-    document.body.removeChild(t)
-    return v
-}
-
 function allowUserSelect() {
     if (window.dmxAllowUserSelect) return
     let sty = document.createElement('style')
@@ -731,35 +677,6 @@ function allowUserSelect() {
     document.addEventListener('selectstart', onClean, true)
     window.dmxAllowUserSelect = true
     alert('解除页面限制完成', 'success')
-}
-
-function addClass(el, className) {
-    className = className.trim()
-    let oldClassName = el.className.trim()
-    if (!oldClassName.length) {
-        el.className = className
-    } else if ((' ' + oldClassName + ' ').indexOf(' ' + className + ' ') === -1) {
-        el.className += ' ' + className
-    }
-}
-
-function rmClass(el, className) {
-    let newClassName = el.className.replace(new RegExp('(?:^|\\s)' + className + '(?:\\s|$)', 'g'), ' ').trim()
-    if (newClassName) {
-        el.className = newClassName
-    } else {
-        el.removeAttribute('class')
-    }
-}
-
-function hasClass(el, className) {
-    if (!el.className) return false
-    return (' ' + el.className.trim() + ' ').indexOf(' ' + className.trim() + ' ') > -1
-}
-
-function inArray(val, arr) {
-    // return arr.indexOf(val) !== -1
-    return arr.includes(val)
 }
 
 function dmxDialog(options) {

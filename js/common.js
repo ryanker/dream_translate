@@ -175,6 +175,156 @@ function sleep(delay) {
     return new Promise(r => setTimeout(r, delay))
 }
 
+function addClass(el, className) {
+    className = className.trim()
+    let oldClassName = el.className.trim()
+    if (!oldClassName) {
+        el.className = className
+    } else if (` ${oldClassName} `.indexOf(` ${className} `) === -1) {
+        el.className += ' ' + className
+    }
+}
+
+function rmClass(el, className) {
+    let newClassName = el.className.replace(new RegExp('(?:^|\\s)' + className + '(?:\\s|$)', 'g'), ' ').trim()
+    if (newClassName) {
+        el.className = newClassName
+    } else {
+        el.removeAttribute('class')
+    }
+}
+
+function hasClass(el, className) {
+    if (!el.className) return false
+    return (` ${el.className.trim()} `).indexOf(` ${className.trim()} `) > -1
+}
+
+function inArray(val, arr) {
+    // return arr.indexOf(val) !== -1
+    return arr.includes(val)
+}
+
+function createTextarea() {
+    let t = document.createElement("textarea")
+    t.style.position = 'fixed'
+    t.style.top = '-200%'
+    document.body.appendChild(t)
+    return t
+}
+
+function execCopy(s) {
+    let t = createTextarea()
+    t.value = s
+    t.select()
+    document.execCommand("copy")
+    document.body.removeChild(t)
+}
+
+function execPaste() {
+    let t = createTextarea()
+    t.focus()
+    document.execCommand("paste")
+    let v = t.value
+    document.body.removeChild(t)
+    return v
+}
+
+function alert(message, type) {
+    type = type || 'info'
+    let el = $('dmx_alert')
+    if (!el) {
+        let d = document.createElement('div')
+        d.id = 'dmx_alert'
+        shadow.appendChild(d)
+        el = $('dmx_alert')
+    }
+    let icon = {
+        info: '<i class="dmx-icon dmx-icon-info"></i>',
+        error: '<i class="dmx-icon dmx-icon-close"></i>',
+        success: '<i class="dmx-icon dmx-icon-success"></i>',
+    }
+    let m = document.createElement('div')
+    m.className = `dxm_alert_${type}`
+    m.innerHTML = (icon[type] || '') + message
+    el.appendChild(m)
+    setTimeout(() => {
+        addClass(m, 'an_top')
+    }, 10)
+    setTimeout(() => {
+        addClass(m, 'an_delete')
+        setTimeout(() => {
+            el.removeChild(m)
+        }, 300)
+    }, 2500)
+}
+
+function httpGet(url, type, headers) {
+    return new Promise((resolve, reject) => {
+        let c = new XMLHttpRequest()
+        c.responseType = type || 'text'
+        c.timeout = 10000
+        c.onload = function (e) {
+            if (this.status === 200) {
+                resolve(this.response)
+            } else {
+                reject(e)
+            }
+        }
+        c.ontimeout = function (e) {
+            reject('NETWORK_TIMEOUT', e)
+        }
+        c.onerror = function (e) {
+            reject('NETWORK_ERROR', e)
+        }
+        c.open("GET", url)
+        headers && headers.forEach(v => {
+            c.setRequestHeader(v.name, v.value)
+        })
+        c.send()
+    })
+}
+
+function httpPost(options) {
+    let o = Object.assign({
+        url: '',
+        responseType: 'json',
+        type: 'form',
+        body: null,
+        timeout: 20000,
+        headers: [],
+    }, options)
+    return new Promise((resolve, reject) => {
+        let c = new XMLHttpRequest()
+        c.responseType = o.responseType
+        c.timeout = o.timeout
+        c.onload = function (e) {
+            if (this.status === 200 && this.response !== null) {
+                resolve(this.response)
+            } else {
+                reject(e)
+            }
+        }
+        c.ontimeout = function (e) {
+            reject('NETWORK_TIMEOUT', e)
+        }
+        c.onerror = function (e) {
+            reject('NETWORK_ERROR', e)
+        }
+        c.open("POST", o.url)
+        if (o.type === 'form') {
+            c.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+        } else if (o.type === 'json') {
+            c.setRequestHeader("Content-Type", "application/json; charset=UTF-8")
+        } else if (o.type === 'xml') {
+            c.setRequestHeader("Content-Type", "application/ssml+xml")
+        }
+        o.headers.length > 0 && o.headers.forEach(v => {
+            c.setRequestHeader(v.name, v.value)
+        })
+        c.send(o.body)
+    })
+}
+
 function debug(...data) {
     isDebug && console.log('[DMX DEBUG]', ...data)
 }
