@@ -1,18 +1,25 @@
-let bg = chrome.extension.getBackgroundPage()
-let setting = bg.setting
+let setting = {}
+document.addEventListener('DOMContentLoaded', async function () {
+    await storageSyncGet(['setting']).then(function (r) {
+        setting = r.setting
+    })
 
-document.addEventListener('DOMContentLoaded', function () {
+    // 初始值
     document.querySelector(`[name="scribble"][value="${setting.scribble}"]`).checked = true
 
+    // 修改设置
     N('scribble').forEach(el => {
         el.addEventListener('change', function () {
-            let val = this.value
-            bg.setSetting('scribble', val)
+            setting.scribble = this.value
+            B.getBackgroundPage().saveSettingAll(setting, true)
         })
     })
 
+    // 解除页面限制
     $('allow_select').addEventListener('click', function () {
-        bg.currentTabMessage({action: 'allowSelect'})
+        getActiveTabId().then(tabId => {
+            tabId && sendTabMessage(tabId, {action: 'allowSelect'})
+        })
     })
 })
 

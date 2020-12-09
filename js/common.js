@@ -10,6 +10,7 @@ const isDebug = true
 const isChrome = window.navigator.userAgent.includes("Chrome")
 // const isChrome = typeof browser === "undefined" || Object.getPrototypeOf(browser) !== Object.prototype
 const B = {
+    getBackgroundPage: chrome.extension.getBackgroundPage,
     id: chrome.runtime.id,
     root: chrome.runtime.getURL(''),
     onMessage: chrome.runtime.onMessage,
@@ -103,7 +104,7 @@ function getActiveTabId() {
             })
         } else {
             browser.tabs.query({currentWindow: true, active: true}).then(tab => {
-                let tabId = tab[0] && tab[0].url && resolve(tab[0].id)
+                let tabId = tab[0] && resolve(tab[0].id)
                 resolve(tabId)
             }).catch(err => reject(err))
         }
@@ -154,6 +155,7 @@ function removeMenu(name) {
 function setBrowserAction(text) {
     B.browserAction.setBadgeText({text: text || ''})
     B.browserAction.setBadgeBackgroundColor({color: 'red'})
+    !isChrome && B.browserAction.setBadgeTextColor({color: 'white'}) // firefox
 }
 
 // 获得所有语音的列表 (firefox 不支持)
