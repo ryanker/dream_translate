@@ -1,53 +1,51 @@
 'use strict'
 
 let conf, setting, sdk = {}, localTTSConf = {}
-document.addEventListener('DOMContentLoaded', function () {
-    (async () => {
-        let dialogCSS = '', languageList = ''
-        await fetch('../conf/conf.json').then(r => r.json()).then(r => {
-            conf = r
-        })
-        await fetch('../css/dmx_dialog.css').then(r => r.text()).then(s => {
-            dialogCSS += minCss(s)
-        })
-        await fetch('../conf/language.json').then(r => r.text()).then(s => {
-            languageList += s
-        })
-        storageLocalSet({conf, dialogCSS, languageList}).catch(err => debug(`save error: ${err}`))
+document.addEventListener('DOMContentLoaded', async function () {
+    let dialogCSS = '', languageList = ''
+    await fetch('../conf/conf.json').then(r => r.json()).then(r => {
+        conf = r
+    })
+    await fetch('../css/dmx_dialog.css').then(r => r.text()).then(s => {
+        dialogCSS += minCss(s)
+    })
+    await fetch('../conf/language.json').then(r => r.text()).then(s => {
+        languageList += s
+    })
+    storageLocalSet({conf, dialogCSS, languageList}).catch(err => debug(`save error: ${err}`))
 
-        await storageSyncGet(['setting']).then(function (result) {
-            setting = Object.assign({}, conf.setting, result.setting)
-        })
-        debug('init setting:', setting)
-        debug('init conf:', conf)
+    await storageSyncGet(['setting']).then(function (result) {
+        setting = Object.assign({}, conf.setting, result.setting)
+    })
+    debug('conf:', conf)
+    debug('setting:', setting)
 
-        // 初始设置参数
-        storageSyncSet({setting}).catch(err => debug(`save error: ${err}`))
+    // 初始设置参数
+    storageSyncSet({setting}).catch(err => debug(`save error: ${err}`))
 
-        // 是否显示关闭划词图标
-        if (setting.scribble === 'off') setBrowserAction('OFF')
+    // 是否显示关闭划词图标
+    if (setting.scribble === 'off') setBrowserAction('OFF')
 
-        // 加载 js
-        loadJs(uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList))), 'translate')
-        loadJs(Object.keys(conf.dictionaryList), 'dictionary')
+    // 加载 js
+    loadJs(uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList))), 'translate')
+    loadJs(Object.keys(conf.dictionaryList), 'dictionary')
 
-        // 添加菜单
-        setting.searchMenus.forEach(name => {
-            let v = conf.searchList[name]
-            v && addMenu(name, v.title, v.url)
-        })
-    })()
+    // 添加菜单
+    setting.searchMenus.forEach(name => {
+        let v = conf.searchList[name]
+        v && addMenu(name, v.title, v.url)
+    })
 
     loadLocalConf()
+})
 
-    // 添加上下文菜单
-    B.contextMenus.create({
-        title: "梦想翻译“%s”",
-        contexts: ["selection"],
-        onclick: function (info, tab) {
-            tab && sendTabMessage(tab.id, {action: 'contextMenus', text: info.selectionText})
-        }
-    })
+// 添加上下文菜单
+B.contextMenus.create({
+    title: "梦想翻译“%s”",
+    contexts: ["selection"],
+    onclick: function (info, tab) {
+        tab && sendTabMessage(tab.id, {action: 'contextMenus', text: info.selectionText})
+    }
 })
 
 // 监听设置修改
@@ -63,8 +61,8 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     sendResponse()
     debug('request:', m)
     debug('sender:', sender)
-    if (!sender.tab) return
-    let tabId = sender.tab.id
+    // if (!sender.tab) return
+    let tabId = sender?.tab?.id
 
     if (m.action === 'translate') {
         setting.translateList.forEach(name => {
@@ -125,6 +123,11 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
             let title = conf.dictionaryList[m.name] || ''
             sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, error: `${title}发音出错`})
         })
+    } else if (m.action === 'menu') {
+        let v = conf.searchList[m.name]
+        if (v) m.checked ? addMenu(m.name, v.title, v.url) : removeMenu(m.name)
+    } else if (m.action === 'setting') {
+        setSetting(m.name, m.value)
     }
 })
 
@@ -135,6 +138,13 @@ function minCss(s) {
     s = s.replace(/;}/g, '}')
     s = s.replace(/;}/g, '}')
     return s
+}
+
+function setSetting(name, value) {
+    debug('setSetting:', name, '=', value)
+    if (name === 'scribble') setBrowserAction(value === 'off' ? 'OFF' : '')
+    setting[name] = value
+    storageSyncSet({setting})
 }
 
 async function autoSoundPlay(tabId, text, lang, list, arr) {

@@ -156,7 +156,7 @@ function setBrowserAction(text) {
     B.browserAction.setBadgeBackgroundColor({color: 'red'})
 }
 
-// 获得所有语音的列表
+// 获得所有语音的列表 (firefox 不支持)
 function getVoices() {
     if (!B.tts || !B.tts.getVoices) return null
     let list = {}
