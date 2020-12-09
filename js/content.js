@@ -1,7 +1,6 @@
 'use strict'
 
-window.isDebug = true
-let dialog, shadow, setting, conf, dialogCSS, languageList, iconBut, iconText, extPath
+let dialog, shadow, setting, conf, dialogCSS, languageList, iconBut, iconText
 let dialogConf = {
     width: 500,
     height: 470,
@@ -619,11 +618,11 @@ function searchBoxInit() {
 }
 
 function settingBoxInit() {
-    dialog.contentHTML(`<iframe class="dmx_iframe" src="${getURL('html/setting.html')}" importance="high"></iframe>`)
+    dialog.contentHTML(`<iframe class="dmx_iframe" src="${B.root + 'html/setting.html'}" importance="high"></iframe>`)
 }
 
 function moreBoxInit() {
-    dialog.contentHTML(`<iframe class="dmx_iframe" src="${getURL('html/more.html')}" importance="high"></iframe>`)
+    dialog.contentHTML(`<iframe class="dmx_iframe" src="${B.root + 'html/more.html'}" importance="high"></iframe>`)
 }
 
 function $(id) {
@@ -642,11 +641,6 @@ function onD(s, type, listener, options) {
     D(s).forEach(v => {
         v.addEventListener(type, listener, options)
     })
-}
-
-function getURL(s) {
-    if (!extPath) extPath = B.getURL('')
-    return extPath + s
 }
 
 function loadSetting(callback) {
@@ -802,7 +796,7 @@ function dmxDialog(options) {
     d.style.all = 'initial'
     document.documentElement.appendChild(d)
     let shadow = d.attachShadow({mode: 'closed'})
-    shadow.innerHTML = `<link rel="stylesheet" href="${getURL('css/content.css')}">
+    shadow.innerHTML = `<link rel="stylesheet" href="${B.root + 'css/content.css'}">
 <style>${o.cssText}</style>
 <div id="dmx_dialog">
     <div id="dmx_dialog_title">

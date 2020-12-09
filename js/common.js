@@ -4,12 +4,13 @@
  * https://github.com/mozilla/webextension-polyfill
  * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Chrome_incompatibilities
  */
+const isDebug = true
 const isChrome = typeof browser === "undefined" || Object.getPrototypeOf(browser) !== Object.prototype
 const B = {
     id: chrome.runtime.id,
+    root: chrome.runtime.getURL(''),
     onMessage: chrome.runtime.onMessage,
     sendMessage: chrome.runtime.sendMessage,
-    getURL: chrome.runtime.getURL,
     error: chrome.runtime.lastError,
     storageLocal: chrome.storage.local,
     storageSync: chrome.storage.sync,
@@ -69,9 +70,50 @@ function storage(type, method, options) {
 }
 
 function debug(...data) {
-    window.isDebug && console.log('[DMX DEBUG]', ...data)
+    isDebug && console.log('[DMX DEBUG]', ...data)
 }
 
 function sleep(delay) {
     return new Promise(r => setTimeout(r, delay))
+}
+
+// ======== background ========
+function addMenu(name, title, url) {
+    // {id: "separator1", type: "separator", contexts: ['selection']}
+    B.contextMenus.create({
+        id: name + '_page',
+        title: title + '首页',
+        contexts: ["page"],
+        onclick: function () {
+            B.tabs.create({url: (new URL(url)).origin + '?tn=dream_translate'})
+        }
+    })
+    B.contextMenus.create({
+        id: name + '_selection',
+        title: lv.title + "“%s”",
+        contexts: ["selection"],
+        onclick: function (info) {
+            B.tabs.create({url: url.format(decodeURIComponent(info.selectionText)) + '&tn=dream_translate'})
+        }
+    })
+}
+
+function removeMenu(name) {
+    B.contextMenus.remove(name + '_page')
+    B.contextMenus.remove(name + '_selection')
+}
+
+// 获得所有语音的列表
+function getVoices() {
+    if (!B.tts || !B.tts.getVoices) return null
+    let list = {}
+    B.tts.getVoices(function (voices) {
+        for (let i = 0; i < voices.length; i++) {
+            // debug('Voice ' + i + ':', JSON.stringify(voices[i]))
+            let v = voices[i]
+            if (!list[v.lang]) list[v.lang] = []
+            list[v.lang].push({lang: v.lang, voiceName: v.voiceName, remote: v.remote})
+        }
+    })
+    return list
 }
