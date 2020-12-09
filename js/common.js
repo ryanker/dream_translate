@@ -229,35 +229,6 @@ function execPaste() {
     return v
 }
 
-function alert(message, type) {
-    type = type || 'info'
-    let el = $('dmx_alert')
-    if (!el) {
-        let d = document.createElement('div')
-        d.id = 'dmx_alert'
-        shadow.appendChild(d)
-        el = $('dmx_alert')
-    }
-    let icon = {
-        info: '<i class="dmx-icon dmx-icon-info"></i>',
-        error: '<i class="dmx-icon dmx-icon-close"></i>',
-        success: '<i class="dmx-icon dmx-icon-success"></i>',
-    }
-    let m = document.createElement('div')
-    m.className = `dxm_alert_${type}`
-    m.innerHTML = (icon[type] || '') + message
-    el.appendChild(m)
-    setTimeout(() => {
-        addClass(m, 'an_top')
-    }, 10)
-    setTimeout(() => {
-        addClass(m, 'an_delete')
-        setTimeout(() => {
-            el.removeChild(m)
-        }, 300)
-    }, 2500)
-}
-
 function httpGet(url, type, headers) {
     return new Promise((resolve, reject) => {
         let c = new XMLHttpRequest()
