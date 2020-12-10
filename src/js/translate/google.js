@@ -118,18 +118,19 @@ function googleTranslate() {
         },
         langMapReverse: {},
         sign(t, e) {
-            var xe = '', Ue = function (t, e) {
-                for (var r = 0; r < e.length - 2; r += 3) {
-                    var n = "a" <= (n = e.charAt(r + 2)) ? n.charCodeAt(0) - 87 : Number(n)
+            let xe = '', Ue = function (t, e) {
+                for (let r = 0, n; r < e.length - 2; r += 3) {
+                    n = "a" <= (n = e.charAt(r + 2)) ? n.charCodeAt(0) - 87 : Number(n)
                     n = "+" === e.charAt(r + 1) ? t >>> n : t << n
                     t = "+" === e.charAt(r) ? t + n & 4294967295 : t ^ n
                 }
                 return t
             }
-            var r, n = (r = '' !== xe ? xe : (xe = e || "") || "").split(".")
+            let r, n = (r = '' !== xe ? xe : (xe = e || "") || "").split(".")
             r = Number(n[0]) || 0
-            for (var o = [], a = 0, c = 0; c < t.length; c++) {
-                var i = t.charCodeAt(c)
+            let o = [], a = 0, c = 0
+            for (; c < t.length; c++) {
+                let i = t.charCodeAt(c)
                 128 > i ? o[a++] = i : (2048 > i ? o[a++] = i >> 6 | 192 : (55296 === (64512 & i) && c + 1 < t.length && 56320 === (64512 & t.charCodeAt(c + 1))
                     ? (i = 65536 + ((1023 & i) << 10) + (1023 & t.charCodeAt(++c)), o[a++] = i >> 18 | 240, o[a++] = i >> 12 & 63 | 128) :
                     o[a++] = i >> 12 | 224, o[a++] = i >> 6 & 63 | 128), o[a++] = 63 & i | 128)
