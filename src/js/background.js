@@ -118,6 +118,8 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         if (v) m.checked ? addMenu(m.name, v.title, v.url) : removeMenu(m.name)
     } else if (m.action === 'saveSetting') {
         saveSettingAll(m.setting, m.updateIcon)
+    } else if (m.action === 'copy') {
+        execCopy(m.text) // 后台复制，页面才不会失去焦点
     }
 })
 

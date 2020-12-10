@@ -303,15 +303,11 @@ function linkResult(m) {
 }
 
 function playTTS(name, type, lang, text) {
-    sendMessage({action: 'translateTTS', name: name, type: type, lang: lang, text: text}).catch(e => {
-        alert('梦想翻译已更新，请刷新页面激活。', 'error')
-    })
+    sendBgMessage({action: 'translateTTS', name: name, type: type, lang: lang, text: text})
 }
 
 function playSound(name, type, url) {
-    sendMessage({action: 'dictionarySound', name: name, type: type, url: url}).catch(e => {
-        alert('梦想翻译已更新，请刷新页面激活。', 'error')
-    })
+    sendBgMessage({action: 'dictionarySound', name: name, type: type, url: url})
 }
 
 function onQuery(text, clientX, clientY) {
@@ -323,7 +319,7 @@ function onQuery(text, clientX, clientY) {
 
     // 自动复制功能
     if (setting.autoCopy === 'on') {
-        execCopy(text)
+        sendBgMessage({action: 'copy', text})
         alert('复制成功', 'success')
     }
 
@@ -362,9 +358,7 @@ function queryInit(text) {
         $(`search_input`).value = text
         searchCaseInit()
     }
-    message && sendMessage(message).catch(e => {
-        alert('梦想翻译已更新，请刷新页面激活。', 'error')
-    })
+    sendBgMessage(message)
 }
 
 function checkChange(action, text) {
@@ -405,7 +399,8 @@ function translateCaseInit() {
         let bilingualEl = caseEl.querySelector('.case_bilingual')
         let contentEl = caseEl.querySelector('.case_content')
         copyEl.addEventListener('click', () => {
-            execCopy(contentEl.innerText.replace(/\n{2}/g, '\n').trim())
+            let text = contentEl.innerText.replace(/\n{2}/g, '\n').trim()
+            sendBgMessage({action: 'copy', text})
             alert('复制成功', 'success')
         })
         bilingualEl.addEventListener('click', () => {
@@ -678,6 +673,12 @@ function allowUserSelect() {
     document.addEventListener('selectstart', onClean, true)
     window.dmxAllowUserSelect = true
     alert('解除页面限制完成', 'success')
+}
+
+function sendBgMessage(message) {
+    message && sendMessage(message).catch(e => {
+        alert('梦想翻译已更新，请刷新页面激活。', 'error')
+    })
 }
 
 function alert(message, type) {

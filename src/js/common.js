@@ -115,7 +115,7 @@ function sendMessage(message) {
         if (!isFirefox) {
             B.sendMessage(message, r => B.error ? reject(B.error) : resolve(r))
         } else {
-            browser.runtime.sendMessage(message).then((r, err) => err ? reject(err) : resolve(r))
+            browser.runtime.sendMessage(message).then(r => resolve(r), err => reject(err))
         }
     })
 }
