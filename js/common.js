@@ -169,17 +169,20 @@ function setBrowserAction(text) {
 
 // 获得所有语音的列表 (firefox 不支持)
 function getVoices() {
-    if (!B.tts || !B.tts.getVoices) return null
-    let list = {}
-    B.tts.getVoices(function (voices) {
-        for (let i = 0; i < voices.length; i++) {
-            // debug('Voice ' + i + ':', JSON.stringify(voices[i]))
-            let v = voices[i]
-            if (!list[v.lang]) list[v.lang] = []
-            list[v.lang].push({lang: v.lang, voiceName: v.voiceName, remote: v.remote})
-        }
+    return new Promise((resolve, reject) => {
+        if (!B.tts || !B.tts.getVoices) return reject("I won't support it!")
+
+        B.tts.getVoices(function (voices) {
+            let list = {}
+            for (let i = 0; i < voices.length; i++) {
+                // debug('Voice ' + i + ':', JSON.stringify(voices[i]))
+                let v = voices[i]
+                if (!list[v.lang]) list[v.lang] = []
+                list[v.lang].push({lang: v.lang, voiceName: v.voiceName, remote: v.remote})
+            }
+            resolve(list)
+        })
     })
-    return list
 }
 
 function sleep(delay) {
