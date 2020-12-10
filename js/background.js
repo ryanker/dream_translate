@@ -14,14 +14,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
     storageLocalSet({conf, dialogCSS, languageList}).catch(err => debug(`save error: ${err}`))
 
-    await storageSyncGet(['setting']).then(function (result) {
-        setting = Object.assign({}, conf.setting, result.setting)
+    await storageSyncGet(['setting']).then(function (r) {
+        saveSettingAll(r.setting) // 初始设置参数
     })
-    debug('conf:', conf)
-    debug('setting:', setting)
-
-    // 初始设置参数
-    storageSyncSet({setting}).catch(err => debug(`save error: ${err}`))
 
     // 是否显示关闭划词图标
     if (setting.scribble === 'off') setBrowserAction('OFF')
@@ -37,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
 
     loadLocalConf()
+    storageShowAll() // 查看全部数据
 })
 
 // 添加上下文菜单
@@ -46,14 +42,6 @@ B.contextMenus.create({
     onclick: function (info, tab) {
         tab && sendTabMessage(tab.id, {action: 'contextMenus', text: info.selectionText})
     }
-})
-
-// 监听设置修改
-B.storage.onChanged.addListener(function (data) {
-    let keys = Object.keys(data)
-    keys.forEach(k => {
-        if (k === 'setting') setting = data[k].newValue
-    })
 })
 
 // 监听消息
@@ -126,10 +114,20 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     } else if (m.action === 'menu') {
         let v = conf.searchList[m.name]
         if (v) m.checked ? addMenu(m.name, v.title, v.url) : removeMenu(m.name)
-    } else if (m.action === 'setting') {
-        setSetting(m.name, m.value)
+    } else if (m.action === 'saveSetting') {
+        saveSettingAll(m.setting, m.updateIcon)
     }
 })
+
+function saveSettingAll(data, updateIcon) {
+    setting = Object.assign({}, conf.setting, data)
+    updateIcon && setBrowserIcon(setting.scribble)
+    storageSyncSet({setting})
+}
+
+function setBrowserIcon(scribble) {
+    setBrowserAction(scribble === 'off' ? 'OFF' : '')
+}
 
 function minCss(s) {
     s = s.replace(/\/\*.*?\*\//g, '')
@@ -140,36 +138,31 @@ function minCss(s) {
     return s
 }
 
-function setSetting(name, value) {
-    debug('setSetting:', name, '=', value)
-    if (name === 'scribble') setBrowserAction(value === 'off' ? 'OFF' : '')
-    setting[name] = value
-    storageSyncSet({setting})
-}
-
-async function autoSoundPlay(tabId, text, lang, list, arr) {
-    if (lang === 'auto') {
-        lang = 'en' // 默认值
-        await httpPost({
-            url: `https://fanyi.baidu.com/langdetect`,
-            body: `query=${encodeURIComponent(text)}`
-        }).then(r => {
-            if (r && r.lan) lang = r.lan
-        }).catch(err => {
-            debug(err)
-        })
-    }
-    for (let k = 0; k < arr.length; k++) {
-        let name = arr[k]
-        let message = {action: 'translateTTS', name: name, type: 'source', status: 'end'}
-        sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
-        await soundPlay(name, text, lang).then(() => {
-            sendTabMessage(tabId, message)
-        }).catch(err => {
-            debug(`${name} sound error:`, err)
-            sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name]}出错`}))
-        })
-    }
+function autoSoundPlay(tabId, text, lang, list, arr) {
+    (async () => {
+        if (lang === 'auto') {
+            lang = 'en' // 默认值
+            await httpPost({
+                url: `https://fanyi.baidu.com/langdetect`,
+                body: `query=${encodeURIComponent(text)}`
+            }).then(r => {
+                if (r && r.lan) lang = r.lan
+            }).catch(err => {
+                debug(err)
+            })
+        }
+        for (let k = 0; k < arr.length; k++) {
+            let name = arr[k]
+            let message = {action: 'translateTTS', name: name, type: 'source', status: 'end'}
+            sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
+            await soundPlay(name, text, lang).then(() => {
+                sendTabMessage(tabId, message)
+            }).catch(err => {
+                debug(`${name} sound error:`, err)
+                sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name]}出错`}))
+            })
+        }
+    })()
 }
 
 function soundPlay(name, text, lang) {

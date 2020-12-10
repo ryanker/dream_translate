@@ -45,6 +45,15 @@ function storageSyncSet(options) {
     return storage('sync', 'set', options)
 }
 
+function storageShowAll() {
+    isChrome && storageSyncGet(null).then(function (r) {
+        debug(`all sync storage:`, r)
+    })
+    storageLocalGet(null).then(function (r) {
+        debug(`all local storage:`, r)
+    })
+}
+
 function storage(type, method, options) {
     return new Promise((resolve, reject) => {
         if (isChrome) {

@@ -11,18 +11,19 @@ document.addEventListener('DOMContentLoaded', async function () {
     debug('loaded content.js')
 
     let dialogCSS = ''
-    await storageLocalGet(['conf', 'dialogCSS', 'languageList']).then(function (r) {
-        // debug('languageList:', JSON.stringify(languageList))
-        debug('conf:', r.conf)
+    await storageLocalGet(['conf', 'languageList', 'dialogCSS']).then(function (r) {
         conf = r.conf
-        dialogCSS = r.dialogCSS
         languageList = JSON.parse(r.languageList)
+        dialogCSS = r.dialogCSS
     })
 
     await storageSyncGet(['setting', 'dialogConf']).then(function (r) {
         setting = r.setting
         dialogConf = Object.assign({}, conf.dialog, r.dialogConf)
     })
+    debug('setting:', setting)
+    debug('conf:', conf)
+    // debug('languageList:', JSON.stringify(languageList))
 
     // 初始对话框
     initDialog(dialogCSS)
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 B.onMessage.addListener(function (m, sender, sendResponse) {
     sendResponse()
     debug('request:', m)
-    debug('sender:', sender)
+    // debug('sender:', sender)
     if (m.action === 'translate') {
         msgList[m.name] = m.result
         translateResult(m.name)
@@ -67,7 +68,10 @@ window.addEventListener("message", function (m) {
 B.storage.onChanged.addListener(function (data) {
     let keys = Object.keys(data)
     keys.forEach(k => {
-        if (k === 'setting') setting = data[k].newValue
+        if (k === 'setting') {
+            setting = data[k].newValue
+            debug('new setting:', setting)
+        }
     })
 })
 
