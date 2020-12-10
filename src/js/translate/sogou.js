@@ -68,39 +68,20 @@ function sogouTranslate() {
         transOld(q, srcLan, tarLan) {
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
-                let w = chrome.webRequest
 
                 // 取消 Frame 嵌入限制
-                let onCompleted = function (details) {
-                    for (let i = 0; i < details.responseHeaders.length; ++i) {
-                        if (details.responseHeaders[i].name === 'X-Frame-Options') {
-                            details.responseHeaders.splice(i, 1)
-                            break
-                        }
-                    }
-                    return {responseHeaders: details.requestHeaders}
-                }
-                w.onCompleted.addListener(onCompleted, {urls: ["*://fanyi.sogou.com/*"]}, Object.values(w.OnCompletedOptions))
+                onCompletedAddListener(onRemoveFrame, {urls: ["*://fanyi.sogou.com/*"]})
 
                 // Frame 请求
-                let eid = 'soGouIframe'
-                let src = this.link(q, srcLan, tarLan)
-                let el = document.getElementById(eid)
-                if (!el) {
-                    el = document.createElement('iframe')
-                    el.id = eid
-                    el.src = src
-                    document.body.appendChild(el)
-                } else {
-                    el.src = src
-                }
+                let url = this.link(q, srcLan, tarLan)
+                let el = this.openIframe(url)
 
                 // 获取请求参数
-                let isGet = false
                 let urls = ['*://fanyi.sogou.com/reventondc/translateV*']
+                let isFirst = false
                 let onBeforeRequest = function (details) {
-                    if (isGet) return
-                    isGet = true
+                    if (isFirst) return
+                    isFirst = true
 
                     let data = details.requestBody.formData
                     // console.log(data)
@@ -110,40 +91,66 @@ function sogouTranslate() {
                     }, 200)
                     return {cancel: true}
                 }
-                w.onBeforeRequest.addListener(onBeforeRequest, {urls: urls}, Object.values(w.OnBeforeRequestOptions))
+                onBeforeRequestAddListener(onBeforeRequest, {urls: urls})
 
-                // 销毁
-                let removeListener = function () {
-                    el.remove()
-                    w.onCompleted.removeListener(onCompleted)
-                    w.onBeforeSendHeaders.removeListener(onBeforeSendHeaders)
-                    w.onBeforeRequest.removeListener(onBeforeRequest)
-                }
-
-                // 请求接口
+                // 请求接口数据修改
                 let onBeforeSendHeaders = function (details) {
                     let h = details.requestHeaders
                     h.push({name: 'Host', value: 'fanyi.sogou.com'})
                     h.push({name: 'Origin', value: 'https://fanyi.sogou.com'})
-                    h.push({name: 'Referer', value: src})
+                    h.push({name: 'Referer', value: url})
                     h.push({name: 'Sec-Fetch-Site', value: 'same-origin'})
                     return {requestHeaders: h}
                 }
+
+                // 销毁
+                let removeListener = function () {
+                    // el.remove()
+                    onCompletedRemoveListener(onRemoveFrame)
+                    onBeforeSendHeadersRemoveListener(onBeforeSendHeaders)
+                    onBeforeRequestRemoveListener(onBeforeRequest)
+                }
+
+                // 获取数据
                 let post = (url, data) => {
-                    w.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: urls}, Object.values(w.OnBeforeSendHeadersOptions))
+                    onBeforeSendHeadersAddListener(onBeforeSendHeaders, {urls: urls})
                     let p = new URLSearchParams(data)
-                    setTimeout(removeListener, 200)
                     httpPost({url: url, body: p.toString()}).then(r => {
+                        removeListener()
                         if (r) {
                             resolve(this.unify(r, q, srcLan, tarLan))
                         } else {
                             reject('sogou trans error!')
                         }
                     }).catch(e => {
+                        removeListener()
                         reject(e)
                     })
                 }
             })
+        },
+        openIframe(url) {
+            let eid = 'soGouIframe'
+            let el = document.getElementById(eid)
+            if (!el) {
+                el = document.createElement('iframe')
+                el.id = eid
+                el.src = url
+                document.body.appendChild(el)
+            } else {
+                el.src = url
+            }
+
+            // 超时删除，减小内容占用
+            if (this.timeoutId) {
+                clearTimeout(this.timeoutId)
+                this.timeoutId = null
+            }
+            this.timeoutId = setTimeout(() => {
+                el && el.remove()
+            }, 30000)
+
+            return el
         },
         trans(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
@@ -152,6 +159,7 @@ function sogouTranslate() {
                 if (q.length > 5000) return reject('The text is too large!')
 
                 let url = this.link(q, srcLan, tarLan)
+                this.openIframe(url)
                 httpGet(url, 'document').then(r => {
                     let transOld = function () {
                         this.transOld(q, srcLan, tarLan).then((rOld) => {

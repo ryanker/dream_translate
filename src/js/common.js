@@ -170,6 +170,34 @@ function requestHeadersFormat(s) {
     return r
 }
 
+function onBeforeRequestAddListener(callback, filter, extraInfoSpec) {
+    if (!extraInfoSpec) extraInfoSpec = Object.values(B.webRequest.OnBeforeRequestOptions)
+    B.webRequest.onBeforeRequest.addListener(callback, filter, extraInfoSpec)
+}
+
+function onBeforeRequestRemoveListener(callback) {
+    B.webRequest.onBeforeRequest.removeListener(callback)
+}
+
+function onCompletedAddListener(callback, filter, extraInfoSpec) {
+    if (!extraInfoSpec) extraInfoSpec = Object.values(B.webRequest.OnCompletedOptions)
+    B.webRequest.onCompleted.addListener(callback, filter, extraInfoSpec)
+}
+
+function onCompletedRemoveListener(callback) {
+    B.webRequest.onCompleted.removeListener(callback)
+}
+
+function onRemoveFrame(details) {
+    for (let i = 0; i < details.responseHeaders.length; ++i) {
+        if (details.responseHeaders[i].name === 'X-Frame-Options') {
+            details.responseHeaders.splice(i, 1)
+            break
+        }
+    }
+    return {responseHeaders: details.requestHeaders}
+}
+
 // 获得所有语音的列表 (firefox 不支持)
 function getVoices() {
     return new Promise((resolve, reject) => {
