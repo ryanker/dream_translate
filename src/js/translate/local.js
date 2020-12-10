@@ -9,7 +9,7 @@ function localTranslate() {
             return new Promise((resolve, reject) => {
                 let ttsConf = setting.ttsConf || {}
                 let lang = conf.ttsList[lan]
-                if (!lang || !voiceList[lang]) return reject('This language is not supported!')
+                if (!lang || !voiceList || !voiceList[lang]) return reject('This language is not supported!')
 
                 let options = {}
                 if (ttsConf['speak_rate']) options.rate = Number(ttsConf['speak_rate'])
@@ -40,9 +40,9 @@ function localTranslate() {
                         }
                     }
                     if (k === 0) {
-                        chrome.tts.speak(v, options)
+                        B.tts.speak(v, options)
                     } else {
-                        chrome.tts.speak(v, Object.assign({enqueue: true}, options))
+                        B.tts.speak(v, Object.assign({enqueue: true}, options))
                     }
                 })
             })

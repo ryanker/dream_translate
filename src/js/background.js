@@ -1,6 +1,6 @@
 'use strict'
 
-let conf, setting, sdk = {}
+let conf, setting, voiceList, sdk = {}
 document.addEventListener('DOMContentLoaded', async function () {
     let dialogCSS = '', languageList = ''
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     await storageSyncGet(['setting']).then(function (r) {
         saveSettingAll(r.setting, true) // 初始设置参数
+    })
+
+    !isFirefox && await getVoices().then(r => {
+        voiceList = r
     })
 
     // 加载 js
