@@ -7,8 +7,8 @@
  * https://crxdoc-zh.appspot.com/extensions/
  */
 const isDebug = true
-const isChrome = window.navigator.userAgent.includes("Chrome")
-// const isChrome = typeof browser === "undefined" || Object.getPrototypeOf(browser) !== Object.prototype
+const isFirefox = navigator.userAgent.includes("Firefox")
+// const isFirefox = typeof browser !== "undefined" && Object.getPrototypeOf(browser) === Object.prototype
 const B = {
     getBackgroundPage: chrome.extension.getBackgroundPage,
     id: chrome.runtime.id,
@@ -46,7 +46,7 @@ function storageSyncSet(options) {
 }
 
 function storageShowAll() {
-    isChrome && storageSyncGet(null).then(function (r) {
+    !isFirefox && storageSyncGet(null).then(function (r) {
         debug(`all sync storage:`, r)
     })
     storageLocalGet(null).then(function (r) {
@@ -56,7 +56,7 @@ function storageShowAll() {
 
 function storage(type, method, options) {
     return new Promise((resolve, reject) => {
-        if (isChrome) {
+        if (!isFirefox) {
             let callback = function (r) {
                 let err = B.error
                 err ? reject(err) : resolve(r)
@@ -83,7 +83,7 @@ function storage(type, method, options) {
 
 function sendMessage(message) {
     return new Promise((resolve, reject) => {
-        if (isChrome) {
+        if (!isFirefox) {
             B.sendMessage(message, r => B.error ? reject(B.error) : resolve(r))
         } else {
             browser.runtime.sendMessage(message).then((r, err) => err ? reject(err) : resolve(r))
@@ -93,7 +93,7 @@ function sendMessage(message) {
 
 function sendTabMessage(tabId, message) {
     return new Promise((resolve, reject) => {
-        if (isChrome) {
+        if (!isFirefox) {
             // B.tabs.sendMessage(tabId, message, r => B.error ? reject(B.error) : resolve(r))
             tabId && B.tabs.sendMessage(tabId, message)
         } else {
@@ -106,7 +106,7 @@ function sendTabMessage(tabId, message) {
 
 function getActiveTabId() {
     return new Promise((resolve, reject) => {
-        if (isChrome) {
+        if (!isFirefox) {
             B.tabs.query({currentWindow: true, active: true}, tab => {
                 let tabId = tab[0] && tab[0].url && resolve(tab[0].id)
                 resolve(tabId)
@@ -164,7 +164,7 @@ function removeMenu(name) {
 function setBrowserAction(text) {
     B.browserAction.setBadgeText({text: text || ''})
     B.browserAction.setBadgeBackgroundColor({color: 'red'})
-    !isChrome && B.browserAction.setBadgeTextColor({color: 'white'}) // firefox
+    isFirefox && B.browserAction.setBadgeTextColor({color: 'white'})
 }
 
 // 获得所有语音的列表 (firefox 不支持)
