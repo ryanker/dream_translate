@@ -8,8 +8,6 @@ let dialog, shadow,
     root = B.root
 let dQuery = {action: '', text: '', source: '', target: ''}
 document.addEventListener('DOMContentLoaded', async function () {
-    debug('loaded content.js')
-
     let dialogCSS = ''
     await storageLocalGet(['conf', 'languageList', 'dialogCSS']).then(function (r) {
         conf = r.conf
@@ -21,15 +19,16 @@ document.addEventListener('DOMContentLoaded', async function () {
         setting = r.setting
         dialogConf = Object.assign({}, conf.dialog, r.dialogConf)
     })
-    debug('setting:', setting)
-    debug('conf:', conf)
-    // debug('languageList:', JSON.stringify(languageList))
 
     // 初始对话框
     initDialog(dialogCSS)
 
     // 是否开启自动解除选中现在
     if (setting.allowSelect === 'on') allowUserSelect()
+
+    debug('setting:', setting)
+    debug('conf:', conf)
+    // debug('languageList:', JSON.stringify(languageList))
 })
 
 // 监听消息
