@@ -1,6 +1,6 @@
 'use strict'
 
-let conf, setting, sdk = {}, localTTSConf = {}
+let conf, setting, sdk = {}
 document.addEventListener('DOMContentLoaded', async function () {
     let dialogCSS = '', languageList = ''
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
