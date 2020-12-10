@@ -205,7 +205,7 @@ function localTtsSetting() {
     let dialogEl = $('local_tts_dialog')
     let butEl = document.querySelector('[name="translateTTSList"][value="local"]')
     if (isFirefox) {
-        butEl.style.display = 'none'
+        butEl.parentElement.style.display = 'none'
         return
     }
 
