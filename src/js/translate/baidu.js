@@ -9,25 +9,27 @@ function baiduTranslate() {
         },
         lanTTS: ["en", "zh", "yue", "ara", "kor", "jp", "th", "pt", "spa", "fra", "ru", "de"],
         sign(t, e) {
-            var ye = function (t, e) {
-                for (var r = 0; r < e.length - 2; r += 3) {
-                    var n = e.charAt(r + 2)
+            let ye = function (t, e) {
+                for (let r = 0; r < e.length - 2; r += 3) {
+                    let n = e.charAt(r + 2)
                     n = n >= "a" ? n.charCodeAt(0) - 87 : Number(n)
                     n = "+" === e.charAt(r + 1) ? t >>> n : t << n
                     t = "+" === e.charAt(r) ? t + n & 4294967295 : t ^ n
                 }
                 return t
             }
-            var he = '', r = t.length
+            let he = '', r = t.length
             r > 30 && (t = "" + t.substr(0, 10) + t.substr(Math.floor(r / 2) - 5, 10) + t.substr(-10, 10))
-            var n = ('' !== he ? he : (he = e || "") || "").split("."), o = Number(n[0]) || 0, a = Number(n[1]) || 0
-            for (var c = [], i = 0, u = 0; u < t.length; u++) {
-                var s = t.charCodeAt(u)
+            let n = ('' !== he ? he : (he = e || "") || "").split("."), o = Number(n[0]) || 0, a = Number(n[1]) || 0
+            let c = [], i = 0, u = 0
+            for (; u < t.length; u++) {
+                let s = t.charCodeAt(u)
                 128 > s ? c[i++] = s : (2048 > s ? c[i++] = s >> 6 | 192 : (55296 === (64512 & s) && u + 1 < t.length && 56320 === (64512 & t.charCodeAt(u + 1)) ?
                     (s = 65536 + ((1023 & s) << 10) + (1023 & t.charCodeAt(++u)), c[i++] = s >> 18 | 240, c[i++] = s >> 12 & 63 | 128) :
                     c[i++] = s >> 12 | 224, c[i++] = s >> 6 & 63 | 128), c[i++] = 63 & s | 128)
             }
-            for (var f = o, l = 0; l < c.length; l++) f = ye(f += c[l], "+-a^+6")
+            let f = o, l = 0
+            for (; l < c.length; l++) f = ye(f += c[l], "+-a^+6")
             return f = ye(f, "+-3^+b+-f"), 0 > (f ^= a) && (f = 2147483648 + (2147483647 & f)), (f %= 1e6).toString() + "." + (f ^ o)
         },
         init() {
