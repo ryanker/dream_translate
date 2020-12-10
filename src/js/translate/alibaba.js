@@ -38,26 +38,17 @@ function alibabaTranslate() {
             return this
         },
         addListenerRequest() {
-            chrome.webRequest.onBeforeSendHeaders.addListener(this.onChangeHeaders,
-                {urls: ['*://translate.alibaba.com/*'], types: ['xmlhttprequest']},
-                Object.values(chrome.webRequest.OnBeforeSendHeadersOptions))
+            onBeforeSendHeadersAddListener(this.onChangeHeaders,
+                {urls: ['*://translate.alibaba.com/*'], types: ['xmlhttprequest']})
         },
         removeListenerRequest() {
-            chrome.webRequest.onBeforeSendHeaders.removeListener(this.onChangeHeaders)
+            onBeforeSendHeadersRemoveListener(this.onChangeHeaders)
         },
         onChangeHeaders(details) {
-            let h = details.requestHeaders
-            let requestStr = `origin: https://translate.alibaba.com
+            let s = `origin: https://translate.alibaba.com
 referer: https://translate.alibaba.com/
 sec-fetch-site: same-origin`
-            let arr = requestStr.split('\n')
-            arr && arr.forEach(v => {
-                v = v.trim()
-                if (!v) return
-                let a = v.split(': ')
-                if (a.length === 2) h.push({name: a[0].trim(), value: a[1].trim()})
-            })
-            return {requestHeaders: h}
+            return {requestHeaders: details.requestHeaders.concat(requestHeadersFormat(s))}
         },
         trans(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'

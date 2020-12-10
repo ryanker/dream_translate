@@ -6,20 +6,24 @@ function frdicTranslate() {
             return this
         },
         addListenerRequest() {
-            let arr = navigator.userAgent.match(/Chrome\/(\d+)/)
-            let chromeVersion = arr ? Number(arr[1]) : -1
-            chrome.webRequest.onBeforeSendHeaders.addListener(this.onChangeHeaders,
-                {urls: ['*://api.frdic.com/api/*']},
-                chromeVersion > 71 ? ['blocking', 'requestHeaders', 'extraHeaders'] : ['blocking', 'requestHeaders'])
+            onBeforeSendHeadersAddListener(this.onChangeHeaders, {urls: ['*://api.frdic.com/api/*']})
         },
         removeListenerRequest() {
-            chrome.webRequest.onBeforeSendHeaders.removeListener(this.onChangeHeaders)
+            onBeforeSendHeadersRemoveListener(this.onChangeHeaders)
         },
         onChangeHeaders(details) {
             let h = details.requestHeaders
             h.push({name: 'Origin', value: 'https://dict.eudic.net/'})
             h.push({name: 'Referer', value: 'https://dict.eudic.net/'})
             return {requestHeaders: h}
+        },
+        onRequest() {
+            this.addListenerRequest()
+            if (this.timeoutId) {
+                clearTimeout(this.timeoutId)
+                this.timeoutId = null
+            }
+            this.timeoutId = setTimeout(this.removeListenerRequest, 30000)
         },
         encode(s) {
             let Base64 = {
@@ -70,7 +74,6 @@ function frdicTranslate() {
             return fix(Base64.encode(s))
         },
         tts(q, lan) {
-            this.addListenerRequest()
             return new Promise((resolve, reject) => {
                 if (lan === 'auto') lan = 'en'
                 let lanArr = {'en': 'en', 'zh': 'zh', 'fra': 'fr', 'de': 'de', 'spa': 'es', 'jp': 'jp'}
@@ -84,6 +87,7 @@ function frdicTranslate() {
                 arr.forEach(text => {
                     r.push(getUrl(text))
                 })
+                this.onRequest()
                 resolve(r)
             })
         },

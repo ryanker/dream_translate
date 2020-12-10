@@ -96,29 +96,26 @@ function qqTranslate() {
             return s.replace(/\+/g, '%2B')
         },
         addListenerRequest() {
-            chrome.webRequest.onBeforeSendHeaders.addListener(this.onChangeHeaders,
-                {urls: ['*://fanyi.qq.com/api/*']},
-                Object.values(chrome.webRequest.OnBeforeSendHeadersOptions))
+            onBeforeSendHeadersAddListener(this.onChangeHeaders, {urls: ['*://fanyi.qq.com/api/*']})
         },
         removeListenerRequest() {
-            chrome.webRequest.onBeforeSendHeaders.removeListener(this.onChangeHeaders)
+            onBeforeSendHeadersRemoveListener(this.onChangeHeaders)
         },
         onChangeHeaders(details) {
-            let h = details.requestHeaders
-            let requestStr = `Host: fanyi.qq.com
+            let s = `Host: fanyi.qq.com
 Origin: https://fanyi.qq.com
 Referer: https://fanyi.qq.com
 Sec-Fetch-Dest: empty
 Sec-Fetch-Mode: cors
 Sec-Fetch-Site: same-origin`
-            let arr = requestStr.split('\n')
-            arr && arr.forEach(v => {
-                v = v.trim()
-                if (!v) return
-                let a = v.split(': ')
-                if (a.length === 2) h.push({name: a[0].trim(), value: a[1].trim()})
-            })
-            return {requestHeaders: h}
+            return {requestHeaders: details.requestHeaders.concat(requestHeadersFormat(s))}
+        },
+        onRequest() {
+            if (this.timeoutId) {
+                clearTimeout(this.timeoutId)
+                this.timeoutId = null
+            }
+            this.timeoutId = setTimeout(this.removeListenerRequest, 30000)
         },
         trans(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
@@ -126,18 +123,19 @@ Sec-Fetch-Site: same-origin`
             if (!inArray(tarLan, this.pairMap[srcLan])) tarLan = this.pairMap[srcLan][0]
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
-                setTimeout(this.removeListenerRequest, 200)
                 let qtv = this.token.qtv
                 let qtk = this.token.qtk
                 let uuid = 'translate_uuid' + (new Date).getTime()
                 let p = `source=${srcLan}&target=${tarLan}&sourceText=${encodeURIComponent(q)}&qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}&sessionUuid=${uuid}`
                 httpPost({url: 'https://fanyi.qq.com/api/translate', body: p}).then(r => {
+                    this.removeListenerRequest()
                     if (r) {
                         resolve(this.unify(r, q, srcLan, tarLan))
                     } else {
                         reject('qq translate error!')
                     }
                 }).catch(e => {
+                    this.removeListenerRequest()
                     reject(e)
                 })
             })
@@ -165,20 +163,14 @@ Sec-Fetch-Site: same-origin`
             return this.trans(q, srcLan, tarLan)
         },
         setCookie(name, value) {
-            chrome.cookies.set({
-                url: 'https://fanyi.qq.com/',
-                name: name,
-                value: value,
-                domain: 'fanyi.qq.com',
-                path: '/'
-            }, v => {
-                if (!chrome.runtime.lastError) this.cookie[v.name] = v.value
+            let domain = 'fanyi.qq.com'
+            cookies('set', {url: `https://${domain}`, name: name, value: value, domain: domain, path: '/'}).then(v => {
+                this.cookie[v.name] = v.value
             })
         },
         getCookieAll() {
-            chrome.cookies.getAll({domain: 'fanyi.qq.com'}, cookies => {
-                cookies.forEach(v => {
-                    // this.cookie.push({name: v.name, value: v.value})
+            cookies('getAll', {domain: 'fanyi.qq.com'}).then(arr => {
+                arr.forEach(v => {
                     this.cookie[v.name] = v.value
                 })
             })
@@ -189,10 +181,7 @@ Sec-Fetch-Site: same-origin`
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'
             return new Promise((resolve) => {
-                this.addListenerRequest()
-                setTimeout(() => {
-                    this.removeListenerRequest()
-                }, 200)
+                this.onRequest()
                 let guid = this.getCookie('fy_guid')
                 // todo: 腾讯 TTS 服务很不稳定
                 resolve(`https://fanyi.qq.com/api/tts?platform=PC_Website&lang=${lan}&text=${encodeURIComponent(q)}&guid=${guid}`)

@@ -7,30 +7,20 @@ function soTranslate() {
             return this
         },
         addListenerRequest() {
-            chrome.webRequest.onBeforeSendHeaders.addListener(this.onChangeHeaders,
-                {urls: ['*://fanyi.so.com/*']},
-                Object.values(chrome.webRequest.OnBeforeSendHeadersOptions))
+            onBeforeSendHeadersAddListener(this.onChangeHeaders, {urls: ['*://fanyi.so.com/*']})
         },
         removeListenerRequest() {
-            chrome.webRequest.onBeforeSendHeaders.removeListener(this.onChangeHeaders)
+            onBeforeSendHeadersRemoveListener(this.onChangeHeaders)
         },
         onChangeHeaders(details) {
-            let h = details.requestHeaders
-            let requestStr = `Host: fanyi.so.com
+            let s = `Host: fanyi.so.com
 Origin: https://fanyi.so.com
 pro: fanyi
 Referer: https://fanyi.so.com/
 Sec-Fetch-Dest: empty
 Sec-Fetch-Mode: cors
 Sec-Fetch-Site: same-origin`
-            let arr = requestStr.split('\n')
-            arr && arr.forEach(v => {
-                v = v.trim()
-                if (!v) return
-                let a = v.split(': ')
-                if (a.length === 2) h.push({name: a[0].trim(), value: a[1].trim()})
-            })
-            return {requestHeaders: h}
+            return {requestHeaders: details.requestHeaders.concat(requestHeadersFormat(s))}
         },
         trans(q, srcLan, tarLan) {
             let eng = 0

@@ -19,6 +19,8 @@ const B = {
     storage: chrome.storage,
     browserAction: chrome.browserAction,
     contextMenus: chrome.contextMenus,
+    webRequest: chrome.webRequest,
+    cookies: chrome.cookies,
     tabs: chrome.tabs,
     tts: chrome.tts,
 }
@@ -68,14 +70,41 @@ function storage(type, method, options) {
                 api.set(options, callback)
             }
         } else {
-            let callback = function (r, err) {
+            let api = isDebug ? browser.storage.local : type === 'sync' ? browser.storage.sync : browser.storage.local
+            if (method === 'get') {
+                api.get(options).then(r => resolve(r), err => reject(err))
+            } else if (method === 'set') {
+                api.set(options).then(r => resolve(r), err => reject(err))
+            }
+        }
+    })
+}
+
+function cookies(method, options) {
+    return new Promise((resolve, reject) => {
+        if (!isFirefox) {
+            let callback = function (r) {
+                let err = B.error
                 err ? reject(err) : resolve(r)
             }
-            let api = browser.storage.local
             if (method === 'get') {
-                api.get(options).then(callback)
+                B.cookies.get(options, callback)
+            } else if (method === 'getAll') {
+                B.cookies.getAll(options, callback)
             } else if (method === 'set') {
-                api.set(options).then(callback)
+                B.cookies.set(options, callback)
+            } else if (method === 'remove') {
+                B.cookies.remove(options, callback)
+            }
+        } else {
+            if (method === 'get') {
+                browser.cookies.get(options).then(r => resolve(r), err => reject(err))
+            } else if (method === 'getAll') {
+                browser.cookies.getAll(options).then(r => resolve(r), err => reject(err))
+            } else if (method === 'set') {
+                browser.cookies.set(options).then(r => resolve(r), err => reject(err))
+            } else if (method === 'remove') {
+                browser.cookies.remove(options).then(r => resolve(r), err => reject(err))
             }
         }
     })
@@ -118,6 +147,27 @@ function getActiveTabId() {
             }).catch(err => reject(err))
         }
     })
+}
+
+function onBeforeSendHeadersAddListener(callback, filter, opt_extraInfoSpec) {
+    if (!opt_extraInfoSpec) opt_extraInfoSpec = Object.values(B.webRequest.OnBeforeSendHeadersOptions)
+    B.webRequest.onBeforeSendHeaders.addListener(callback, filter, opt_extraInfoSpec)
+}
+
+function onBeforeSendHeadersRemoveListener(callback) {
+    B.webRequest.onBeforeSendHeaders.removeListener(callback)
+}
+
+function requestHeadersFormat(s) {
+    let r = []
+    let arr = s.split('\n')
+    arr && arr.forEach(v => {
+        v = v.trim()
+        if (!v) return
+        let a = v.split(': ')
+        if (a.length === 2) r.push({name: a[0].trim(), value: a[1].trim()})
+    })
+    return r
 }
 
 // 获得所有语音的列表 (firefox 不支持)

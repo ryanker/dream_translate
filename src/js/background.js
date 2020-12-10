@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         saveSettingAll(r.setting, true) // 初始设置参数
     })
 
+    // 发音列表
     !isFirefox && await getVoices().then(r => {
         voiceList = r
     })

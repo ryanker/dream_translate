@@ -204,12 +204,11 @@ function youdaoTranslate() {
             })
         },
         addListenerRequest() {
-            chrome.webRequest.onBeforeSendHeaders.addListener(this.onChangeHeaders,
-                {urls: ['*://fanyi.youdao.com/*'], types: ['xmlhttprequest']},
-                Object.values(chrome.webRequest.OnBeforeSendHeadersOptions))
+            onBeforeSendHeadersAddListener(this.onChangeHeaders,
+                {urls: ['*://fanyi.youdao.com/*'], types: ['xmlhttprequest']})
         },
         removeListenerRequest() {
-            chrome.webRequest.onBeforeSendHeaders.removeListener(this.onChangeHeaders)
+            onBeforeSendHeadersRemoveListener(this.onChangeHeaders)
         },
         onChangeHeaders(details) {
             let h = details.requestHeaders
@@ -219,6 +218,7 @@ function youdaoTranslate() {
                     return true
                 }
             })*/
+            h.push({name: 'Origin', value: 'https://fanyi.youdao.com'})
             h.push({name: 'Referer', value: 'http://fanyi.youdao.com'})
             return {requestHeaders: h}
         },
