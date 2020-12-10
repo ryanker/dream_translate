@@ -15,11 +15,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     storageLocalSet({conf, dialogCSS, languageList}).catch(err => debug(`save error: ${err}`))
 
     await storageSyncGet(['setting']).then(function (r) {
-        saveSettingAll(r.setting) // 初始设置参数
+        saveSettingAll(r.setting, true) // 初始设置参数
     })
-
-    // 是否显示关闭划词图标
-    if (setting.scribble === 'off') setBrowserAction('OFF')
 
     // 加载 js
     loadJs(uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList))), 'translate')
@@ -31,8 +28,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         v && addMenu(name, v.title, v.url)
     })
 
-    loadLocalConf()
-    storageShowAll() // 查看全部数据
+    // 查看全部数据
+    storageShowAll()
 })
 
 // 添加上下文菜单
@@ -48,7 +45,7 @@ B.contextMenus.create({
 B.onMessage.addListener(function (m, sender, sendResponse) {
     sendResponse()
     debug('request:', m)
-    debug('sender:', sender)
+    debug('sender:', sender && sender.url ? sender.url : sender)
     // if (!sender.tab) return
     let tabId = sender?.tab?.id
 
@@ -121,12 +118,43 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
 
 function saveSettingAll(data, updateIcon) {
     setting = Object.assign({}, conf.setting, data)
-    updateIcon && setBrowserIcon(setting.scribble)
+    updateIcon && setBrowserIcon(setting.scribble) // 是否显示关闭划词图标
     storageSyncSet({setting})
 }
 
 function setBrowserIcon(scribble) {
     setBrowserAction(scribble === 'off' ? 'OFF' : '')
+}
+
+function addMenu(name, title, url) {
+    // {id: "separator1", type: "separator", contexts: ['selection']}
+    B.contextMenus.create({
+        id: name + '_page',
+        title: title + '首页',
+        contexts: ["page"],
+        onclick: function () {
+            B.tabs.create({url: (new URL(url)).origin + '?tn=dream_translate'})
+        }
+    })
+    B.contextMenus.create({
+        id: name + '_selection',
+        title: title + "“%s”",
+        contexts: ["selection"],
+        onclick: function (info) {
+            B.tabs.create({url: url.format(decodeURIComponent(info.selectionText)) + '&tn=dream_translate'})
+        }
+    })
+}
+
+function removeMenu(name) {
+    B.contextMenus.remove(name + '_page')
+    B.contextMenus.remove(name + '_selection')
+}
+
+function setBrowserAction(text) {
+    B.browserAction.setBadgeText({text: text || ''})
+    B.browserAction.setBadgeBackgroundColor({color: 'red'})
+    isFirefox && B.browserAction.setBadgeTextColor({color: 'white'})
 }
 
 function minCss(s) {

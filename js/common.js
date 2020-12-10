@@ -120,53 +120,6 @@ function getActiveTabId() {
     })
 }
 
-// ======== background ========
-function loadLocalConf() {
-    let s = localStorage.getItem('localTTSConf')
-    if (s) localTTSConf = JSON.parse(s)
-}
-
-function setLocalConf(k, v) {
-    localTTSConf[k] = v
-    localStorage.setItem('localTTSConf', JSON.stringify(localTTSConf))
-}
-
-function resetLocalConf() {
-    localStorage.removeItem('localTTSConf')
-    localTTSConf = {}
-}
-
-function addMenu(name, title, url) {
-    // {id: "separator1", type: "separator", contexts: ['selection']}
-    B.contextMenus.create({
-        id: name + '_page',
-        title: title + '首页',
-        contexts: ["page"],
-        onclick: function () {
-            B.tabs.create({url: (new URL(url)).origin + '?tn=dream_translate'})
-        }
-    })
-    B.contextMenus.create({
-        id: name + '_selection',
-        title: title + "“%s”",
-        contexts: ["selection"],
-        onclick: function (info) {
-            B.tabs.create({url: url.format(decodeURIComponent(info.selectionText)) + '&tn=dream_translate'})
-        }
-    })
-}
-
-function removeMenu(name) {
-    B.contextMenus.remove(name + '_page')
-    B.contextMenus.remove(name + '_selection')
-}
-
-function setBrowserAction(text) {
-    B.browserAction.setBadgeText({text: text || ''})
-    B.browserAction.setBadgeBackgroundColor({color: 'red'})
-    isFirefox && B.browserAction.setBadgeTextColor({color: 'white'})
-}
-
 // 获得所有语音的列表 (firefox 不支持)
 function getVoices() {
     return new Promise((resolve, reject) => {

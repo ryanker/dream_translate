@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
 
     // 添加发音列表
-    let voiceList = getVoiceListSort(voices)
+    let voiceList = voiceListSort(voices)
     for (const [key, val] of Object.entries(voiceList)) {
         val.forEach(v => {
             let op = document.createElement('option')
@@ -80,7 +80,7 @@ function $(id) {
     return document.getElementById(id)
 }
 
-function getVoiceListSort(list) {
+function voiceListSort(list) {
     if (!list) return {}
     let kArr = Object.keys(list)
     // console.log(kArr.length)

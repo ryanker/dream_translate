@@ -30,7 +30,8 @@
       "wikipedia",
       "baiduBaike"
     ],
-    "searchMenus": []
+    "searchMenus": [],
+    "ttsConf": {}
   },
   "translateList": {
     "baidu": "百度翻译",

@@ -1,13 +1,17 @@
 'use strict'
 
-let bg = chrome.extension.getBackgroundPage()
-let conf = Object.assign({}, bg.conf)
-let voiceList = bg.voiceList
-let localTTSConf = bg.localTTSConf
-let ttsList = conf.ttsList
-let setting = bg.setting
-document.addEventListener('DOMContentLoaded', function () {
+let conf, setting, bg = {}
+document.addEventListener('DOMContentLoaded', async function () {
+    if (!isFirefox) bg = B.getBackgroundPage()
+    await fetch('../conf/conf.json').then(r => r.json()).then(r => {
+        conf = r
+    })
+    await storageSyncGet(['setting']).then(function (r) {
+        setting = r.setting
+    })
     init()
+    // debug('conf:', conf)
+    // debug('setting:', setting)
 })
 
 function init() {
@@ -77,30 +81,6 @@ function N(id) {
     return document.getElementsByName(id)
 }
 
-function addClass(el, className) {
-    className = className.trim()
-    let oldClassName = el.className.trim()
-    if (!oldClassName) {
-        el.className = className
-    } else if (` ${oldClassName} `.indexOf(` ${className} `) === -1) {
-        el.className += ' ' + className
-    }
-}
-
-function rmClass(el, className) {
-    let newClassName = el.className.replace(new RegExp('(?:^|\\s)' + className + '(?:\\s|$)', 'g'), ' ').trim()
-    if (newClassName) {
-        el.className = newClassName
-    } else {
-        el.removeAttribute('class')
-    }
-}
-
-function hasClass(el, className) {
-    if (!el.className) return false
-    return (` ${el.className.trim()} `).indexOf(` ${className.trim()} `) > -1
-}
-
 function navigate(navId, contentSel) {
     let nav = $(navId)
     let el = nav.querySelectorAll('u')
@@ -162,7 +142,9 @@ function bindValue(name, value) {
             } else {
                 value = this.checked ? val : ''
             }
-            bg.setSetting(name, value)
+
+            // 保存设置
+            setSetting(name, value)
         })
     })
 }
@@ -170,7 +152,8 @@ function bindValue(name, value) {
 function bindSearchMenus() {
     N('searchMenus').forEach(v => {
         v.addEventListener('change', function () {
-            this.checked ? bg.addMenu(this.value) : bg.removeMenu(this.value)
+            // firefox 在 iframe 下功能缺失，只能通过 message 处理
+            sendMessage({action: 'menu', name: this.value, checked: this.checked})
         })
     })
 }
@@ -185,12 +168,12 @@ function bindSortHTML(preName, id, name, value, list) {
     })
 }
 
-function sortShow(preName, id, value, obj) {
+function sortShow(preName, id, value, list) {
     let s = ''
     if (value.length > 0) {
         s = preName
         value.forEach((v, k) => {
-            let o = obj[v]
+            let o = list[v]
             s += (k > 0 ? ' > ' : '') + (o.title || o)
         })
     }
@@ -207,57 +190,61 @@ function bindShow(id, name, value) {
     $(id).style.display = (!value || value.length === 0) ? 'none' : 'block'
 }
 
-function settingBoxHTML(id, name, obj) {
+function settingBoxHTML(id, name, list) {
     let s = ''
-    Object.keys(obj).forEach(v => {
-        let o = obj[v]
+    Object.keys(list).forEach(v => {
+        let o = list[v]
         s += `<label><input type="checkbox" name="${name}" value="${v}">${o.title || o}</label>`
     })
     let el = $(id)
     el.innerHTML = s
 }
 
-function clearSetting() {
-    bg.clearSetting(() => {
-        fetch('../conf/conf.json').then(r => r.json()).then(r => {
-            bg.setting = Object.assign({}, r.setting)
-            bg.saveSetting(bg.setting, () => {
-                location.reload()
-            })
-        })
-    })
-}
-
 function localTtsSetting() {
-    let bEl = document.querySelector('[name="translateTTSList"][value="local"]')
-    let lEl = $('local_tts_list')
-    let dEl = $('local_tts_dialog')
-    dEl.querySelector('.dialog_back').onclick = function () {
-        dEl.style.display = 'none'
+    let listEl = $('local_tts_list')
+    let dialogEl = $('local_tts_dialog')
+    let butEl = document.querySelector('[name="translateTTSList"][value="local"]')
+    if (isFirefox) {
+        butEl.style.display = 'none'
+        return
     }
 
-    let specialLang = ['en', 'es', 'nl']
-    let kArr = Object.keys(voiceList)
-    kArr = kArr.sort()
-    let list = {}
-    kArr.forEach(k => {
-        let v = voiceList[k]
-        for (let i = 0; i < specialLang.length; i++) {
-            let lan = specialLang[i]
-            if (k === lan || (new RegExp(`^${lan}-`)).test(k)) {
-                if (!list[lan]) list[lan] = []
-                v.forEach(val => list[lan].push(val))
-                return
-            }
-        }
-        list[k] = v
-    })
+    // 关闭设置
+    dialogEl.querySelector('.dialog_back').onclick = function () {
+        dialogEl.style.display = 'none'
+    }
 
-    let ttsKeys = Object.values(ttsList)
-    fetch('../conf/langSpeak.json').then(r => r.json()).then(langList => {
-        // 语言设置
+    // 打开设置
+    let i = document.createElement('i')
+    i.className = 'dmx-icon dmx-icon-setting'
+    i.title = '本地朗读设置'
+    i.onclick = function (e) {
+        e.preventDefault()
+        dialogEl.style.display = 'block'
+    }
+    butEl.parentNode.appendChild(i)
+
+    // 初始设置
+    let langList = {}, voices = {}
+    ;(async () => {
+        // 语音包
+        await fetch('../conf/langSpeak.json').then(r => r.json()).then(r => {
+            langList = r
+        })
+
+        // 获取发音列表
+        await getVoices().then(r => {
+            voices = r
+        })
+
+        // 归类发音列表
+        let specialLang = ['en', 'es', 'nl']
+        let voiceList = voiceListSort(voices, specialLang)
+
+        // 创建发音列表
         let s1 = '', s2 = ''
-        for (const [key, val] of Object.entries(list)) {
+        let ttsKeys = Object.values(conf.ttsList)
+        for (const [key, val] of Object.entries(voiceList)) {
             let preName = langList[key] ? langList[key].zhName : key
             let select = `<select key="${key}"><option value="">默认</option>`
             val.forEach(v => {
@@ -273,36 +260,73 @@ function localTtsSetting() {
                 s2 += row
             }
         }
-        lEl.insertAdjacentHTML('beforeend', `<div class="lang_list">${s1}</div><div class="lang_list_err">${s2}</div>`)
+        listEl.insertAdjacentHTML('beforeend', `<div class="lang_list">${s1}</div><div class="lang_list_err">${s2}</div>`)
 
-        // 绑定事件
-        let sEl = dEl.querySelectorAll('select')
+        // 初始发音设置
+        if (!setting.ttsConf) setting.ttsConf = {}
+        for (let [k, v] of Object.entries(setting.ttsConf)) {
+            let vEl = dialogEl.querySelector(`select[key="${k}"]`)
+            if (vEl) vEl.value = v
+        }
+
+        // 修改发音设置
+        let sEl = dialogEl.querySelectorAll('select')
         sEl.forEach(fn => {
             fn.onchange = function () {
-                bg.setLocalConf(fn.getAttribute('key'), this.value)
+                let key = fn.getAttribute('key')
+                setting.ttsConf[key] = this.value
+                setSetting('ttsConf', setting.ttsConf) // 保存设置
             }
         })
+
+        // 重置发音设置
         $('local_tts_reset_setting').onclick = function () {
-            bg.resetLocalConf()
+            setSetting('ttsConf', {})
             sEl.forEach(fn => {
                 fn.value = ''
             })
         }
+    })()
+}
 
-        // 初始值
-        for (let [k, v] of Object.entries(localTTSConf)) {
-            let vEl = dEl.querySelector(`select[key="${k}"]`)
-            if (vEl) vEl.value = v
+function voiceListSort(voices, specialLang) {
+    let kArr = Object.keys(voices)
+    kArr = kArr.sort()
+    let r = {}
+    kArr.forEach(k => {
+        let v = voices[k]
+        for (let i = 0; i < specialLang.length; i++) {
+            let lan = specialLang[i]
+            if (k === lan || (new RegExp(`^${lan}-`)).test(k)) {
+                if (!r[lan]) r[lan] = []
+                v.forEach(val => r[lan].push(val))
+                return
+            }
         }
-
-        // 打开设置
-        let i = document.createElement('i')
-        i.className = 'dmx-icon dmx-icon-setting'
-        i.title = '本地朗读设置'
-        i.onclick = function (e) {
-            e.preventDefault()
-            dEl.style.display = 'block'
-        }
-        bEl.parentNode.appendChild(i)
+        r[k] = v
     })
+    return r
+}
+
+function setSetting(name, value) {
+    setting[name] = value
+    sendSetting(setting, name === 'scribble')
+}
+
+function clearSetting() {
+    sendSetting({}, true)
+    setTimeout(() => {
+        let url = new URL(location.href)
+        url.searchParams.set('r', Date.now() + '')
+        location.href = url.toString()
+    }, 300)
+}
+
+function sendSetting(setting, isScribble) {
+    if (isFirefox) {
+        // firefox 在 iframe 下功能缺失，所以通过 message 处理
+        sendMessage({action: 'saveSetting', setting, updateIcon: isScribble})
+    } else {
+        bg.saveSettingAll(setting, isScribble)
+    }
 }
