@@ -188,7 +188,7 @@
     content: "\e63e";
 }
 
-#dmx_dialog_title #dmx_back {
+#dmx_dialog_title #dmx_history {
     margin: 1px 0 0 15px;
     border: 1px solid gray;
     border-radius: 30px;
@@ -196,24 +196,24 @@
     overflow: hidden;
 }
 
-#dmx_dialog_title #dmx_back .dmx-icon {
+#dmx_dialog_title #dmx_history .dmx-icon {
     display: block;
     float: left;
     margin: 0;
     line-height: 26px;
 }
 
-#dmx_dialog_title #dmx_back .dmx-icon:hover {
+#dmx_dialog_title #dmx_history .dmx-icon:hover {
     background: #252525;
     color: #fff;
 }
 
-#dmx_dialog_title #dmx_back .dmx-icon-left {
+#dmx_dialog_title #dmx_history .dmx-icon-left {
     padding: 0 8px;
     border-right: 1px solid gray;
 }
 
-#dmx_dialog_title #dmx_back .dmx-icon-right {
+#dmx_dialog_title #dmx_history .dmx-icon-right {
     padding: 0 8px;
 }
 

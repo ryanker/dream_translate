@@ -7,7 +7,7 @@ let dialog, shadow,
     msgList = {},
     root = B.root
 let dQuery = {action: '', text: '', source: '', target: ''}
-let history = [], historyIndex = 0
+let history = [], historyIndex = 0, disHistory = false
 document.addEventListener('DOMContentLoaded', async function () {
     let dialogCSS = ''
     await storageLocalGet(['conf', 'languageList', 'dialogCSS']).then(function (r) {
@@ -161,6 +161,42 @@ function initDialog(dialogCSS) {
         rmClassD(navEl, 'active')
         initMore()
         dQuery.action = 'more'
+    })
+
+    // 历史记录
+    let loadHistory = function (index) {
+        let data = history[index]
+        let action = data.action
+        let text = data.text
+        dialogConf.source = data.source
+        dialogConf.target = data.target
+        rmClassD(navEl, 'active')
+        addClass(nav.querySelector(`u[action="${action}"]`), 'active')
+        if (action === 'translate') {
+            initTranslate()
+        } else if (action === 'dictionary') {
+            initDictionary()
+        } else if (action === 'search') {
+            initSearch()
+        }
+        sendQuery(text) // 历史记录查询
+    }
+    let historyEl = $('dmx_history')
+    historyEl.querySelector('.dmx-icon-left').addEventListener('click', function () {
+        if (historyIndex > 0) {
+            disHistory = true
+            historyIndex = historyIndex - 1
+            console.log(history, historyIndex)
+            loadHistory(historyIndex)
+        }
+    })
+    historyEl.querySelector('.dmx-icon-right').addEventListener('click', function () {
+        if (historyIndex < history.length - 1) {
+            disHistory = true
+            historyIndex = historyIndex + 1
+            console.log(history, historyIndex)
+            loadHistory(historyIndex)
+        }
     })
 }
 
@@ -629,13 +665,18 @@ function checkChange(action, text) {
 }
 
 function addHistory(data) {
+    if (disHistory) {
+        disHistory = false
+        return
+    }
     if (historyIndex < history.length - 1) {
-        history.splice(historyIndex, history.length)
+        history.splice(historyIndex + 1, history.length)
     } else if (history.length >= 1000) {
         history.shift() // 最多只保留 1000 条
     }
     history.push(data)
     historyIndex = history.length - 1
+    console.log('history:', history, historyIndex)
 }
 
 function $(id) {
@@ -756,7 +797,7 @@ function dmxDialog(options) {
             <div id="dmx_close"><i class="dmx-icon dmx-icon-close"></i></div>
             <div id="dmx_pin" class="dmx-icon"></div>
             <div id="dmx_fullscreen" class="dmx-icon"></div>
-            <div id="dmx_back">
+            <div id="dmx_history">
                 <i class="dmx-icon dmx-icon-left"></i>
                 <i class="dmx-icon dmx-icon-right"></i>
             </div>
