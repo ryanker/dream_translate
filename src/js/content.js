@@ -87,9 +87,6 @@ function initDialog(dialogCSS) {
         }
     })
 
-    // 影子元素
-    shadow = dialog.shadow
-
     // 保存窗口大小
     dialog.el.addEventListener('mouseup', function () {
         if (isChange) {
@@ -98,6 +95,9 @@ function initDialog(dialogCSS) {
         }
     })
 
+    // 影子元素
+    shadow = dialog.shadow
+
     // 小屏窗口
     if (document.documentElement.scrollWidth < 1024) {
         dialog.el.style.width = document.documentElement.offsetWidth + 'px'
@@ -105,7 +105,7 @@ function initDialog(dialogCSS) {
         $('dmx_fullscreen').remove()
     }
 
-    // 鼠标事件
+    // 划词查询
     document.addEventListener('mouseup', function (e) {
         let text = window.getSelection().toString().trim()
         onQuery(text, e.clientX, e.clientY)
