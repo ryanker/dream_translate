@@ -57,7 +57,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
 // 监听 frame 消息
 window.addEventListener("message", function (m) {
     let d = m.data
-    if (d.text && typeof d.clientX === 'number' && typeof d.clientY === 'number') onQuery(d.text, d.clientX, d.clientY)
+    if (d.text && typeof d.clientX === 'number' && typeof d.clientY === 'number') initQuery(d.text, d.clientX, d.clientY)
 })
 
 // 监听设置修改
@@ -108,7 +108,7 @@ function initDialog(dialogCSS) {
     // 划词查询
     document.addEventListener('mouseup', function (e) {
         let text = window.getSelection().toString().trim()
-        onQuery(text, e.clientX, e.clientY)
+        initQuery(text, e.clientX, e.clientY)
     })
 
     // 鼠标图标
@@ -565,7 +565,7 @@ function activeRipple(el) {
     addClass(el, 'active')
 }
 
-function onQuery(text, clientX, clientY) {
+function initQuery(text, clientX, clientY) {
     if (!text) {
         iconBut.style.display = 'none'
         return
