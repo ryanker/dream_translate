@@ -125,13 +125,13 @@ function initDialog(dialogCSS) {
 
     // 绑定事件
     let nav = $('dmx_navigate')
-    let navEl = nav.querySelectorAll('.dmx-icon')
-    navEl.forEach(uEl => {
-        uEl.addEventListener('click', function () {
+    let uEl = nav.querySelectorAll('u')
+    uEl.forEach(e => {
+        e.addEventListener('click', function () {
             let action = this.getAttribute('action')
             if (!['translate', 'dictionary', 'search'].includes(action)) return
             if (dQuery.action === action) return
-            rmClassD(navEl, 'active')
+            rmClassD(uEl, 'active')
             addClass(this, 'active')
             setDialogConf('action', action) // 保存设置
             if (action === 'translate') {
@@ -151,14 +151,14 @@ function initDialog(dialogCSS) {
 
     // 设置按钮
     $('dmx_setting').addEventListener('click', function () {
-        rmClassD(navEl, 'active')
+        rmClassD(uEl, 'active')
         initSetting()
         dQuery.action = 'setting'
     })
 
     // 更多功能
     $('dmx_more').addEventListener('click', function () {
-        rmClassD(navEl, 'active')
+        rmClassD(uEl, 'active')
         initMore()
         dQuery.action = 'more'
     })
@@ -170,7 +170,7 @@ function initDialog(dialogCSS) {
         let text = data.text
         dialogConf.source = data.source
         dialogConf.target = data.target
-        rmClassD(navEl, 'active')
+        rmClassD(uEl, 'active')
         addClass(nav.querySelector(`u[action="${action}"]`), 'active')
         if (action === 'translate') {
             initTranslate()
@@ -246,21 +246,21 @@ function initTranslate() {
                 addClass(dropdownEl, 'dropdown_target')
             }
             dropdownEl.style.display = 'block'
-            dropdownU.forEach(uEl => {
-                rmClass(uEl, 'active')
-                rmClass(uEl, 'disabled')
-                let val = uEl.getAttribute('value')
+            dropdownU.forEach(e => {
+                rmClass(e, 'active')
+                rmClass(e, 'disabled')
+                let val = e.getAttribute('value')
                 if (isSource) {
                     if (sourceVal === val) {
-                        addClass(uEl, 'active')
+                        addClass(e, 'active')
                     } else if (targetVal === val) {
-                        addClass(uEl, 'disabled')
+                        addClass(e, 'disabled')
                     }
                 } else {
                     if (targetVal === val) {
-                        addClass(uEl, 'active')
+                        addClass(e, 'active')
                     } else if (sourceVal === val) {
-                        addClass(uEl, 'disabled')
+                        addClass(e, 'disabled')
                     }
                 }
             })
@@ -291,8 +291,8 @@ function initTranslate() {
         let text = inputEl.innerText.trim()
         sendQuery(text) // 翻译按钮查询
     })
-    dropdownU.forEach(uEl => {
-        uEl.addEventListener('click', function () {
+    dropdownU.forEach(e => {
+        e.addEventListener('click', function () {
             let v = this.getAttribute('value')
             let s = this.innerText
             let isSource = !hasClass(dropdownEl, 'dropdown_target')
@@ -802,9 +802,9 @@ function dmxDialog(options) {
                 <i class="dmx-icon dmx-icon-right"></i>
             </div>
             <div id="dmx_navigate">
-                <u class="dmx-icon active" action="translate">翻译</u>
-                <u class="dmx-icon" action="dictionary">词典</u>
-                <u class="dmx-icon" action="search">搜索</u>
+                <u action="translate">翻译</u>
+                <u action="dictionary">词典</u>
+                <u action="search">搜索</u>
             </div>
         </div>
         <div class="dmx_right">
