@@ -37,20 +37,20 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     // debug('sender:', sender)
     if (m.action === 'translate') {
         msgList[m.name] = m.result
-        translateResult(m.name)
+        resultTranslate(m.name)
     } else if (m.action === 'translateTTS') {
-        soundResult(m, 'translate')
+        resultSound(m, 'translate')
     } else if (m.action === 'dictionary') {
-        dictionaryResult(m)
+        resultDictionary(m)
     } else if (m.action === 'dictionarySound') {
-        soundResult(m, 'dictionary')
+        resultSound(m, 'dictionary')
     } else if (m.action === 'link') {
-        linkResult(m)
+        resultLink(m)
     } else if (m.action === 'allowSelect') {
         allowUserSelect()
     } else if (m.action === 'contextMenus') {
         if (m.text) {
-            sendQuery(m.text)
+            sendQuery(m.text) // 右键查询
             dialog.show()
         }
     }
@@ -117,7 +117,7 @@ function initDialog(dialogCSS) {
     iconBut = $('dmx_mouse_icon')
     iconBut.onclick = function (e) {
         iconBut.style.display = 'none'
-        sendQuery(iconText)
+        sendQuery(iconText)  // 点击图标查询
         dialog.show(setting.position === 'fixed' ? {} : {left: e.clientX + 10, top: e.clientY - 35})
     }
     iconBut.onmousedown = function (e) {
@@ -138,12 +138,16 @@ function initDialog(dialogCSS) {
             addClass(this, 'active')
 
             let action = this.getAttribute('action')
-            let arr = {'translate': initTranslate, 'dictionary': initDictionary, 'search': initSearch}
-            if (arr[action]) {
-                setDialogConf('action', action)
-                arr[action]()
-                sendQuery(dQuery.text)
+            if (!['translate', 'dictionary', 'search'].includes(action)) return
+            setDialogConf('action', action) // 保存设置
+            if (action === 'translate') {
+                initTranslate()
+            } else if (action === 'dictionary') {
+                initDictionary()
+            } else if (action === 'search') {
+                initSearch()
             }
+            sendQuery(dQuery.text) // 切换导航查询
         })
     })
     dialogConf.action && nav.querySelector(`u[action="${dialogConf.action}"]`).click()
@@ -252,7 +256,7 @@ function initTranslate() {
         rmClass(targetEl, 'active')
         dropdownEl.style.display = 'none'
         let text = inputEl.innerText.trim()
-        text && sendQuery(text)
+        text && sendQuery(text) // 翻译按钮查询
     })
     dropdownU.forEach(uEl => {
         uEl.addEventListener('click', function () {
@@ -295,7 +299,7 @@ function initDictionary() {
     let butEl = $('search_but')
     butEl.onclick = function () {
         let text = inpEl.value.trim()
-        text && sendQuery(text)
+        text && sendQuery(text) // 词典按钮查询
     }
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
@@ -329,7 +333,102 @@ function initMore() {
     dialog.contentHTML(`<iframe class="dmx_iframe" src="${root + 'html/more.html'}" importance="high"></iframe>`)
 }
 
-function translateResult(name, isBilingual) {
+function loadingTranslate() {
+    let el = $('case_list')
+    let cList = conf.translateList
+    let sList = setting.translateList
+    if (sList.length < 1) {
+        el.innerHTML = `<div class="case case_content"><i class="dmx-icon dmx-icon-info"></i> 您未启用任何翻译模块</div>`
+        return
+    }
+
+    let s = ''
+    sList.forEach(name => {
+        s += `<div class="case" id="${name}_translate_case">
+    <div class="case_top fx">
+        <div class="case_left case_language"></div>
+        <div class="case_right">
+            <a class="case_link"><i class="dmx-icon dmx-icon-${name}"></i>${cList[name]}</a>
+        </div>
+        <div class="case_right case_copy" title="复制"><i class="dmx-icon dmx-icon-copy"></i></div>
+        <div class="case_right case_bilingual dmx-icon">双语</div>
+    </div>
+    <div class="case_content"><div class="dmx_loading"></div></div>
+</div>`
+    })
+    el.innerHTML = s
+
+    // 绑定事件
+    sList.forEach(name => {
+        let caseEl = $(`${name}_translate_case`)
+        let copyEl = caseEl.querySelector('.case_copy')
+        let bilingualEl = caseEl.querySelector('.case_bilingual')
+        let contentEl = caseEl.querySelector('.case_content')
+        copyEl.addEventListener('click', () => {
+            let text = contentEl.innerText.replace(/\n{2}/g, '\n').trim()
+            execCopy(text)
+            alert('复制成功', 'success')
+        })
+        bilingualEl.addEventListener('click', () => {
+            if (hasClass(bilingualEl, 'active')) {
+                resultTranslate(name, false)
+                rmClass(bilingualEl, 'active')
+            } else {
+                resultTranslate(name, true)
+                addClass(bilingualEl, 'active')
+            }
+        })
+    })
+}
+
+function loadingDictionary() {
+    let el = $('case_list')
+    let cList = conf.dictionaryList
+    let sList = setting.dictionaryList
+    if (sList.length < 1) {
+        el.innerHTML = `<div class="case case_content"><i class="dmx-icon dmx-icon-info"></i> 您未启用任何词典模块</div>`
+        return
+    }
+
+    let s = ''
+    sList.forEach(name => {
+        s += `<div class="case" id="${name}_dictionary_case">
+        <div class="case_top fx">
+            <div class="case_right">
+                <a class="case_link"><i class="dmx-icon dmx-icon-${name}"></i>${cList[name]}</a>
+            </div>
+            <div class="case_left case_pronunciation"></div>
+        </div>
+        <div class="case_content"><div class="dmx_loading"></div></div>
+    </div>`
+    })
+    el.innerHTML = s
+}
+
+function loadingSearch() {
+    let s = ''
+    let sList = setting.searchList
+    let cList = conf.searchList
+    sList.forEach(name => {
+        let v = cList[name]
+        s += `<div class="dmx_button" data-search="${name}"><i class="dmx-icon dmx-icon-${v.icon || name}"></i>${v.title}</div>`
+    })
+    $('case_list').innerHTML = s
+
+    // 绑定点击事件
+    onD('[data-search]', 'click', function () {
+        let name = this.dataset.search
+        let lv = cList[name]
+        let text = $('search_input').value.trim()
+        if (text) {
+            open(lv.url.format(decodeURIComponent(text)) + '&tn=dream_translate')
+        } else {
+            open((new URL(lv.url)).origin + '?tn=dream_translate')
+        }
+    })
+}
+
+function resultTranslate(name, isBilingual) {
     let el = $(`${name}_translate_case`)
     if (!el) return
     let r = msgList[name]
@@ -392,21 +491,7 @@ function translateResult(name, isBilingual) {
     }
 }
 
-function soundResult(m, action) {
-    if (m.error) alert(m.error, 'error')
-    let el = $(`${m.name}_${action}_case`)
-    if (!el) return
-    if (m.status === 'start') {
-        let sEl = el.querySelector(`[data-type=${m.type}]`)
-        if (sEl) addClass(sEl, 'active')
-    } else if (m.status === 'end') {
-        el.querySelectorAll(`[data-type=${m.type}]`).forEach(e => {
-            rmClass(e, 'active')
-        })
-    }
-}
-
-function dictionaryResult(m) {
+function resultDictionary(m) {
     let el = $(`${m.name}_dictionary_case`)
     if (!el) return
     let s = '', pron = ''
@@ -444,12 +529,13 @@ function dictionaryResult(m) {
     // 绑定点击搜索
     el.querySelectorAll('[data-search=true]').forEach(e => {
         e.addEventListener('click', function () {
-            sendQuery(e.innerText?.trim())
+            let text = e.innerText?.trim()
+            text && sendQuery(text) // 结果点击查询
         })
     })
 }
 
-function linkResult(m) {
+function resultLink(m) {
     let el = $(`${m.name}_${m.type}_case`)
     if (!el) return
     let sEl = el.querySelector(`.case_link`)
@@ -457,6 +543,20 @@ function linkResult(m) {
         sEl.setAttribute('href', m.link)
         sEl.setAttribute('target', '_blank')
         sEl.setAttribute('referrerPolicy', 'no-referrer')
+    }
+}
+
+function resultSound(m, action) {
+    if (m.error) alert(m.error, 'error')
+    let el = $(`${m.name}_${action}_case`)
+    if (!el) return
+    if (m.status === 'start') {
+        let sEl = el.querySelector(`[data-type=${m.type}]`)
+        if (sEl) addClass(sEl, 'active')
+    } else if (m.status === 'end') {
+        el.querySelectorAll(`[data-type=${m.type}]`).forEach(e => {
+            rmClass(e, 'active')
+        })
     }
 }
 
@@ -472,7 +572,7 @@ function onQuery(text, clientX, clientY) {
         iconBut.style.display = 'none'
         return
     }
-    debug(text)
+    debug('text:', text)
 
     // 自动复制功能
     if (setting.autoCopy === 'on') {
@@ -481,9 +581,8 @@ function onQuery(text, clientX, clientY) {
     }
 
     if (setting.scribble === 'off') return
-
     if (setting.scribble === 'direct') {
-        sendQuery(text)
+        sendQuery(text) // 划词查询
         dialog.show(setting.position === 'fixed' ? {} : {left: clientX + 30, top: clientY - 60})
     } else if (setting.scribble === 'clickIcon') {
         iconText = text
@@ -523,101 +622,6 @@ function checkChange(action, text) {
         dQuery.source === dialogConf.source && dQuery.target === dialogConf.target) return false
     dQuery = {action: action, text: text, source: dialogConf.source, target: dialogConf.target}
     return true
-}
-
-function loadingTranslate() {
-    let el = $('case_list')
-    let cList = conf.translateList
-    let sList = setting.translateList
-    if (sList.length < 1) {
-        el.innerHTML = `<div class="case case_content"><i class="dmx-icon dmx-icon-info"></i> 您未启用任何翻译模块</div>`
-        return
-    }
-
-    let s = ''
-    sList.forEach(name => {
-        s += `<div class="case" id="${name}_translate_case">
-    <div class="case_top fx">
-        <div class="case_left case_language"></div>
-        <div class="case_right">
-            <a class="case_link"><i class="dmx-icon dmx-icon-${name}"></i>${cList[name]}</a>
-        </div>
-        <div class="case_right case_copy" title="复制"><i class="dmx-icon dmx-icon-copy"></i></div>
-        <div class="case_right case_bilingual dmx-icon">双语</div>
-    </div>
-    <div class="case_content"><div class="dmx_loading"></div></div>
-</div>`
-    })
-    el.innerHTML = s
-
-    // 绑定事件
-    sList.forEach(name => {
-        let caseEl = $(`${name}_translate_case`)
-        let copyEl = caseEl.querySelector('.case_copy')
-        let bilingualEl = caseEl.querySelector('.case_bilingual')
-        let contentEl = caseEl.querySelector('.case_content')
-        copyEl.addEventListener('click', () => {
-            let text = contentEl.innerText.replace(/\n{2}/g, '\n').trim()
-            execCopy(text)
-            alert('复制成功', 'success')
-        })
-        bilingualEl.addEventListener('click', () => {
-            if (hasClass(bilingualEl, 'active')) {
-                translateResult(name, false)
-                rmClass(bilingualEl, 'active')
-            } else {
-                translateResult(name, true)
-                addClass(bilingualEl, 'active')
-            }
-        })
-    })
-}
-
-function loadingDictionary() {
-    let el = $('case_list')
-    let cList = conf.dictionaryList
-    let sList = setting.dictionaryList
-    if (sList.length < 1) {
-        el.innerHTML = `<div class="case case_content"><i class="dmx-icon dmx-icon-info"></i> 您未启用任何词典模块</div>`
-        return
-    }
-
-    let s = ''
-    sList.forEach(name => {
-        s += `<div class="case" id="${name}_dictionary_case">
-        <div class="case_top fx">
-            <div class="case_right">
-                <a class="case_link"><i class="dmx-icon dmx-icon-${name}"></i>${cList[name]}</a>
-            </div>
-            <div class="case_left case_pronunciation"></div>
-        </div>
-        <div class="case_content"><div class="dmx_loading"></div></div>
-    </div>`
-    })
-    el.innerHTML = s
-}
-
-function loadingSearch() {
-    let s = ''
-    let sList = setting.searchList
-    let cList = conf.searchList
-    sList.forEach(name => {
-        let v = cList[name]
-        s += `<div class="dmx_button" data-search="${name}"><i class="dmx-icon dmx-icon-${v.icon || name}"></i>${v.title}</div>`
-    })
-    $('case_list').innerHTML = s
-
-    // 绑定点击事件
-    onD('[data-search]', 'click', function () {
-        let name = this.dataset.search
-        let lv = cList[name]
-        let text = $('search_input').value.trim()
-        if (text) {
-            open(lv.url.format(decodeURIComponent(text)) + '&tn=dream_translate')
-        } else {
-            open((new URL(lv.url)).origin + '?tn=dream_translate')
-        }
-    })
 }
 
 function $(id) {
@@ -919,10 +923,11 @@ function dmxDialog(options) {
         setTimeout(() => {
             el.style.display = 'block'
             if (!o || typeof o.left !== 'number' || typeof o.top !== 'number') return
+            let d = document.documentElement
             let b = el.getBoundingClientRect()
-            el.style.left = Math.max(0, Math.min(o.left, document.documentElement.clientWidth - b.width)) + 'px'
-            el.style.top = Math.max(0, Math.min(o.top, document.documentElement.clientHeight - b.height)) + 'px'
-        }, 20)
+            el.style.left = Math.max(0, Math.min(o.left, d.clientWidth - b.width)) + 'px'
+            el.style.top = Math.max(0, Math.min(o.top, d.clientHeight - b.height)) + 'px'
+        }, 99)
     }
     D.hide = function () {
         el.style.display = 'none'
