@@ -73,7 +73,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
             })
         })
 
-        // 自动播放发音
+        // 自动朗读
         setTimeout(() => {
             autoPlaySound(tabId, m.text, m.srcLan, conf.translateTTSList, setting.translateTTSList)
         }, 300)
@@ -125,12 +125,12 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
 
 function saveSettingAll(data, updateIcon, resetDialog) {
     setting = Object.assign({}, conf.setting, data)
-    updateIcon && setBrowserIcon(setting.scribble) // 是否显示关闭划词图标
+    updateIcon && changeBrowserIcon(setting.scribble) // 是否显示关闭划词图标
     let options = resetDialog ? {setting, dialogConf: {}} : {setting}
     storageSyncSet(options)
 }
 
-function setBrowserIcon(scribble) {
+function changeBrowserIcon(scribble) {
     setBrowserAction(scribble === 'off' ? 'OFF' : '')
 }
 
