@@ -85,7 +85,7 @@ function bingTranslate() {
         langMapReverse: {},
         lanTTS: ["zh", "en", "jp", "th", "spa", "ara", "fra", "kor", "ru", "de", "pt", "it", "el", "nl", "pl", "fin", "cs", "bul"],
         init() {
-            this.langMapReverse = objectReverse(this.langMap)
+            this.langMapReverse = reverseObject(this.langMap)
             let str = localStorage.getItem('bingToken')
             if (str) this.token = JSON.parse(str)
             return this

@@ -169,7 +169,7 @@ function youdaoTranslate() {
             return m(e)
         },
         init() {
-            this.langMapReverse = objectReverse(this.langMap)
+            this.langMapReverse = reverseObject(this.langMap)
             let str = localStorage.getItem('youdaoToken')
             if (str) this.token = JSON.parse(str)
             return this

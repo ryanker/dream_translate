@@ -49,7 +49,7 @@ function qqTranslate() {
             hi: ["en"]
         },
         init() {
-            this.langMapReverse = objectReverse(this.langMap)
+            this.langMapReverse = reverseObject(this.langMap)
             let str = localStorage.getItem('qqToken')
             if (str) this.token = JSON.parse(str)
             this.getCookieAll()

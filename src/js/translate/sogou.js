@@ -61,7 +61,7 @@ function sogouTranslate() {
         },
         langMapReverse: {},
         init() {
-            this.langMapReverse = objectReverse(this.langMap)
+            this.langMapReverse = reverseObject(this.langMap)
             return this
         },
         // 2020.12.03 刚写完就改版，白破解了！要吐了。。。

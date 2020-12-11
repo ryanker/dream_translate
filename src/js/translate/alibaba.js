@@ -34,7 +34,7 @@ function alibabaTranslate() {
             "vi": ["en"]
         },
         init() {
-            this.langMapReverse = objectReverse(this.langMap)
+            this.langMapReverse = reverseObject(this.langMap)
             return this
         },
         addListenerRequest() {

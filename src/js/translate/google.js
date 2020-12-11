@@ -139,7 +139,7 @@ function googleTranslate() {
             return t = Ue(t, "+-3^+b+-f"), 0 > (t ^= Number(n[1]) || 0) && (t = 2147483648 + (2147483647 & t)), (t %= 1e6).toString() + "." + (t ^ r)
         },
         init() {
-            this.langMapReverse = objectReverse(this.langMap)
+            this.langMapReverse = reverseObject(this.langMap)
             let str = localStorage.getItem('googleToken')
             if (str) this.token = JSON.parse(str)
             return this

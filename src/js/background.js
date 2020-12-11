@@ -73,15 +73,15 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
             })
         })
 
-        // 自动播放读音
+        // 自动播放发音
         setTimeout(() => {
-            autoSoundPlay(tabId, m.text, m.srcLan, conf.translateTTSList, setting.translateTTSList)
+            autoPlaySound(tabId, m.text, m.srcLan, conf.translateTTSList, setting.translateTTSList)
         }, 300)
     } else if (m.action === 'translateTTS') {
         let list = conf.translateList
         let tList = conf.translateTTSList
         let message = {action: m.action, name: m.name, type: m.type, status: 'end'}
-        soundPlay(m.name, m.text, m.lang).then(() => {
+        playSound(m.name, m.text, m.lang).then(() => {
             sendTabMessage(tabId, message)
         }).catch(err => {
             debug(`${m.name} sound error:`, err)
@@ -106,7 +106,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
             })
         })
     } else if (m.action === 'dictionarySound') {
-        audioPlay(m.url).then(() => {
+        playAudio(m.url).then(() => {
             sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, status: 'end'})
         }).catch(err => {
             debug(`${m.name} sound error:`, err)
@@ -134,6 +134,12 @@ function setBrowserIcon(scribble) {
     setBrowserAction(scribble === 'off' ? 'OFF' : '')
 }
 
+function setBrowserAction(text) {
+    B.browserAction.setBadgeText({text: text || ''})
+    B.browserAction.setBadgeBackgroundColor({color: 'red'})
+    isFirefox && B.browserAction.setBadgeTextColor({color: 'white'})
+}
+
 function addMenu(name, title, url) {
     // {id: "separator1", type: "separator", contexts: ['selection']}
     B.contextMenus.create({
@@ -159,12 +165,6 @@ function removeMenu(name) {
     B.contextMenus.remove(name + '_selection')
 }
 
-function setBrowserAction(text) {
-    B.browserAction.setBadgeText({text: text || ''})
-    B.browserAction.setBadgeBackgroundColor({color: 'red'})
-    isFirefox && B.browserAction.setBadgeTextColor({color: 'white'})
-}
-
 function minCss(s) {
     s = s.replace(/\/\*.*?\*\//g, '')
     s = s.replace(/\s+/g, ' ')
@@ -174,7 +174,7 @@ function minCss(s) {
     return s
 }
 
-function autoSoundPlay(tabId, text, lang, list, arr) {
+function autoPlaySound(tabId, text, lang, list, arr) {
     (async () => {
         if (lang === 'auto') {
             lang = 'en' // 默认值
@@ -191,7 +191,7 @@ function autoSoundPlay(tabId, text, lang, list, arr) {
             let name = arr[k]
             let message = {action: 'translateTTS', name: name, type: 'source', status: 'end'}
             sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
-            await soundPlay(name, text, lang).then(() => {
+            await playSound(name, text, lang).then(() => {
                 sendTabMessage(tabId, message)
             }).catch(err => {
                 debug(`${name} sound error:`, err)
@@ -201,7 +201,7 @@ function autoSoundPlay(tabId, text, lang, list, arr) {
     })()
 }
 
-function soundPlay(name, text, lang) {
+function playSound(name, text, lang) {
     return new Promise((resolve, reject) => {
         sdkInit(`${name}Translate`, sd => {
             if (!sd) return reject('sdkInit error')
@@ -212,7 +212,7 @@ function soundPlay(name, text, lang) {
                         let ok = false
                         let err = new Error()
                         for (let i = 0; i < val.length; i++) {
-                            await audioPlay(val[i]).then(() => {
+                            await playAudio(val[i]).then(() => {
                                 if (!ok) ok = true // 为更好的兼容，只要有一次播放成功就算播放成功
                             }).catch(e => {
                                 err = e
@@ -221,7 +221,7 @@ function soundPlay(name, text, lang) {
                         ok ? resolve() : reject(err)
                     })()
                 } else {
-                    audioPlay(val).then(() => {
+                    playAudio(val).then(() => {
                         resolve()
                     }).catch(err => {
                         reject(err)
@@ -234,7 +234,7 @@ function soundPlay(name, text, lang) {
     })
 }
 
-function audioPlay(url) {
+function playAudio(url) {
     return new Promise((resolve, reject) => {
         if (!window._Audio) window._Audio = new Audio()
         let a = window._Audio
@@ -287,7 +287,7 @@ function uniqueArray(arr) {
     return [...new Set(arr)]
 }
 
-function objectReverse(obj) {
+function reverseObject(obj) {
     let r = {}
     for (const [key, value] of Object.entries(obj)) {
         r[value] = key
