@@ -221,6 +221,26 @@ function sleep(delay) {
     return new Promise(r => setTimeout(r, delay))
 }
 
+function onD(el, type, listener, options) {
+    el.forEach(v => {
+        v.addEventListener(type, listener, options)
+    })
+}
+
+function unD(el, type, listener, options) {
+    el.forEach(v => {
+        v.removeEventListener(type, listener, options)
+    })
+}
+
+function removeD(el) {
+    el.forEach(e => e.remove())
+}
+
+function rmClassD(el, className) {
+    el.forEach(v => rmClass(v, className))
+}
+
 function addClass(el, className) {
     className = className.trim()
     let oldClassName = el.className.trim()

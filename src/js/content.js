@@ -640,16 +640,6 @@ function D(s) {
     return shadow.querySelectorAll(s)
 }
 
-function onD(el, type, listener, options) {
-    el.forEach(v => {
-        v.addEventListener(type, listener, options)
-    })
-}
-
-function rmClassD(el, className) {
-    el.forEach(v => rmClass(v, className))
-}
-
 function saveDialogConf() {
     storageSyncSet({'dialogConf': dialogConf})
 }
