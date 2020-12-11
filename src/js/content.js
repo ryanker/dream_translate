@@ -666,7 +666,7 @@ function allowUserSelect() {
     if (window.dmxAllowUserSelect) return
     let sty = document.createElement('style')
     sty.innerHTML = `* {-webkit-user-select:text!important;-moz-user-select:text!important;user-select:text!important}`
-    document.body.appendChild(sty)
+    document.head.appendChild(sty)
 
     let allow = function () {
         return true
