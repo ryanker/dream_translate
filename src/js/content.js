@@ -125,13 +125,15 @@ function initDialog(dialogCSS) {
     // 绑定事件
     let nav = $('dmx_navigate')
     let navEl = nav.querySelectorAll('.dmx-icon')
+    let tmpAction = ''
     navEl.forEach(uEl => {
         uEl.addEventListener('click', function () {
-            rmClassD(navEl, 'active')
-            addClass(this, 'active')
-
             let action = this.getAttribute('action')
             if (!['translate', 'dictionary', 'search'].includes(action)) return
+            if (tmpAction === action) return
+            tmpAction = action // 临时
+            rmClassD(navEl, 'active')
+            addClass(this, 'active')
             setDialogConf('action', action) // 保存设置
             if (action === 'translate') {
                 initTranslate()
@@ -510,7 +512,6 @@ function resultDictionary(m) {
         r.sound && r.sound.forEach(v => {
             pron += ` <i class="dmx-icon dmx_ripple${v.isWoman ? ' dmx_pink' : ''}" data-type="${v.type}" data-src-mp3="${v.url}" title="${v.title}">${v.type === 'us' ? '&#xe674;' : '&#xe69f;'}</i>`
         })
-
     }
     if (!s) s = '网络错误，请稍后再试'
     el.querySelector('.case_content').innerHTML = s
