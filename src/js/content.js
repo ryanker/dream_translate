@@ -478,7 +478,7 @@ function resultTranslate(name, isBilingual) {
         let targetEl = el.querySelector('[data-type=target]')
         sourceEl && sourceEl.addEventListener('click', () => {
             onActive(sourceEl)
-            playTTS(name, 'source', r.srcLan, dQuery.text)
+            sendPlayTTS(name, 'source', r.srcLan, dQuery.text) // 播放原音
         })
         targetEl && targetEl.addEventListener('click', () => {
             onActive(targetEl)
@@ -486,7 +486,7 @@ function resultTranslate(name, isBilingual) {
             r.data && r.data.forEach(v => {
                 s += v.tarText
             })
-            s && playTTS(name, 'target', r.tarLan, s)
+            s && sendPlayTTS(name, 'target', r.tarLan, s) // 播放译音
         })
     }
 }
@@ -522,7 +522,9 @@ function resultDictionary(m) {
     el.querySelectorAll('[data-src-mp3]').forEach(e => {
         e.addEventListener('click', function () {
             onActive(e)
-            playSound(m.name, e.getAttribute('data-type'), e.getAttribute('data-src-mp3'))
+            let type = e.getAttribute('data-type')
+            let url = e.getAttribute('data-src-mp3')
+            sendPlaySound(m.name, type, url)
         })
     })
 
@@ -679,11 +681,11 @@ function allowUserSelect() {
     alert('解除页面限制完成', 'success')
 }
 
-function playTTS(name, type, lang, text) {
+function sendPlayTTS(name, type, lang, text) {
     sendBgMessage({action: 'translateTTS', name: name, type: type, lang: lang, text: text})
 }
 
-function playSound(name, type, url) {
+function sendPlaySound(name, type, url) {
     sendBgMessage({action: 'dictionarySound', name: name, type: type, url: url})
 }
 
