@@ -125,14 +125,9 @@ function initDialog(dialogCSS) {
     // 绑定事件
     let nav = $('dmx_navigate')
     let navEl = nav.querySelectorAll('.dmx-icon')
-    let navClean = function () {
-        navEl.forEach(el => {
-            rmClass(el, 'active')
-        })
-    }
     navEl.forEach(uEl => {
         uEl.addEventListener('click', function () {
-            navClean()
+            rmClassD(navEl, 'active')
             addClass(this, 'active')
 
             let action = this.getAttribute('action')
@@ -155,14 +150,14 @@ function initDialog(dialogCSS) {
 
     // 设置按钮
     $('dmx_setting').addEventListener('click', function () {
-        navClean()
+        rmClassD(navEl, 'active')
         initSetting()
         dQuery.action = 'setting'
     })
 
     // 更多功能
     $('dmx_more').addEventListener('click', function () {
-        navClean()
+        rmClassD(navEl, 'active')
         initMore()
         dQuery.action = 'more'
     })
@@ -419,7 +414,7 @@ function loadingSearch() {
     $('case_list').innerHTML = s
 
     // 绑定点击事件
-    onD('[data-search]', 'click', function () {
+    onD(D('[data-search]'), 'click', function () {
         let name = this.dataset.search
         let lv = cList[name]
         let text = $('search_input').value.trim()
@@ -479,12 +474,12 @@ function resultTranslate(name, isBilingual) {
 
         let sourceEl = el.querySelector('[data-type=source]')
         let targetEl = el.querySelector('[data-type=target]')
-        sourceEl && sourceEl.addEventListener('click', () => {
-            onActive(sourceEl)
+        sourceEl && sourceEl.addEventListener('click', function () {
+            activeRipple(this)
             sendPlayTTS(name, 'source', r.srcLan, dQuery.text) // 播放原音
         })
-        targetEl && targetEl.addEventListener('click', () => {
-            onActive(targetEl)
+        targetEl && targetEl.addEventListener('click', function () {
+            activeRipple(this)
             let s = ''
             r.data && r.data.forEach(v => {
                 s += v.tarText
@@ -524,9 +519,9 @@ function resultDictionary(m) {
     // 绑定播放音频
     el.querySelectorAll('[data-src-mp3]').forEach(e => {
         e.addEventListener('click', function () {
-            onActive(e)
-            let type = e.getAttribute('data-type')
-            let url = e.getAttribute('data-src-mp3')
+            activeRipple(this)
+            let type = this.getAttribute('data-type')
+            let url = this.getAttribute('data-src-mp3')
             sendPlaySound(m.name, type, url)
         })
     })
@@ -559,16 +554,13 @@ function resultSound(m, action) {
         let sEl = el.querySelector(`[data-type=${m.type}]`)
         if (sEl) addClass(sEl, 'active')
     } else if (m.status === 'end') {
-        el.querySelectorAll(`[data-type=${m.type}]`).forEach(e => {
-            rmClass(e, 'active')
-        })
+        let dEl = el.querySelectorAll(`[data-type=${m.type}]`)
+        rmClassD(dEl, 'active')
     }
 }
 
-function onActive(el) {
-    shadow.querySelectorAll('.dmx_ripple').forEach(e => {
-        rmClass(e, 'active')
-    })
+function activeRipple(el) {
+    rmClassD(D('.dmx_ripple'), 'active')
     addClass(el, 'active')
 }
 
@@ -647,10 +639,14 @@ function D(s) {
     return shadow.querySelectorAll(s)
 }
 
-function onD(s, type, listener, options) {
-    D(s).forEach(v => {
+function onD(el, type, listener, options) {
+    el.forEach(v => {
         v.addEventListener(type, listener, options)
     })
+}
+
+function rmClassD(el, className) {
+    el.forEach(v => rmClass(v, className))
 }
 
 function saveDialogConf() {
