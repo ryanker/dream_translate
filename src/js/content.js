@@ -693,10 +693,9 @@ function alert(message, type) {
     type = type || 'info'
     let el = $('dmx_alert')
     if (!el) {
-        let d = document.createElement('div')
-        d.id = 'dmx_alert'
-        shadow.appendChild(d)
-        el = $('dmx_alert')
+        el = document.createElement('div')
+        el.id = 'dmx_alert'
+        shadow.appendChild(el)
     }
     let icon = {
         info: '<i class="dmx-icon dmx-icon-info"></i>',
@@ -832,7 +831,7 @@ function dmxDialog(options) {
     let _s = function (e) {
         let top = e.clientY - (clientY - elY)
         let height = top - elY + elH
-        if (height > o.minHeight && e.clientY < docH - (elH - (clientY - elY))) {
+        if (e.clientY < docH - (elH - (clientY - elY)) && height > o.minHeight) {
             el.style.height = height + 'px'
             typeof o.onResize === 'function' && o.onResize({height: height})
         } else {
@@ -842,7 +841,7 @@ function dmxDialog(options) {
     let _w = function (e) {
         let left = e.clientX - (clientX - elX)
         let width = elW - (left - elX)
-        if (width > o.minWidth && left >= 0) {
+        if (left >= 0 && width > o.minWidth) {
             el.style.left = left + 'px'
             el.style.width = width + 'px'
             typeof o.onResize === 'function' && o.onResize({width: width})
