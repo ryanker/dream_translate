@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     await storageSyncGet(['setting', 'dialogConf']).then(function (r) {
         setting = r.setting
-        dialogConf = Object.assign({}, conf.dialog, r.dialogConf)
+        dialogConf = Object.assign({}, conf.dialogConf, r.dialogConf)
     })
 
     // 初始对话框
@@ -49,10 +49,8 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     } else if (m.action === 'allowSelect') {
         allowUserSelect()
     } else if (m.action === 'contextMenus') {
-        if (m.text) {
-            sendQuery(m.text) // 右键查询
-            dialog.show()
-        }
+        sendQuery(m.text) // 右键查询
+        dialog.show()
     }
 })
 
@@ -150,7 +148,10 @@ function initDialog(dialogCSS) {
             sendQuery(dQuery.text) // 切换导航查询
         })
     })
-    dialogConf.action && nav.querySelector(`u[action="${dialogConf.action}"]`).click()
+
+    // 初始模块
+    let action = dialogConf.action
+    action && nav.querySelector(`u[action="${action}"]`).click()
 
     // 设置按钮
     $('dmx_setting').addEventListener('click', function () {
@@ -256,7 +257,7 @@ function initTranslate() {
         rmClass(targetEl, 'active')
         dropdownEl.style.display = 'none'
         let text = inputEl.innerText.trim()
-        text && sendQuery(text) // 翻译按钮查询
+        sendQuery(text) // 翻译按钮查询
     })
     dropdownU.forEach(uEl => {
         uEl.addEventListener('click', function () {
@@ -279,11 +280,13 @@ function initTranslate() {
     })
 
     // 初始值
-    sourceEl.setAttribute('value', dialogConf.source)
-    sourceEl.innerText = l[dialogConf.source]?.zhName
-    targetEl.setAttribute('value', dialogConf.target)
-    targetEl.innerText = l[dialogConf.target]?.zhName
-    if (dialogConf.source === 'auto') addClass(exchangeEl, 'disabled')
+    let source = dialogConf.source
+    let target = dialogConf.target
+    if (source === 'auto') addClass(exchangeEl, 'disabled')
+    sourceEl.setAttribute('value', source)
+    sourceEl.innerText = l[source]?.zhName
+    targetEl.setAttribute('value', target)
+    targetEl.innerText = l[target]?.zhName
 }
 
 function initDictionary() {
@@ -299,7 +302,7 @@ function initDictionary() {
     let butEl = $('search_but')
     butEl.onclick = function () {
         let text = inpEl.value.trim()
-        text && sendQuery(text) // 词典按钮查询
+        sendQuery(text) // 词典按钮查询
     }
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
@@ -532,7 +535,7 @@ function resultDictionary(m) {
     el.querySelectorAll('[data-search=true]').forEach(e => {
         e.addEventListener('click', function () {
             let text = e.innerText?.trim()
-            text && sendQuery(text) // 结果点击查询
+            sendQuery(text) // 结果点击查询
         })
     })
 }
@@ -598,9 +601,13 @@ function onQuery(text, clientX, clientY) {
 }
 
 function sendQuery(text) {
-    let action = S('#dmx_navigate > .active')?.getAttribute('action')
-    if (!action) return
     if (!text) return
+    let nav = $('dmx_navigate')
+    let action = nav.querySelector('.active')?.getAttribute('action')
+    if (!action) {
+        action = dialogConf.action
+        nav.querySelector(`u[action="${action}"]`).click()
+    }
     if (!checkChange(action, text)) return
 
     let message = null
@@ -620,9 +627,11 @@ function sendQuery(text) {
 }
 
 function checkChange(action, text) {
-    if (dQuery.action === action && dQuery.text === text &&
-        dQuery.source === dialogConf.source && dQuery.target === dialogConf.target) return false
-    dQuery = {action: action, text: text, source: dialogConf.source, target: dialogConf.target}
+    let d = dQuery
+    let source = dialogConf.source
+    let target = dialogConf.target
+    if (d.action === action && d.text === text && d.source === source && d.target === target) return false
+    dQuery = {action, text, source, target}
     return true
 }
 

@@ -147,7 +147,7 @@
     "yue": "zh-HK",
     "cht": "zh-TW"
   },
-  "dialog": {
+  "dialogConf": {
     "width": 500,
     "height": 470,
     "source": "en",
