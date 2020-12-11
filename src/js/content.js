@@ -26,9 +26,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     // 是否开启自动解除选中现在
     if (setting.allowSelect === 'on') allowUserSelect()
 
-    debug('setting:', setting)
-    debug('conf:', conf)
-    // debug('languageList:', JSON.stringify(languageList))
+    // 查看全部数据
+    storageShowAll()
 })
 
 // 监听消息

@@ -314,7 +314,7 @@ function setSetting(name, value) {
 }
 
 function clearSetting() {
-    sendSetting({}, true)
+    sendSetting({}, true, true)
     setTimeout(() => {
         let url = new URL(location.href)
         url.searchParams.set('r', Date.now() + '')
@@ -322,11 +322,11 @@ function clearSetting() {
     }, 300)
 }
 
-function sendSetting(setting, isScribble) {
+function sendSetting(setting, updateIcon, resetDialog) {
     if (isFirefox) {
         // firefox 在 iframe 下功能缺失，所以通过 message 处理
-        sendMessage({action: 'saveSetting', setting, updateIcon: isScribble})
+        sendMessage({action: 'saveSetting', setting, updateIcon, resetDialog})
     } else {
-        bg.saveSettingAll(setting, isScribble)
+        bg.saveSettingAll(setting, updateIcon, resetDialog)
     }
 }

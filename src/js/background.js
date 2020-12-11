@@ -117,16 +117,17 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         let v = conf.searchList[m.name]
         if (v) m.checked ? addMenu(m.name, v.title, v.url) : removeMenu(m.name)
     } else if (m.action === 'saveSetting') {
-        saveSettingAll(m.setting, m.updateIcon)
+        saveSettingAll(m.setting, m.updateIcon, m.resetDialog)
     } else if (m.action === 'copy') {
         execCopy(m.text) // 后台复制，页面才不会失去焦点
     }
 })
 
-function saveSettingAll(data, updateIcon) {
+function saveSettingAll(data, updateIcon, resetDialog) {
     setting = Object.assign({}, conf.setting, data)
     updateIcon && setBrowserIcon(setting.scribble) // 是否显示关闭划词图标
-    storageSyncSet({setting})
+    let options = resetDialog ? {setting, dialogConf: {}} : {setting}
+    storageSyncSet(options)
 }
 
 function setBrowserIcon(scribble) {

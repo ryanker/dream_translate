@@ -48,6 +48,7 @@ function storageSyncSet(options) {
 }
 
 function storageShowAll() {
+    if (!isDebug) return
     !isFirefox && storageSyncGet(null).then(function (r) {
         debug(`all sync storage:`, r)
     })
