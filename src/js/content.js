@@ -7,6 +7,7 @@ let dialog, shadow,
     msgList = {},
     root = B.root
 let dQuery = {action: '', text: '', source: '', target: ''}
+let history = [], historyIndex = 0
 document.addEventListener('DOMContentLoaded', async function () {
     let dialogCSS = ''
     await storageLocalGet(['conf', 'languageList', 'dialogCSS']).then(function (r) {
@@ -125,13 +126,11 @@ function initDialog(dialogCSS) {
     // 绑定事件
     let nav = $('dmx_navigate')
     let navEl = nav.querySelectorAll('.dmx-icon')
-    let tmpAction = ''
     navEl.forEach(uEl => {
         uEl.addEventListener('click', function () {
             let action = this.getAttribute('action')
             if (!['translate', 'dictionary', 'search'].includes(action)) return
-            if (tmpAction === action) return
-            tmpAction = action // 临时
+            if (dQuery.action === action) return
             rmClassD(navEl, 'active')
             addClass(this, 'active')
             setDialogConf('action', action) // 保存设置
@@ -625,7 +624,18 @@ function checkChange(action, text) {
     let target = dialogConf.target
     if (d.action === action && d.text === text && d.source === source && d.target === target) return false
     dQuery = {action, text, source, target}
+    addHistory(dQuery)
     return true
+}
+
+function addHistory(data) {
+    if (historyIndex < history.length - 1) {
+        history.splice(historyIndex, history.length)
+    } else if (history.length >= 1000) {
+        history.shift() // 最多只保留 1000 条
+    }
+    history.push(data)
+    historyIndex = history.length - 1
 }
 
 function $(id) {
