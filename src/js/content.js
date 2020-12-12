@@ -25,12 +25,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     initDialog()
 
     // 初始对话框CSS
-    let styleEl = S('style')
-    conf.dictionaryCSS.forEach(name => {
-        if (!setting.dictionaryList.includes(name) || !dictionaryCSS[name]) return
-        let s = `<style data-name="${name}">${dictionaryCSS[name]}</style>`
-        styleEl.insertAdjacentHTML('afterend', s)
-    })
+    initDictionaryCSS()
 
     // 是否开启自动解除选中现在
     if (setting.allowSelect === 'on') allowUserSelect()
@@ -76,6 +71,9 @@ B.storage.onChanged.addListener(function (data) {
         if (k === 'setting') {
             setting = data[k].newValue
             debug('new setting:', setting)
+
+            // 初始对话框CSS
+            initDictionaryCSS()
         }
     })
 })
@@ -377,6 +375,15 @@ function initSetting() {
 
 function initMore() {
     dialog.contentHTML(`<iframe id="dmx_iframe" src="${root + 'html/more.html'}" importance="high"></iframe>`)
+}
+
+function initDictionaryCSS() {
+    let styleEl = S('style')
+    conf.dictionaryCSS.forEach(name => {
+        if (!setting.dictionaryList.includes(name) || !dictionaryCSS[name] || S(`style[data-name="${name}"]`)) return
+        let s = `<style data-name="${name}">${dictionaryCSS[name]}</style>`
+        styleEl.insertAdjacentHTML('afterend', s)
+    })
 }
 
 function loadingTranslate() {
