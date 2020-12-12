@@ -248,15 +248,18 @@
     border-radius: 5px 5px 0 0;
     padding: 0 8px;
     margin-right: 5px;
+    height: 28px;
     line-height: 28px;
+    overflow: hidden;
     font-size: 15px;
-    font-weight: bold;
+    font-weight: 600;
     text-decoration: none;
     cursor: pointer;
 }
 
 #dmx_dialog_title #dmx_navigate u.active {
     border-bottom: 1px solid #F3F6F9;
+    opacity: 1;
 }
 
 #dmx_dialog_title .dmx_right {
