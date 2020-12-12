@@ -76,6 +76,9 @@
     "urban": "城市词典",
     "macmillan": "麦克米伦词典"
   },
+  "dictionaryCSS": [
+    "longman"
+  ],
   "dictionarySoundList": {
     "youdao": "有道词典",
     "bing": "必应词典",

@@ -2,18 +2,18 @@
 
 let dialog, shadow,
     setting, conf, dialogConf,
-    languageList,
+    languageList, dialogCSS = '', dictionaryCSS = {},
     iconBut, iconText,
     msgList = {},
     root = B.root
 let dQuery = {action: '', text: '', source: '', target: ''}
 let history = [], historyIndex = 0, disHistory = false
 document.addEventListener('DOMContentLoaded', async function () {
-    let dialogCSS = ''
-    await storageLocalGet(['conf', 'languageList', 'dialogCSS']).then(function (r) {
+    await storageLocalGet(['conf', 'languageList', 'dialogCSS', 'dictionaryCSS']).then(function (r) {
         conf = r.conf
         languageList = JSON.parse(r.languageList)
         dialogCSS = r.dialogCSS
+        dictionaryCSS = r.dictionaryCSS
     })
 
     await storageSyncGet(['setting', 'dialogConf']).then(function (r) {
@@ -22,7 +22,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
 
     // 初始对话框
-    initDialog(dialogCSS)
+    initDialog()
+
+    // 初始对话框CSS
+    let styleEl = S('style')
+    conf.dictionaryCSS.forEach(name => {
+        if (!setting.dictionaryList.includes(name) || !dictionaryCSS[name]) return
+        let s = `<style data-name="${name}">${dictionaryCSS[name]}</style>`
+        styleEl.insertAdjacentHTML('afterend', s)
+    })
 
     // 是否开启自动解除选中现在
     if (setting.allowSelect === 'on') allowUserSelect()
@@ -73,7 +81,7 @@ B.storage.onChanged.addListener(function (data) {
 })
 
 // 初始对话框
-function initDialog(dialogCSS) {
+function initDialog() {
     let isChange = false
     dialog = dmxDialog({
         cssText: dialogCSS,

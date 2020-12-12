@@ -2,17 +2,22 @@
 
 let conf, setting, voiceList, sdk = {}
 document.addEventListener('DOMContentLoaded', async function () {
-    let dialogCSS = '', languageList = ''
+    let languageList = '', dialogCSS = '', dictionaryCSS = {}
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
         conf = r
-    })
-    await fetch('../css/dmx_dialog.css').then(r => r.text()).then(s => {
-        dialogCSS += minCss(s)
     })
     await fetch('../conf/language.json').then(r => r.text()).then(s => {
         languageList += s
     })
-    storageLocalSet({conf, dialogCSS, languageList}).catch(err => debug(`save error: ${err}`))
+    await fetch('../css/dmx_dialog.css').then(r => r.text()).then(s => {
+        dialogCSS += minCss(s)
+    })
+    for (let name of conf.dictionaryCSS) {
+        await fetch(`../css/${name}.css`).then(r => r.text()).then(s => {
+            dictionaryCSS[name] = minCss(s)
+        })
+    }
+    storageLocalSet({conf, languageList, dialogCSS, dictionaryCSS}).catch(err => debug(`save error: ${err}`))
 
     await storageSyncGet(['setting']).then(function (r) {
         saveSettingAll(r.setting, true) // 初始设置参数
