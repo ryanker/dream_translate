@@ -851,7 +851,7 @@ function dmxDialog(options) {
             el.style.height = height + 'px'
             typeof o.onResize === 'function' && o.onResize({height: height})
         } else {
-            mid = null
+            onMouseup()
         }
     }
     let _e = function (e) {
@@ -861,7 +861,7 @@ function dmxDialog(options) {
             el.style.width = width + 'px'
             typeof o.onResize === 'function' && o.onResize({width: width})
         } else {
-            mid = null
+            onMouseup()
         }
     }
     let _s = function (e) {
@@ -871,7 +871,7 @@ function dmxDialog(options) {
             el.style.height = height + 'px'
             typeof o.onResize === 'function' && o.onResize({height: height})
         } else {
-            mid = null
+            onMouseup()
         }
     }
     let _w = function (e) {
@@ -882,7 +882,7 @@ function dmxDialog(options) {
             el.style.width = width + 'px'
             typeof o.onResize === 'function' && o.onResize({width: width})
         } else {
-            mid = null
+            onMouseup()
         }
     }
     let onMousedown = function (e) {
@@ -901,7 +901,7 @@ function dmxDialog(options) {
         addClass(el, 'dmx_unselectable')
     }
     let onMouseup = function (e) {
-        e.stopPropagation()
+        e && e.stopPropagation()
         mid = null
         rmClass(document.body, 'dmx_unselectable')
         rmClass(el, 'dmx_unselectable')
