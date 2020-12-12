@@ -781,9 +781,11 @@ function dmxDialog(options) {
         minHeight: 200,
         show: false,
         autoHide: true,
+        isMove: false,
+        isResize: true,
+        onResize: null,
         cssText: '',
         contentHTML: '',
-        onResize: null,
     }, options || {})
 
     let d = document.createElement('div')
@@ -804,9 +806,9 @@ function dmxDialog(options) {
                 <i class="dmx-icon disabled dmx-icon-right"></i>
             </div>
             <div id="dmx_navigate">
-                <u action="translate">翻译</u>
-                <u action="dictionary">词典</u>
-                <u action="search">搜索</u>
+                <u class="dmx-icon" action="translate">翻译</u>
+                <u class="dmx-icon" action="dictionary">词典</u>
+                <u class="dmx-icon" action="search">搜索</u>
             </div>
         </div>
         <div class="dmx_right">
@@ -831,27 +833,6 @@ function dmxDialog(options) {
     }
     let el = $('dmx_dialog')
     let clientX, clientY, elX, elY, elW, elH, docW, docH, mid
-    let onMousedown = function (e) {
-        e.stopPropagation()
-        mid = this.id
-        clientX = e.clientX
-        clientY = e.clientY
-        let b = el.getBoundingClientRect()
-        elX = b.left || el.offsetLeft
-        elY = b.top || el.offsetTop
-        elW = b.width || el.offsetWidth
-        elH = b.height || el.offsetHeight
-        docW = document.documentElement.clientWidth
-        docH = document.documentElement.clientHeight
-        addClass(document.body, 'dmx_unselectable')
-        addClass(el, 'dmx_unselectable')
-    }
-    let elArr = ['dmx_dialog_title', 'dmx_dialog_resize_n', 'dmx_dialog_resize_e', 'dmx_dialog_resize_s', 'dmx_dialog_resize_w',
-        'dmx_dialog_resize_nw', 'dmx_dialog_resize_ne', 'dmx_dialog_resize_sw', 'dmx_dialog_resize_se']
-    elArr.forEach(i => {
-        $(i).addEventListener('mousedown', onMousedown)
-    })
-
     let _m = function (e) {
         let left = e.clientX - (clientX - elX)
         let top = e.clientY - (clientY - elY)
@@ -904,6 +885,27 @@ function dmxDialog(options) {
             mid = null
         }
     }
+    let onMousedown = function (e) {
+        e.stopPropagation()
+        mid = this.id
+        clientX = e.clientX
+        clientY = e.clientY
+        let b = el.getBoundingClientRect()
+        elX = b.left || el.offsetLeft
+        elY = b.top || el.offsetTop
+        elW = b.width || el.offsetWidth
+        elH = b.height || el.offsetHeight
+        docW = document.documentElement.clientWidth
+        docH = document.documentElement.clientHeight
+        addClass(document.body, 'dmx_unselectable')
+        addClass(el, 'dmx_unselectable')
+    }
+    let onMouseup = function (e) {
+        e.stopPropagation()
+        mid = null
+        rmClass(document.body, 'dmx_unselectable')
+        rmClass(el, 'dmx_unselectable')
+    }
     let onMousemove = function (e) {
         if (mid === 'dmx_dialog_title') {
             _m(e)
@@ -929,47 +931,21 @@ function dmxDialog(options) {
             _e(e)
         }
     }
-    let onMouseup = function (e) {
-        e.stopPropagation()
-        mid = null
-        rmClass(document.body, 'dmx_unselectable')
-        rmClass(el, 'dmx_unselectable')
-    }
     document.addEventListener('mousemove', onMousemove)
     document.addEventListener('mouseup', onMouseup)
-
-    // 阻止冒泡
-    shadow.querySelectorAll('.dmx-icon').forEach(el => {
-        el.addEventListener('mousedown', (e) => {
-            e.stopPropagation()
-        })
-    })
     el.addEventListener('mouseup', onMouseup)
 
-    // 点击 body 隐藏 dialog
-    let onMouseupPin = function () {
-        D.hide()
-    }
-
-    // 全屏显示
-    let fullObj
-    let fullScreen = function () {
-        fullObj = {top: el.style.top, left: el.style.left, width: el.style.width, height: el.style.height}
-        el.style.top = '0'
-        el.style.left = '0'
-        el.style.width = document.documentElement.clientWidth + 'px'
-        el.style.height = document.documentElement.clientHeight + 'px'
-    }
-    let fullScreenExit = function () {
-        if (typeof fullObj.top === 'string') el.style.top = fullObj.top
-        if (typeof fullObj.left === 'string') el.style.left = fullObj.left
-        if (typeof fullObj.width === 'string') el.style.width = fullObj.width
-        if (typeof fullObj.height === 'string') el.style.height = fullObj.height
-    }
-
+    let elArr = ['n', 'e', 's', 'w', 'nw', 'ne', 'sw', 'se']
+    let fsTmp = {} // 全屏设置临时缓存
     let D = {}
     D.el = el
     D.shadow = shadow
+    D.destroy = function () {
+        document.removeEventListener('mousemove', onMousemove)
+        document.removeEventListener('mouseup', onMouseup)
+        document.removeEventListener('mouseup', D.hide)
+        el.remove()
+    }
     D.show = function (o) {
         setTimeout(() => {
             el.style.display = 'block'
@@ -978,37 +954,58 @@ function dmxDialog(options) {
             let b = el.getBoundingClientRect()
             el.style.left = Math.max(0, Math.min(o.left, d.clientWidth - b.width)) + 'px'
             el.style.top = Math.max(0, Math.min(o.top, d.clientHeight - b.height)) + 'px'
-        }, 99)
+        }, 80)
     }
     D.hide = function () {
         el.style.display = 'none'
     }
+    D.enableMove = function () {
+        $('dmx_dialog_title').addEventListener('mousedown', onMousedown)
+    }
+    D.disableMove = function () {
+        $('dmx_dialog_title').removeEventListener('mousedown', onMousedown)
+    }
+    D.enableResize = function () {
+        elArr.forEach(v => {
+            let e = $(`dmx_dialog_resize_${v}`)
+            e.removeAttribute('style')
+            e.addEventListener('mousedown', onMousedown)
+        })
+    }
+    D.disableResize = function () {
+        elArr.forEach(v => {
+            let e = $(`dmx_dialog_resize_${v}`)
+            e.style.display = 'none'
+            e.removeEventListener('mousedown', onMousedown)
+        })
+    }
     D.fullScreen = function () {
         addClass($('dmx_fullscreen'), 'active')
         addClass(document.body, 'dmx_overflow_hidden')
-        fullScreen()
+        fsTmp = {top: el.style.top, left: el.style.left, width: el.style.width, height: el.style.height}
+        el.style.top = '0'
+        el.style.left = '0'
+        el.style.width = document.documentElement.clientWidth + 'px'
+        el.style.height = document.documentElement.clientHeight + 'px'
     }
     D.fullScreenExit = function () {
         rmClass($('dmx_fullscreen'), 'active')
         rmClass(document.body, 'dmx_overflow_hidden')
-        fullScreenExit()
+        if (typeof fsTmp.top === 'string') el.style.top = fsTmp.top
+        if (typeof fsTmp.left === 'string') el.style.left = fsTmp.left
+        if (typeof fsTmp.width === 'string') el.style.width = fsTmp.width
+        if (typeof fsTmp.height === 'string') el.style.height = fsTmp.height
     }
     D.pin = function () {
         addClass($('dmx_pin'), 'active')
-        document.removeEventListener('mouseup', onMouseupPin)
+        document.removeEventListener('mouseup', D.hide)
     }
     D.pinCancel = function () {
         rmClass($('dmx_pin'), 'active')
-        document.addEventListener('mouseup', onMouseupPin)
+        document.addEventListener('mouseup', D.hide) // 点击 body 隐藏 dialog
     }
     D.contentHTML = function (s) {
         $('dmx_dialog_content').innerHTML = s
-    }
-    D.destroy = function () {
-        document.removeEventListener('mousemove', onMousemove)
-        document.removeEventListener('mouseup', onMouseup)
-        document.removeEventListener('mouseup', onMouseupPin)
-        el.remove()
     }
     window._MxDialog = D
 
@@ -1016,9 +1013,11 @@ function dmxDialog(options) {
     el.style.width = Number(o.width) + 'px'
     el.style.height = Number(o.height) + 'px'
     o.show ? D.show() : D.hide()
+    o.isMove ? D.enableMove() : D.disableMove()
+    o.isResize ? D.enableResize() : D.disableResize()
     o.autoHide ? D.pinCancel() : D.pin()
 
-    // 顶部按钮
+    // 顶部按钮事件
     $('dmx_close').onclick = function () {
         D.hide()
         rmClass(document.body, 'dmx_overflow_hidden')
@@ -1029,6 +1028,9 @@ function dmxDialog(options) {
     $('dmx_fullscreen').onclick = function () {
         hasClass(this, 'active') ? D.fullScreenExit() : D.fullScreen()
     }
+
+    // 阻止冒泡
+    shadow.querySelectorAll('.dmx-icon').forEach(v => v.addEventListener('mousedown', e => e.stopPropagation()))
 
     return D
 }
