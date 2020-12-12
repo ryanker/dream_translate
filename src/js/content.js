@@ -1012,7 +1012,7 @@ function dmxDialog(options) {
     }
     window._MxDialog = D
 
-    // 设置初始宽高
+    // 初始设置
     el.style.width = Number(o.width) + 'px'
     el.style.height = Number(o.height) + 'px'
     o.show ? D.show() : D.hide()
