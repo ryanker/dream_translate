@@ -228,6 +228,7 @@ function addClass(el, className) {
 }
 
 function rmClass(el, className) {
+    if (!el.className) return
     className = className.trim()
     let newClassName = el.className.trim()
     if ((` ${newClassName} `).indexOf(` ${className} `) === -1) return
