@@ -706,11 +706,8 @@ function allowUserSelect() {
     sty.textContent = `* {-webkit-user-select:text!important;-moz-user-select:text!important;user-select:text!important}`
     document.head.appendChild(sty)
 
-    let allow = function () {
-        return true
-    }
     let onAllow = function (el, event) {
-        if (el.getAttribute && el.getAttribute(event)) el.setAttribute(event, allow)
+        if (el.getAttribute && el.getAttribute(event)) el.setAttribute(event, () => true)
     }
     let onClean = function (e) {
         e.stopPropagation()
