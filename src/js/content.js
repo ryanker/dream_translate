@@ -960,10 +960,14 @@ function dmxDialog(options) {
         el.style.display = 'none'
     }
     D.enableMove = function () {
-        $('dmx_dialog_title').addEventListener('mousedown', onMousedown)
+        let e = $('dmx_dialog_title')
+        e.style.cursor = 'move'
+        e.addEventListener('mousedown', onMousedown)
     }
     D.disableMove = function () {
-        $('dmx_dialog_title').removeEventListener('mousedown', onMousedown)
+        let e = $('dmx_dialog_title')
+        e.style.cursor = 'auto'
+        e.removeEventListener('mousedown', onMousedown)
     }
     D.enableResize = function () {
         elArr.forEach(v => {
