@@ -82,7 +82,7 @@
     cursor: ew-resize;
     position: absolute;
     z-index: var(--zi2);
-    right: -5px;
+    right: -7px;
     top: 0;
     width: 8px;
     height: 100%
