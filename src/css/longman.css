@@ -690,7 +690,7 @@
 .bussdictEntry .REFHWD {
     text-transform: lowercase;
     font-style: normal;
-    font-variant: small-caps;
+    /*font-variant: small-caps;*/
 }
 
 .bussdictEntry .neutral {
