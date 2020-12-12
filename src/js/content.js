@@ -1034,7 +1034,9 @@ function dmxDialog(options) {
     }
 
     // 阻止冒泡
-    shadow.querySelectorAll('.dmx-icon').forEach(v => v.addEventListener('mousedown', e => e.stopPropagation()))
+    shadow.querySelectorAll('.dmx-icon').forEach(v => {
+        v.addEventListener('mousedown', e => e.stopPropagation())
+    })
 
     return D
 }
