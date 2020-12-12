@@ -228,7 +228,10 @@ function addClass(el, className) {
 }
 
 function rmClass(el, className) {
-    let newClassName = el.className.replace(new RegExp('(?:^|\\s)' + className + '(?:\\s|$)', 'g'), ' ').trim()
+    className = className.trim()
+    let newClassName = el.className.trim()
+    if ((` ${newClassName} `).indexOf(` ${className} `) === -1) return
+    newClassName = newClassName.replace(new RegExp('(?:^|\\s)' + className + '(?:\\s|$)', 'g'), ' ').trim()
     if (newClassName) {
         el.className = newClassName
     } else {

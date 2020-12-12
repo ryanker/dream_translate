@@ -178,8 +178,8 @@ function initDialog(dialogCSS) {
         } else if (index === history.length - 1) {
             addClass(hrEl, className)
         } else {
-            hasClass(hlEl, className) && rmClass(hlEl, className)
-            hasClass(hrEl, className) && rmClass(hrEl, className)
+            rmClass(hlEl, className)
+            rmClass(hrEl, className)
         }
 
         let data = history[index]
