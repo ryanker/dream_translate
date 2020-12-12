@@ -9,16 +9,11 @@
     overflow: hidden;
 }
 
-:root {
-    --zi1: 999999999998;
-    --zi2: 999999999999;
-}
-
 #dmx_mouse_icon {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: var(--zi2);
+    z-index: 999999999999;
     font-family: "dmx-icon", serif !important;
     width: 32px;
     height: 32px;
@@ -53,7 +48,7 @@
 #dmx_dialog {
     all: initial;
     position: fixed;
-    z-index: var(--zi1);
+    z-index: 999999999998;
     width: 500px;
     height: 500px;
     overflow: hidden;
@@ -71,7 +66,7 @@
 #dmx_dialog_resize_n {
     cursor: ns-resize;
     position: absolute;
-    z-index: var(--zi2);
+    z-index: 999999999999;
     left: 0;
     top: -5px;
     width: 100%;
@@ -81,7 +76,7 @@
 #dmx_dialog_resize_e {
     cursor: ew-resize;
     position: absolute;
-    z-index: var(--zi2);
+    z-index: 999999999999;
     right: -7px;
     top: 0;
     width: 8px;
@@ -91,7 +86,7 @@
 #dmx_dialog_resize_s {
     cursor: ns-resize;
     position: absolute;
-    z-index: var(--zi2);
+    z-index: 999999999999;
     left: 0;
     bottom: -5px;
     width: 100%;
@@ -101,7 +96,7 @@
 #dmx_dialog_resize_w {
     cursor: ew-resize;
     position: absolute;
-    z-index: var(--zi2);
+    z-index: 999999999999;
     left: -5px;
     top: 0;
     width: 8px;
@@ -111,7 +106,7 @@
 #dmx_dialog_resize_nw {
     cursor: nwse-resize;
     position: absolute;
-    z-index: var(--zi2);
+    z-index: 999999999999;
     left: -5px;
     top: -5px;
     width: 10px;
@@ -121,7 +116,7 @@
 #dmx_dialog_resize_ne {
     cursor: nesw-resize;
     position: absolute;
-    z-index: var(--zi2);
+    z-index: 999999999999;
     right: -5px;
     top: -5px;
     width: 10px;
@@ -131,7 +126,7 @@
 #dmx_dialog_resize_sw {
     cursor: nesw-resize;
     position: absolute;
-    z-index: var(--zi2);
+    z-index: 999999999999;
     left: -5px;
     bottom: -5px;
     width: 10px;
@@ -141,7 +136,7 @@
 #dmx_dialog_resize_se {
     cursor: nwse-resize;
     position: absolute;
-    z-index: var(--zi2);
+    z-index: 999999999999;
     right: -5px;
     bottom: -5px;
     width: 17px;
@@ -754,7 +749,7 @@ a:hover {
 
 /* ==================== alert ==================== */
 #dmx_alert {
-    z-index: var(--zi2);
+    z-index: 999999999999;
     position: fixed;
     top: 0;
     left: 50%;
