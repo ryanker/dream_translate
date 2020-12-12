@@ -208,7 +208,7 @@ function initTranslate() {
     for (let k in l) {
         if (l.hasOwnProperty(k)) langList += `<u value="${k}">${l[k].zhName}</u>`
     }
-    dialog.contentHTML(`<div class="main main_trans">
+    dialog.contentHTML(`<div class="dmx_main dmx_main_trans">
     <div class="case" id="translate_input" contenteditable="true"></div>
     <div class="language_box fx">
         <div id="language_source" class="language_button dmx-icon"></div>
@@ -218,7 +218,7 @@ function initTranslate() {
         <div id="language_dropdown" class="fx">${langList}</div>
     </div>
 </div>
-<div id="case_list" class="main fx"></div>`)
+<div id="case_list" class="dmx_main fx"></div>`)
 
     // 绑定事件
     let sourceEl = $('language_source')
@@ -325,13 +325,13 @@ function initTranslate() {
 }
 
 function initDictionary() {
-    dialog.contentHTML(`<div id="head">
+    dialog.contentHTML(`<div id="dmx_head">
     <div class="case search_box">
         <input id="dictionary_input" type="text" maxlength="100" autocomplete="off">
         <div id="search_but"><i class="dmx-icon dmx-icon-search"></i></div>
     </div>
 </div>
-<div id="case_list" class="main fx"></div>`)
+<div id="case_list" class="dmx_main dmx_content fx"></div>`)
 
     let inpEl = $('dictionary_input')
     let butEl = $('search_but')
@@ -345,13 +345,13 @@ function initDictionary() {
 }
 
 function initSearch() {
-    dialog.contentHTML(`<div id="head">
+    dialog.contentHTML(`<div id="dmx_head">
     <div class="case search_box">
         <input id="search_input" type="text" maxlength="100" autocomplete="off">
         <div id="search_but"><i class="dmx-icon dmx-icon-search"></i></div>
     </div>
 </div>
-<div id="case_list" class="main fx"></div>`)
+<div id="case_list" class="dmx_main dmx_content dmx_main_search fx"></div>`)
 
     let inpEl = $('search_input')
     let butEl = $('search_but')
@@ -364,11 +364,11 @@ function initSearch() {
 }
 
 function initSetting() {
-    dialog.contentHTML(`<iframe class="dmx_iframe" src="${root + 'html/setting.html'}" importance="high"></iframe>`)
+    dialog.contentHTML(`<iframe id="dmx_iframe" src="${root + 'html/setting.html'}" importance="high"></iframe>`)
 }
 
 function initMore() {
-    dialog.contentHTML(`<iframe class="dmx_iframe" src="${root + 'html/more.html'}" importance="high"></iframe>`)
+    dialog.contentHTML(`<iframe id="dmx_iframe" src="${root + 'html/more.html'}" importance="high"></iframe>`)
 }
 
 function loadingTranslate() {
@@ -781,7 +781,7 @@ function dmxDialog(options) {
         minHeight: 200,
         show: false,
         autoHide: true,
-        isMove: false,
+        isMove: true,
         isResize: true,
         onResize: null,
         cssText: '',
