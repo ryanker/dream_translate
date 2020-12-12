@@ -718,7 +718,7 @@ a:hover {
     color: #4e5053;
     height: 30px;
     line-height: 30px;
-    padding: 3px 32px 3px 8px;
+    padding: 3px 60px 3px 8px;
     position: relative;
 }
 
@@ -739,6 +739,17 @@ a:hover {
     position: absolute;
     top: calc(50% - 15px);
     right: 10px;
+}
+
+.search_box #search_remove {
+    position: absolute;
+    top: calc(50% - 15px);
+    right: 35px;
+    display: none;
+}
+
+.search_box:hover #search_remove {
+    display: block;
 }
 
 /* ==================== alert ==================== */

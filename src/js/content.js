@@ -334,13 +334,19 @@ function initDictionary() {
     dialog.contentHTML(`<div id="dmx_head">
     <div class="case search_box">
         <input id="dictionary_input" type="text" maxlength="100" autocomplete="off">
+        <div id="search_remove"><i class="dmx-icon dmx-icon-error"></i></div>
         <div id="search_but"><i class="dmx-icon dmx-icon-search"></i></div>
     </div>
 </div>
 <div id="case_list" class="dmx_main dmx_content fx"></div>`)
 
     let inpEl = $('dictionary_input')
+    let rmEl = $('search_remove')
     let butEl = $('search_but')
+    rmEl.onclick = function () {
+        inpEl.value = ''
+        inpEl.focus()
+    }
     butEl.onclick = function () {
         let text = inpEl.value.trim()
         sendQuery(text) // 词典按钮查询
@@ -354,13 +360,19 @@ function initSearch() {
     dialog.contentHTML(`<div id="dmx_head">
     <div class="case search_box">
         <input id="search_input" type="text" maxlength="100" autocomplete="off">
+        <div id="search_remove"><i class="dmx-icon dmx-icon-error"></i></div>
         <div id="search_but"><i class="dmx-icon dmx-icon-search"></i></div>
     </div>
 </div>
 <div id="case_list" class="dmx_main dmx_content dmx_main_search fx"></div>`)
 
     let inpEl = $('search_input')
+    let rmEl = $('search_remove')
     let butEl = $('search_but')
+    rmEl.onclick = function () {
+        inpEl.value = ''
+        inpEl.focus()
+    }
     butEl.onclick = function () {
         $('case_list').querySelector('[data-search]')?.click()
     }
