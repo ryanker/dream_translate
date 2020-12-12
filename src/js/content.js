@@ -179,13 +179,12 @@ function initDialog() {
         historyIndex = index
 
         let className = 'disabled'
+        rmClass(hlEl, className)
+        rmClass(hrEl, className)
         if (index === 0) {
             addClass(hlEl, className)
         } else if (index === history.length - 1) {
             addClass(hrEl, className)
-        } else {
-            rmClass(hlEl, className)
-            rmClass(hrEl, className)
         }
 
         let data = history[index]
