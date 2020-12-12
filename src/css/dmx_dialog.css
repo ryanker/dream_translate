@@ -217,6 +217,12 @@
     padding: 0 8px;
 }
 
+#dmx_dialog_title #dmx_history .dmx-icon.disabled {
+    color: #9EA0A3;
+    background: #F3F6F9;
+    opacity: 0.8;
+}
+
 #dmx_dialog_title #dmx_navigate {
     margin: 1px 0 0 15px;
 }
@@ -224,7 +230,6 @@
 #dmx_dialog_title #dmx_navigate u {
     float: left;
     display: block;
-    text-decoration: none;
     background: #F3F6F9;
     border: 1px solid #C4C5C8;
     border-radius: 5px 5px 0 0;
@@ -233,6 +238,7 @@
     line-height: 28px;
     font-size: 15px;
     font-weight: bold;
+    text-decoration: none;
     cursor: pointer;
 }
 

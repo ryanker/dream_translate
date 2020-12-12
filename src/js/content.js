@@ -164,8 +164,26 @@ function initDialog(dialogCSS) {
     })
 
     // 历史记录
+    let hEl = $('dmx_history')
+    let hlEl = hEl.querySelector('.dmx-icon-left')
+    let hrEl = hEl.querySelector('.dmx-icon-right')
     let loadHistory = function (index) {
+        if (index < 0 || index >= history.length) return
+        disHistory = true
+        historyIndex = index
+
+        let className = 'disabled'
+        if (index === 0) {
+            addClass(hlEl, className)
+        } else if (index === history.length - 1) {
+            addClass(hrEl, className)
+        } else {
+            hasClass(hlEl, className) && rmClass(hlEl, className)
+            hasClass(hrEl, className) && rmClass(hrEl, className)
+        }
+
         let data = history[index]
+        debug('current:', historyIndex, data, history)
         let action = data.action
         let text = data.text
         dialogConf.source = data.source
@@ -181,23 +199,8 @@ function initDialog(dialogCSS) {
         }
         sendQuery(text) // 历史记录查询
     }
-    let historyEl = $('dmx_history')
-    historyEl.querySelector('.dmx-icon-left').addEventListener('click', function () {
-        if (historyIndex > 0) {
-            disHistory = true
-            historyIndex = historyIndex - 1
-            console.log(history, historyIndex)
-            loadHistory(historyIndex)
-        }
-    })
-    historyEl.querySelector('.dmx-icon-right').addEventListener('click', function () {
-        if (historyIndex < history.length - 1) {
-            disHistory = true
-            historyIndex = historyIndex + 1
-            console.log(history, historyIndex)
-            loadHistory(historyIndex)
-        }
-    })
+    hlEl.addEventListener('click', () => loadHistory(historyIndex - 1))
+    hrEl.addEventListener('click', () => loadHistory(historyIndex + 1))
 }
 
 function initTranslate() {
@@ -665,10 +668,7 @@ function checkChange(action, text) {
 }
 
 function addHistory(data) {
-    if (disHistory) {
-        disHistory = false
-        return
-    }
+    if (disHistory) return disHistory = false
     if (historyIndex < history.length - 1) {
         history.splice(historyIndex + 1, history.length)
     } else if (history.length >= 1000) {
@@ -676,7 +676,12 @@ function addHistory(data) {
     }
     history.push(data)
     historyIndex = history.length - 1
-    console.log('history:', history, historyIndex)
+    debug('history:', history, historyIndex)
+    if (history.length > 1) {
+        let hEl = $('dmx_history')
+        rmClass(hEl.querySelector('.dmx-icon-left'), 'disabled')
+        addClass(hEl.querySelector('.dmx-icon-right'), 'disabled')
+    }
 }
 
 function $(id) {
@@ -795,8 +800,8 @@ function dmxDialog(options) {
             <div id="dmx_pin" class="dmx-icon"></div>
             <div id="dmx_fullscreen" class="dmx-icon"></div>
             <div id="dmx_history">
-                <i class="dmx-icon dmx-icon-left"></i>
-                <i class="dmx-icon dmx-icon-right"></i>
+                <i class="dmx-icon disabled dmx-icon-left"></i>
+                <i class="dmx-icon disabled dmx-icon-right"></i>
             </div>
             <div id="dmx_navigate">
                 <u action="translate">翻译</u>
