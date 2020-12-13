@@ -66,73 +66,82 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     let tabId = sender?.tab?.id
 
     if (m.action === 'translate') {
-        setting.translateList.forEach(name => {
-            sdkInit(`${name}Translate`, sd => {
-                if (!sd) return
-
-                // 翻译
-                sd.query(m.text, m.srcLan, m.tarLan).then(r => {
-                    debug(`${name}:`, r)
-                    sendTabMessage(tabId, {action: m.action, name: name, result: r})
-                }).catch(e => {
-                    sendTabMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
-                })
-
-                // 链接
-                let url = sd.link(m.text, m.srcLan, m.tarLan)
-                sendTabMessage(tabId, {action: 'link', type: m.action, name: name, link: url})
-            })
-        })
-
-        // 自动朗读
-        setTimeout(() => {
-            autoPlaySound(tabId, m.text, m.srcLan, conf.translateTTSList, setting.translateTTSList)
-        }, 300)
+        runTranslate(tabId, m)
     } else if (m.action === 'translateTTS') {
-        let list = conf.translateList
-        let tList = conf.translateTTSList
-        let message = {action: m.action, name: m.name, type: m.type, status: 'end'}
-        playSound(m.name, m.text, m.lang).then(() => {
-            sendTabMessage(tabId, message)
-        }).catch(err => {
-            debug(`${m.name} sound error:`, err)
-            let errMsg = `${tList[m.name] ? tList[m.name] : list[m.name] + '朗读'}出错`
-            sendTabMessage(tabId, Object.assign({}, message, {error: errMsg}))
-        })
+        runTranslateTTS(tabId, m)
     } else if (m.action === 'dictionary') {
-        setting.dictionaryList.forEach(name => {
-            sdkInit(`${name}Dictionary`, sd => {
-                if (!sd) return
-
-                // 查词
-                sd.query(m.text).then(r => {
-                    debug(`${name}:`, r)
-                    sendTabMessage(tabId, {action: m.action, name: name, result: r})
-                }).catch(e => {
-                    sendTabMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
-                })
-
-                // 链接
-                sendTabMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text)})
-            })
-        })
+        runDictionary(tabId, m)
     } else if (m.action === 'dictionarySound') {
-        playAudio(m.url).then(() => {
-            sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, status: 'end'})
-        }).catch(err => {
-            debug(`${m.name} sound error:`, err)
-            let title = conf.dictionaryList[m.name] || ''
-            sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, error: `${title}发音出错`})
-        })
+        runDictionarySound(tabId, m)
     } else if (m.action === 'menu') {
-        let v = conf.searchList[m.name]
-        if (v) m.checked ? addMenu(m.name, v.title, v.url) : removeMenu(m.name)
+        changeMenu(m.name, m.isAdd)
     } else if (m.action === 'saveSetting') {
         saveSettingAll(m.setting, m.updateIcon, m.resetDialog)
     } else if (m.action === 'copy') {
         execCopy(m.text) // 后台复制，页面才不会失去焦点
     }
 })
+
+function runTranslate(tabId, m) {
+    setting.translateList.forEach(name => {
+        sdkInit(`${name}Translate`).then(sd => {
+            sd.query(m.text, m.srcLan, m.tarLan).then(r => {
+                debug(`${name}:`, r)
+                sendTabMessage(tabId, {action: m.action, name: name, result: r})
+            }).catch(e => {
+                sendTabMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
+            })
+
+            // 链接
+            let url = sd.link(m.text, m.srcLan, m.tarLan)
+            sendTabMessage(tabId, {action: 'link', type: m.action, name: name, link: url})
+        })
+    })
+
+    // 自动朗读
+    setTimeout(() => {
+        autoPlayTTS(tabId, m.text, m.srcLan, conf.translateTTSList, setting.translateTTSList)
+    }, 300)
+}
+
+function runTranslateTTS(tabId, m) {
+    let list = conf.translateList
+    let tList = conf.translateTTSList
+    let message = {action: m.action, name: m.name, type: m.type, status: 'end'}
+    playTTS(m.name, m.text, m.lang).then(() => {
+        sendTabMessage(tabId, message)
+    }).catch(err => {
+        debug(`${m.name} sound error:`, err)
+        let errMsg = `${tList[m.name] ? tList[m.name] : list[m.name] + '朗读'}出错`
+        sendTabMessage(tabId, Object.assign({}, message, {error: errMsg}))
+    })
+}
+
+function runDictionary(tabId, m) {
+    setting.dictionaryList.forEach(name => {
+        sdkInit(`${name}Dictionary`).then(sd => {
+            sd.query(m.text).then(r => {
+                debug(`${name}:`, r)
+                sendTabMessage(tabId, {action: m.action, name: name, result: r})
+            }).catch(e => {
+                sendTabMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
+            })
+
+            // 链接
+            sendTabMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text)})
+        })
+    })
+}
+
+function runDictionarySound(tabId, m) {
+    playAudio(m.url).then(() => {
+        sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, status: 'end'})
+    }).catch(err => {
+        debug(`${m.name} sound error:`, err)
+        let title = conf.dictionaryList[m.name] || ''
+        sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, error: `${title}发音出错`})
+    })
+}
 
 function saveSettingAll(data, updateIcon, resetDialog) {
     setting = Object.assign({}, conf.setting, data)
@@ -149,6 +158,11 @@ function setBrowserAction(text) {
     B.browserAction.setBadgeText({text: text || ''})
     B.browserAction.setBadgeBackgroundColor({color: 'red'})
     isFirefox && B.browserAction.setBadgeTextColor({color: 'white'})
+}
+
+function changeMenu(name, isAdd) {
+    let v = conf.searchList[name]
+    if (v) isAdd ? addMenu(name, v.title, v.url) : removeMenu(name)
 }
 
 function addMenu(name, title, url) {
@@ -185,7 +199,7 @@ function minCss(s) {
     return s
 }
 
-function autoPlaySound(tabId, text, lang, list, arr) {
+function autoPlayTTS(tabId, text, lang, list, arr) {
     (async () => {
         if (lang === 'auto') {
             lang = 'en' // 默认值
@@ -201,8 +215,8 @@ function autoPlaySound(tabId, text, lang, list, arr) {
         for (let k = 0; k < arr.length; k++) {
             let name = arr[k]
             let message = {action: 'translateTTS', name: name, type: 'source', status: 'end'}
-            sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
-            await playSound(name, text, lang).then(() => {
+            await sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
+            await playTTS(name, text, lang).then(() => {
                 sendTabMessage(tabId, message)
             }).catch(err => {
                 debug(`${name} sound error:`, err)
@@ -212,10 +226,9 @@ function autoPlaySound(tabId, text, lang, list, arr) {
     })()
 }
 
-function playSound(name, text, lang) {
+function playTTS(name, text, lang) {
     return new Promise((resolve, reject) => {
-        sdkInit(`${name}Translate`, sd => {
-            if (!sd) return reject('sdkInit error')
+        sdkInit(`${name}Translate`).then(sd => {
             sd.tts(text, lang).then(val => {
                 if (name === 'local') return resolve()
                 if (Array.isArray(val)) {
@@ -271,18 +284,18 @@ function playAudio(url) {
     })
 }
 
-function sdkInit(sdkName, callback) {
-    if (sdk[sdkName]) {
-        callback && callback(sdk[sdkName])
-        return
-    }
-    if (typeof window[sdkName] !== 'function') {
-        debug(sdkName + ' not exist!')
-        callback && callback(null)
-        return
-    }
-    sdk[sdkName] = new window[sdkName]().init()
-    callback && callback(sdk[sdkName])
+function sdkInit(name) {
+    return new Promise((resolve, reject) => {
+        if (sdk[name]) return resolve(sdk[name])
+        if (typeof window[name] === 'function') {
+            sdk[name] = new window[name]().init()
+            resolve(sdk[name])
+        } else {
+            let err = name + ' not exist!'
+            debug('sdkInit error:', err)
+            reject(err)
+        }
+    })
 }
 
 function loadJs(arr, type) {

@@ -159,7 +159,7 @@ function bindSearchMenus() {
     N('searchMenus').forEach(v => {
         v.addEventListener('change', function () {
             // firefox 在 iframe 下功能缺失，只能通过 message 处理
-            sendMessage({action: 'menu', name: this.value, checked: this.checked})
+            sendMessage({action: 'menu', name: this.value, isAdd: this.checked})
         })
     })
 }
