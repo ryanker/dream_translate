@@ -589,12 +589,16 @@ a:hover {
 }
 
 .case_keywords_title {
-    padding: 10px 0;
+    padding: 10px 0 0;
     font-weight: bold;
 }
 
 .case_keywords p {
-    padding: 2px 0;
+    padding: 3px 0 0;
+}
+
+.case_keywords p:first-child {
+    padding: 0;
 }
 
 .case_keywords p b {
@@ -602,7 +606,7 @@ a:hover {
     background: #f9f9f9;
     color: #4395ff;
     border-radius: 5px;
-    padding: 0 4px;
+    padding: 0 3px;
     margin-right: 10px;
 }
 
