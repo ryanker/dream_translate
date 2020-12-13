@@ -1,4 +1,10 @@
 'use strict'
+/**
+ * Dream Translate
+ * https://github.com/ryanker/dream_translate
+ * @Author Ryan <dream39999@gmail.com>
+ * @license MIT License
+ */
 
 let langList, voices, conf = {}
 let voiceEl = $('speak_voice')

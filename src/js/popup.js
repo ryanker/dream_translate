@@ -1,3 +1,11 @@
+'use strict'
+/**
+ * Dream Translate
+ * https://github.com/ryanker/dream_translate
+ * @Author Ryan <dream39999@gmail.com>
+ * @license MIT License
+ */
+
 let setting = {}
 document.addEventListener('DOMContentLoaded', async function () {
     await storageSyncGet(['setting']).then(function (r) {

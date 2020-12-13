@@ -1,4 +1,12 @@
+'use strict'
 /**
+ * Dream Translate
+ * https://github.com/ryanker/dream_translate
+ * @Author Ryan <dream39999@gmail.com>
+ * @license MIT License
+ */
+
+/*!
  * 浏览器统一兼容
  * 参考：
  * https://github.com/mozilla/webextension-polyfill
