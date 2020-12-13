@@ -583,6 +583,29 @@ a:hover {
     margin-top: 0;
 }
 
+.case_keywords {
+    margin-top: 10px;
+    border-top: thin dotted gray;
+}
+
+.case_keywords_title {
+    padding: 10px 0;
+    font-weight: bold;
+}
+
+.case_keywords p {
+    padding: 2px 0;
+}
+
+.case_keywords p b {
+    border: 1px solid #f9f9f9;
+    background: #f9f9f9;
+    color: #4395ff;
+    border-radius: 5px;
+    padding: 0 4px;
+    margin-right: 10px;
+}
+
 .case_top {
     padding: 2px 10px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);

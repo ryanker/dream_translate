@@ -230,7 +230,16 @@ function sogouTranslate() {
             }
             if (data.keywords) {
                 ret.keywords = []
-                data.keywords.forEach(v => ret.keywords.push({word: v.key, means: v.value}))
+                data.keywords.forEach(v => {
+                    let valArr = v.value
+                    let vArr = []
+                    if (valArr && valArr.length > 0) {
+                        valArr.forEach(v2 => {
+                            vArr.push(v2?.replace(/；$/g, ''))
+                        })
+                    }
+                    ret.keywords.push({word: v.key, means: vArr})
+                })
             }
             // if (data.keyword_dict) ret.keyword_dict = data.keyword_dict
             return ret

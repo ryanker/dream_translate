@@ -198,8 +198,10 @@ function initDialog() {
         debug('current:', historyIndex, data, history)
         let action = data.action
         let text = data.text
+        dialogConf.action = action
         dialogConf.source = data.source
         dialogConf.target = data.target
+        dQuery.action !== action && setDialogConf('action', action) // 保存设置
         rmClassD(uEl, 'active')
         addClass(nav.querySelector(`u[action="${action}"]`), 'active')
         if (action === 'translate') {
@@ -503,53 +505,11 @@ function resultTranslate(name, isBilingual) {
     let el = $(`${name}_translate_case`)
     if (!el) return
     let r = msgList[name]
-    let s = ''
-    if (r) {
-        r.data && r.data.forEach(v => {
-            if (isBilingual) {
-                s += `<p class="source_text">${v.srcText}</p><p>${v.tarText}</p>`
-            } else {
-                s += `<p>${v.tarText}</p>`
-            }
-        })
 
-        // 重点词汇
-        r.keywords && r.keywords.forEach(v => {
-            if (v.word && v.means) s += `<p><b>${v.word}</b>${v.means.join('；')}</p>`
-        })
-    }
-    if (!s) s = '网络错误，请稍后再试'
-    el.querySelector('.case_content').innerHTML = s
-
-    let soundHTML = function (lan, lanArr, type) {
-        let title = languageList[lan] ? languageList[lan].zhName : ''
-        let arr = {
-            'zh': '&#xe675;',
-            'en': '&#xe6a8;',
-            'jp': '&#xe6a0;',
-            'th': '&#xe69c;',
-            'spa': '&#xe6a5;',
-            'ara': '&#xe6a7;',
-            'fra': '&#xe676;',
-            'kor': '&#xe6a6;',
-            'ru': '&#xe69d;',
-            'de': '&#xe677;',
-            'pt': '&#xe69e;',
-            'it': '&#xe6a4;',
-            'el': '&#xe6a1;',
-            'nl': '&#xe6a3;',
-            'pl': '&#xe6a9;'
-        }
-        let iconStr = arr[lan] || '&#xe67a;'
-        let s = title
-        if (!lanArr || inArray(lan, lanArr)) {
-            s += ` <i class="dmx-icon dmx_ripple" data-type="${type}" title="${title}发音">${iconStr}</i>`
-        }
-        return s
-    }
+    // 显示发音图标
     if (r && r.srcLan && r.tarLan) {
-        let sourceStr = soundHTML(r.srcLan, r.lanTTS, 'source')
-        let targetStr = soundHTML(r.tarLan, r.lanTTS, 'target')
+        let sourceStr = soundIconHTML(r.srcLan, r.lanTTS, 'source')
+        let targetStr = soundIconHTML(r.tarLan, r.lanTTS, 'target')
         el.querySelector('.case_language').innerHTML = `${sourceStr} » ${targetStr}`
 
         let sourceEl = el.querySelector('[data-type=source]')
@@ -567,6 +527,33 @@ function resultTranslate(name, isBilingual) {
             s && sendPlayTTS(name, 'target', r.tarLan, s) // 播放译音
         })
     }
+
+    // 显示翻译结果
+    let s = ''
+    if (r) {
+        r.data && r.data.forEach(v => {
+            if (isBilingual) {
+                s += `<p class="source_text">${v.srcText}</p><p>${v.tarText}</p>`
+            } else {
+                s += `<p>${v.tarText}</p>`
+            }
+        })
+
+        // 重点词汇
+        if (r.keywords && r.keywords.length > 0) {
+            s += `<div class="case_keywords">`
+            s += `<div class="case_keywords_title">重点词汇</div>`
+            r.keywords.forEach(v => {
+                if (v.word && v.means) s += `<p><b data-search="true">${v.word}</b>${v.means.join('；')}</p>`
+            })
+            s += `</div>`
+        }
+    }
+    if (!s) s = '网络错误，请稍后再试'
+    el.querySelector('.case_content').innerHTML = s
+
+    // 绑定点击搜索
+    resultBindSearch(el)
 }
 
 function resultDictionary(m) {
@@ -606,6 +593,10 @@ function resultDictionary(m) {
     })
 
     // 绑定点击搜索
+    resultBindSearch(el)
+}
+
+function resultBindSearch(el) {
     el.querySelectorAll('[data-search=true]').forEach(e => {
         e.addEventListener('click', function () {
             let text = e.innerText?.trim()
@@ -641,6 +632,33 @@ function resultSound(m, action) {
 function activeRipple(el) {
     rmClassD(D('.dmx_ripple'), 'active')
     addClass(el, 'active')
+}
+
+function soundIconHTML(lan, lanArr, type) {
+    let title = languageList[lan] ? languageList[lan].zhName : ''
+    let arr = {
+        'zh': '&#xe675;',
+        'en': '&#xe6a8;',
+        'jp': '&#xe6a0;',
+        'th': '&#xe69c;',
+        'spa': '&#xe6a5;',
+        'ara': '&#xe6a7;',
+        'fra': '&#xe676;',
+        'kor': '&#xe6a6;',
+        'ru': '&#xe69d;',
+        'de': '&#xe677;',
+        'pt': '&#xe69e;',
+        'it': '&#xe6a4;',
+        'el': '&#xe6a1;',
+        'nl': '&#xe6a3;',
+        'pl': '&#xe6a9;'
+    }
+    let iconStr = arr[lan] || '&#xe67a;'
+    let s = title
+    if (!lanArr || inArray(lan, lanArr)) {
+        s += ` <i class="dmx-icon dmx_ripple" data-type="${type}" title="${title}发音">${iconStr}</i>`
+    }
+    return s
 }
 
 function initQuery(text, clientX, clientY) {
