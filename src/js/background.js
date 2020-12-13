@@ -278,9 +278,13 @@ function playAudio(url) {
         a.onerror = function (err) {
             reject(err)
         }
-        a.play().catch(e => {
-            reject(e)
-        })
+        let playPromise = a.play()
+        if (playPromise !== undefined) {
+            playPromise.catch(err => {
+                // reject(err)
+                resolve()
+            })
+        }
     })
 }
 
