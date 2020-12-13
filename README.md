@@ -15,7 +15,8 @@
 
 PS：本来很简单的翻译查词功能，没必要做的跟航空母舰一样复杂，使用起来蒙圈，不仅浪费了使用者时间，还浪费了大量的开发时间。
 
-### 聚合在线翻译（国内）
+## 聚合的词典&翻译
+### 在线翻译（国内）
 百度翻译 https://fanyi.baidu.com
 
 谷歌翻译 https://translate.google.cn
@@ -32,7 +33,7 @@ PS：本来很简单的翻译查词功能，没必要做的跟航空母舰一样
 
 360翻译 https://fanyi.so.com
 
-### 聚合在线词典（国内）
+### 在线词典（国内）
 有道词典 https://www.youdao.com
 
 必应词典 https://cn.bing.com/dict
@@ -49,7 +50,7 @@ PS：本来很简单的翻译查词功能，没必要做的跟航空母舰一样
 
 译典词典 https://www.dreye.com.cn
 
-### 聚合在线词典（国外）
+### 在线词典（国外）
 朗文词典 https://www.ldoceonline.com
 
 剑桥词典 https://dictionary.cambridge.org
