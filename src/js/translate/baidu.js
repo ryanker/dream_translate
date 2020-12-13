@@ -1,4 +1,5 @@
 'use strict'
+
 /**
  * Dream Translate
  * https://github.com/ryanker/dream_translate
@@ -84,17 +85,17 @@ function baiduTranslate() {
                 })
             })
         },
-        unify(r, q, srcLan, tarLan) {
-            // console.log('baidu:', r, q, srcLan, tarLan)
-            let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: this.lanTTS, data: []}
-            let arr = r && r.trans_result && r.trans_result.data
-            if (arr) {
-                arr.forEach(v => {
-                    if (v.src && v.dst) ret.data.push({srcText: v.src, tarText: v.dst})
+        unify(r, text, srcLan, tarLan) {
+            // console.log('baidu:', r, text, srcLan, tarLan)
+            let res = r && r.trans_result
+            let data = [], keywords = []
+            if (res.data) {
+                res.data.forEach(v => {
+                    if (v.src && v.dst) data.push({srcText: v.src, tarText: v.dst})
                 })
-                if (arr.keywords) ret.keywords = arr.keywords
             }
-            return ret
+            if (res.keywords && res.keywords.length > 0) keywords = res.keywords
+            return {text, srcLan, tarLan, lanTTS: this.lanTTS, data, keywords}
         },
         async query(q, srcLan, tarLan, noCache) {
             let t = Math.floor(Date.now() / 36e5)

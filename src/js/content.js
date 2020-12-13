@@ -503,13 +503,20 @@ function resultTranslate(name, isBilingual) {
     if (!el) return
     let r = msgList[name]
     let s = ''
-    r && r.data && r.data.forEach(v => {
-        if (isBilingual) {
-            s += `<p class="source_text">${v.srcText}</p><p>${v.tarText}</p>`
-        } else {
-            s += `<p>${v.tarText}</p>`
-        }
-    })
+    if (r) {
+        r.data && r.data.forEach(v => {
+            if (isBilingual) {
+                s += `<p class="source_text">${v.srcText}</p><p>${v.tarText}</p>`
+            } else {
+                s += `<p>${v.tarText}</p>`
+            }
+        })
+
+        // 重点词汇
+        r.keywords && r.keywords.forEach(v => {
+            if (v.word && v.means) s += `<p><b>${v.word}</b>${v.means.join('；')}</p>`
+        })
+    }
     if (!s) s = '网络错误，请稍后再试'
     el.querySelector('.case_content').innerHTML = s
 
