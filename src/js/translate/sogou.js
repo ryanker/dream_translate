@@ -155,7 +155,7 @@ function sogouTranslate() {
             }
             this.timeoutId = setTimeout(() => {
                 el && el.remove()
-            }, 30000)
+            }, 300000) // 5分钟后释放
 
             return el
         },
@@ -228,7 +228,10 @@ function sogouTranslate() {
                     if (tar) ret.data.push({srcText: srcArr[key] || '', tarText: tar})
                 })
             }
-            if (data.keywords) ret.keywords = data.keywords
+            if (data.keywords) {
+                ret.keywords = []
+                data.keywords.forEach(v => ret.keywords.push({word: v.key, means: v.value}))
+            }
             // if (data.keyword_dict) ret.keyword_dict = data.keyword_dict
             return ret
         },
