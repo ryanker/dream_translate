@@ -1,4 +1,5 @@
 'use strict'
+
 /**
  * Dream Translate
  * https://github.com/ryanker/dream_translate
