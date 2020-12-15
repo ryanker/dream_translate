@@ -123,7 +123,7 @@ function googleTranslate() {
             "st": "st",
             "ug": "ug"
         },
-        langMapReverse: {},
+        langMapInvert: {},
         sign(t, e) {
             let xe = '', Ue = function (t, e) {
                 for (let r = 0, n; r < e.length - 2; r += 3) {
@@ -146,7 +146,7 @@ function googleTranslate() {
             return t = Ue(t, "+-3^+b+-f"), 0 > (t ^= Number(n[1]) || 0) && (t = 2147483648 + (2147483647 & t)), (t %= 1e6).toString() + "." + (t ^ r)
         },
         init() {
-            this.langMapReverse = reverseObject(this.langMap)
+            this.langMapInvert = invertObject(this.langMap)
             let str = localStorage.getItem('googleToken')
             if (str) this.token = JSON.parse(str)
             return this
@@ -191,7 +191,7 @@ function googleTranslate() {
         unify(r, q, srcLan, tarLan) {
             // console.log('google:', r, q, srcLan, tarLan)
             if (srcLan === 'auto' && r[2]) srcLan = r[2]
-            let map = this.langMapReverse
+            let map = this.langMapInvert
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
             let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: null, data: []}

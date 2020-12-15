@@ -24,7 +24,7 @@ function alibabaTranslate() {
             "ara": "ar",
             "vie": "vi"
         },
-        langMapReverse: {},
+        langMapInvert: {},
         pairMap: {
             "auto": ["en"],
             "en": ["zh", "ru", "es", "fr", "ar", "tr", "pt", "th", "id", "vi"],
@@ -41,7 +41,7 @@ function alibabaTranslate() {
             "vi": ["en"]
         },
         init() {
-            this.langMapReverse = reverseObject(this.langMap)
+            this.langMapInvert = invertObject(this.langMap)
             return this
         },
         addListenerRequest() {
@@ -82,7 +82,7 @@ sec-fetch-site: same-origin`
         unify(r, q, srcLan, tarLan) {
             // console.log('alibaba:', r, q, srcLan, tarLan)
             if (srcLan === 'auto' && r.recognizeLanguage) srcLan = r.recognizeLanguage
-            let map = this.langMapReverse
+            let map = this.langMapInvert
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
             let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: null, data: []}

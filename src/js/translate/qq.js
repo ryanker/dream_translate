@@ -34,7 +34,7 @@ function qqTranslate() {
             "ara": "ar",
             "may": "ms"
         },
-        langMapReverse: {},
+        langMapInvert: {},
         pairMap: {
             auto: ["zh", "en", "jp", "kr", "fr", "es", "it", "de", "tr", "ru", "pt", "vi", "id", "th", "ms"],
             en: ["zh", "fr", "es", "it", "de", "tr", "ru", "pt", "vi", "id", "th", "ms", "ar", "hi"],
@@ -56,7 +56,7 @@ function qqTranslate() {
             hi: ["en"]
         },
         init() {
-            this.langMapReverse = reverseObject(this.langMap)
+            this.langMapInvert = invertObject(this.langMap)
             let str = localStorage.getItem('qqToken')
             if (str) this.token = JSON.parse(str)
             this.getCookieAll()
@@ -150,7 +150,7 @@ Sec-Fetch-Site: same-origin`
         unify(r, q, srcLan, tarLan) {
             // console.log('qq:', r, q, srcLan, tarLan)
             if (srcLan === 'auto' && r.translate && r.translate.source) srcLan = r.translate.source
-            let map = this.langMapReverse
+            let map = this.langMapInvert
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
             let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: null, data: []}

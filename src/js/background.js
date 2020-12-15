@@ -316,7 +316,7 @@ function uniqueArray(arr) {
     return [...new Set(arr)]
 }
 
-function reverseObject(obj) {
+function invertObject(obj) {
     let r = {}
     for (const [key, value] of Object.entries(obj)) {
         r[value] = key

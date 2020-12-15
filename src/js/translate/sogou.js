@@ -66,9 +66,9 @@ function sogouTranslate() {
             "zh": "zh-CHS",
             "cht": "zh-CHT"
         },
-        langMapReverse: {},
+        langMapInvert: {},
         init() {
-            this.langMapReverse = reverseObject(this.langMap)
+            this.langMapInvert = invertObject(this.langMap)
             return this
         },
         // 2020.12.03 刚写完就改版，白破解了！要吐了。。。
@@ -215,7 +215,7 @@ function sogouTranslate() {
         unify(r, q, srcLan, tarLan) {
             // console.log('sogou:', r, q, srcLan, tarLan)
             if (srcLan === 'auto' && r?.data?.detect?.detect) srcLan = r.data.detect.detect
-            let map = this.langMapReverse
+            let map = this.langMapInvert
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
             let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: null, data: []}

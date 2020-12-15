@@ -89,10 +89,10 @@ function bingTranslate() {
             "pt": "pt-pt",
             "srp": "sr-Latn"
         },
-        langMapReverse: {},
+        langMapInvert: {},
         lanTTS: ["zh", "en", "jp", "th", "spa", "ara", "fra", "kor", "ru", "de", "pt", "it", "el", "nl", "pl", "fin", "cs", "bul"],
         init() {
-            this.langMapReverse = reverseObject(this.langMap)
+            this.langMapInvert = invertObject(this.langMap)
             let str = localStorage.getItem('bingToken')
             if (str) this.token = JSON.parse(str)
             return this
@@ -142,7 +142,7 @@ function bingTranslate() {
         unify(r, q, srcLan, tarLan) {
             // console.log('bing:', r, q, srcLan, tarLan)
             if (srcLan === 'auto-detect' && r[0].detectedLanguage) srcLan = r[0].detectedLanguage.language
-            let map = this.langMapReverse
+            let map = this.langMapInvert
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
             let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: this.lanTTS, data: []}

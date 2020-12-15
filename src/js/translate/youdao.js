@@ -34,7 +34,7 @@ function youdaoTranslate() {
             "vie": "vi",
             "zh": "zh-CHS"
         },
-        langMapReverse: {},
+        langMapInvert: {},
         lanTTS: ["en", "zh", "jp", "kor", "fra"],
         md5(e) {
             var n = function (e, t) {
@@ -176,7 +176,7 @@ function youdaoTranslate() {
             return m(e)
         },
         init() {
-            this.langMapReverse = reverseObject(this.langMap)
+            this.langMapInvert = invertObject(this.langMap)
             let str = localStorage.getItem('youdaoToken')
             if (str) this.token = JSON.parse(str)
             return this
@@ -259,7 +259,7 @@ function youdaoTranslate() {
             // console.log('youdao:', r, q, srcLan, tarLan)
             let lanArr = r.type.split('2')
             if (lanArr.length > 1) srcLan = lanArr[0]
-            let map = this.langMapReverse
+            let map = this.langMapInvert
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
             let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: this.lanTTS, data: []}
