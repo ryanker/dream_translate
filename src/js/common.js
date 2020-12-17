@@ -154,7 +154,7 @@ function getActiveTabId() {
             browser.tabs.query({currentWindow: true, active: true}).then(tab => {
                 let tabId = tab[0] && resolve(tab[0].id)
                 resolve(tabId)
-            }).catch(err => reject(err))
+            }, err => reject(err))
         }
     })
 }
