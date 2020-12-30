@@ -333,9 +333,9 @@ function initTranslate() {
     let target = dialogConf.target
     if (source === 'auto') addClass(exchangeEl, 'disabled')
     sourceEl.setAttribute('value', source)
-    sourceEl.innerText = l[source]?.zhName
+    sourceEl.innerText = l[source].zhName
     targetEl.setAttribute('value', target)
-    targetEl.innerText = l[target]?.zhName
+    targetEl.innerText = l[target].zhName
 }
 
 function initDictionary() {
@@ -382,7 +382,8 @@ function initSearch() {
         inpEl.focus()
     }
     butEl.onclick = function () {
-        $('case_list').querySelector('[data-search]')?.click()
+        let el = $('case_list').querySelector('[data-search]')
+        if (el) el.click()
     }
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
@@ -548,12 +549,15 @@ function resultTranslate(name, isBilingual) {
             })
             s += `</div>`
         }
+
+        // 单词含义
+        if (r.word_means) s += r.word_means
     }
     if (!s) s = '网络错误，请稍后再试'
     el.querySelector('.case_content').innerHTML = s
 
     // 绑定点击搜索
-    resultBindSearch(el)
+    resultBindEvent(el)
 }
 
 function resultDictionary(m) {
@@ -575,28 +579,32 @@ function resultDictionary(m) {
 
         // 发音
         r.sound && r.sound.forEach(v => {
-            pron += ` <i class="dmx-icon dmx_ripple${v.isWoman ? ' dmx_pink' : ''}" data-type="${v.type}" data-src-mp3="${v.url}" title="${v.title}">${v.type === 'us' ? '&#xe674;' : '&#xe69f;'}</i>`
+            pron += ` <i class="dmx-icon dmx_ripple${v.isWoman ? ' dmx_pink' : ''}" data-type="${v.type}" data-src-mp3="${v.url}" title="${v.title}"></i>`
         })
     }
     if (!s) s = '网络错误，请稍后再试'
     el.querySelector('.case_content').innerHTML = s
     el.querySelector('.case_pronunciation').innerHTML = pron
 
+    resultBindEvent(el, m.name)
+}
+
+function resultBindEvent(el, name) {
     // 绑定播放音频
     el.querySelectorAll('[data-src-mp3]').forEach(e => {
+        let obj = {uk: '&#xe69f;', us: '&#xe674;', other: '&#xe67a;'}
+        let type = e.getAttribute('data-type')
+        if (obj[type]) type = 'other'
+        e.innerHTML = obj[type] // 喇叭字体
         e.addEventListener('click', function () {
             activeRipple(this)
             let type = this.getAttribute('data-type')
             let url = this.getAttribute('data-src-mp3')
-            sendPlaySound(m.name, type, url)
+            sendPlaySound(name, type, url)
         })
     })
 
     // 绑定点击搜索
-    resultBindSearch(el)
-}
-
-function resultBindSearch(el) {
     el.querySelectorAll('[data-search=true]').forEach(e => {
         e.addEventListener('click', function () {
             let text = e.innerText?.trim()
@@ -848,7 +856,6 @@ function dmxDialog(options) {
 
     let d = document.createElement('div')
     d.setAttribute('mx-name', 'dream-translation')
-    d.style.all = 'initial'
     document.documentElement.appendChild(d)
     let shadow = d.attachShadow({mode: 'closed'})
     shadow.innerHTML = `<link rel="stylesheet" href="${root + 'css/content.css'}">

@@ -87,6 +87,7 @@ function baiduTranslate() {
         },
         unify(r, text, srcLan, tarLan) {
             // console.log('baidu:', r, text, srcLan, tarLan)
+            // console.log(JSON.stringify(r))
             let res = r && r.trans_result
             let data = [], keywords = []
             if (res.data) {
@@ -95,7 +96,74 @@ function baiduTranslate() {
                 })
             }
             if (res.keywords && res.keywords.length > 0) keywords = res.keywords
-            return {text, srcLan, tarLan, lanTTS: this.lanTTS, data, keywords}
+
+            // 百度支持牛津，格林斯，英英等，如果全显示，会很复杂，小框显示也会很乱，所以只显示最简单的部分即可。
+            let s = ''
+            let sm = r?.dict_result?.simple_means
+            if (sm) {
+                s += `<div class="case_means">`
+                if (sm.word_name) s += `<div class="case_means_head">${sm.word_name}</div>`  // 查询的单词
+
+                let getIconHTML = function (type, text, title) {
+                    let lan = type === 'uk' ? 'uk' : 'en'
+                    let src = `https://fanyi.baidu.com/gettts?lan=${lan}&text=${encodeURIComponent(text)}&spd=3&source=web`
+                    return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="${src}" title="${title}"></i>`
+                }
+                if (sm.symbols) {
+                    sm.symbols.forEach(sym => {
+                        // 音标
+                        s += `<div class="case_means_ph">`
+                        s += `[${sym.ph_en || ''}${sym.ph_am && sym.ph_am !== sym.ph_en ? ' $ ' + sym.ph_am : ''}]`
+                        s += getIconHTML('uk', text, '英音')
+                        s += getIconHTML('us', text, '美音')
+                        s += `</div>`
+
+                        // 释义
+                        s += `<div class="case_means_parts">`
+                        if (sym.parts) sym.parts.forEach(v => {
+                            s += `<p>${v.part ? `<b>${v.part}</b>` : ''}${v.means.join('；')}</p>`
+                        })
+                        s += `</div>`
+                    })
+                } else if (sm.word_means) {
+                    s += `<div class="case_means_parts"><p>${sm.word_means.join('；')}</p></div>`
+                }
+
+                // 单词形式
+                if (sm.exchange) {
+                    let exchangeObj = {
+                        word_third: '第三人称单数',
+                        word_pl: '复数',
+                        word_ing: '现在分词',
+                        word_past: '过去式',
+                        word_done: '过去分词',
+                        word_er: '比较级',
+                        word_est: '最高级',
+                        word_proto: '原型',
+                    }
+                    s += `<div class="case_means_exchange">`
+                    for (let [k, v] of Object.entries(sm.exchange)) {
+                        let wordStr = ''
+                        v.forEach(word => wordStr += `<a data-search="true">${word}</a>`)
+                        s += `<span>${exchangeObj[k] || '其他'}</span>${wordStr}`
+                    }
+                    s += `</div>`
+                }
+
+                // 单词标签
+                if (sm.tags) {
+                    s += `<div class="case_means_tags">`
+                    for (let [k, v] of Object.entries(sm.tags)) {
+                        let tagStr = ''
+                        v.forEach(tag => tagStr += `<u>${tag}</u>`)
+                        s += tagStr
+                    }
+                    s += `</div>`
+                }
+                s += `</div>`
+            }
+
+            return {text, srcLan, tarLan, lanTTS: this.lanTTS, data, keywords, word_means: s}
         },
         async query(q, srcLan, tarLan, noCache) {
             let t = Math.floor(Date.now() / 36e5)

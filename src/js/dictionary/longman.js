@@ -56,14 +56,13 @@ function longmanDictionary() {
             // 喇叭
             el.querySelectorAll('[data-src-mp3]').forEach(e => {
                 e.className = 'dmx-icon dmx_ripple'
-                e.setAttribute('data-type', 'more')
-                let s = '&#xe67a;'
+                let v = 'other'
                 let title = e.getAttribute('title')
                 if (title) {
-                    if (title.includes('British')) s = '&#xe69f;'
-                    else if (title.includes('American')) s = '&#xe674;'
+                    if (title.includes('British')) v = 'uk'
+                    else if (title.includes('American')) v = 'us'
                 }
-                e.innerHTML = s
+                e.setAttribute('data-type', v)
             })
 
             // 图片

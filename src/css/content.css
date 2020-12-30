@@ -9,6 +9,10 @@
     overflow: hidden;
 }
 
+div[mx-name="dream-translation"] {
+    all: initial;
+}
+
 @font-face {
     font-family: "dmx-icon";
     /*src: url('dmx_icon.woff2') format('woff2');*/

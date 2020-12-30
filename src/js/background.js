@@ -64,7 +64,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     debug('request:', m)
     debug('sender:', sender && sender.url ? sender.url : sender)
     // if (!sender.tab) return
-    let tabId = sender?.tab?.id
+    let tabId = sender.tab.id
 
     if (m.action === 'translate') {
         runTranslate(tabId, m)
