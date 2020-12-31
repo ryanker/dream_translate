@@ -49,12 +49,10 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     if (m.action === 'translate') {
         msgList[m.name] = m.result
         resultTranslate(m.name)
-    } else if (m.action === 'translateTTS') {
-        resultSound(m, 'translate')
     } else if (m.action === 'dictionary') {
         resultDictionary(m)
-    } else if (m.action === 'dictionarySound') {
-        resultSound(m, 'dictionary')
+    } else if (m.action === 'playSound') {
+        resultSound(m)
     } else if (m.action === 'link') {
         resultLink(m)
     } else if (m.action === 'allowSelect') {
@@ -557,7 +555,7 @@ function resultTranslate(name, isBilingual) {
     el.querySelector('.case_content').innerHTML = s
 
     // 绑定点击搜索
-    resultBindEvent(el)
+    resultBindEvent(el, 'translate', name)
 }
 
 function resultDictionary(m) {
@@ -586,21 +584,21 @@ function resultDictionary(m) {
     el.querySelector('.case_content').innerHTML = s
     el.querySelector('.case_pronunciation').innerHTML = pron
 
-    resultBindEvent(el, m.name)
+    resultBindEvent(el, 'dictionary', m.name)
 }
 
-function resultBindEvent(el, name) {
+function resultBindEvent(el, nav, name) {
     // 绑定播放音频
     el.querySelectorAll('[data-src-mp3]').forEach(e => {
         let obj = {uk: '&#xe69f;', us: '&#xe674;', other: '&#xe67a;'}
         let type = e.getAttribute('data-type')
-        if (obj[type]) type = 'other'
+        if (!obj[type]) type = 'other'
         e.innerHTML = obj[type] // 喇叭字体
         e.addEventListener('click', function () {
             activeRipple(this)
             let type = this.getAttribute('data-type')
             let url = this.getAttribute('data-src-mp3')
-            sendPlaySound(name, type, url)
+            sendPlaySound(nav, name, type, url)
         })
     })
 
@@ -624,15 +622,16 @@ function resultLink(m) {
     }
 }
 
-function resultSound(m, action) {
-    if (m.error) alert(m.error, 'error')
-    let el = $(`${m.name}_${action}_case`)
+function resultSound(m) {
+    let {nav, name, type, status, error} = m
+    if (error) alert(error, 'error')
+    let el = $(`${name}_${nav}_case`)
     if (!el) return
-    if (m.status === 'start') {
-        let sEl = el.querySelector(`[data-type=${m.type}]`)
+    if (status === 'start') {
+        let sEl = el.querySelector(`[data-type=${type}]`)
         if (sEl) addClass(sEl, 'active')
-    } else if (m.status === 'end') {
-        let dEl = el.querySelectorAll(`[data-type=${m.type}]`)
+    } else if (status === 'end') {
+        let dEl = el.querySelectorAll(`[data-type=${type}]`)
         rmClassD(dEl, 'active')
     }
 }
@@ -797,15 +796,16 @@ function allowUserSelect() {
 }
 
 function sendPlayTTS(name, type, lang, text) {
-    sendBgMessage({action: 'translateTTS', name: name, type: type, lang: lang, text: text})
+    sendBgMessage({action: 'translateTTS', name, type, lang, text})
 }
 
-function sendPlaySound(name, type, url) {
-    sendBgMessage({action: 'dictionarySound', name: name, type: type, url: url})
+function sendPlaySound(nav, name, type, url) {
+    sendBgMessage({action: 'playSound', nav, name, type, url})
 }
 
 function sendBgMessage(message) {
-    message && sendMessage(message).catch(e => {
+    message && sendMessage(message).catch(err => {
+        debug('sendBgMessage error:', err)
         alert('梦想翻译已更新，请刷新页面激活。', 'error')
     })
 }

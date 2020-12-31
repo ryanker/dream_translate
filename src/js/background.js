@@ -72,8 +72,8 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         runTranslateTTS(tabId, m)
     } else if (m.action === 'dictionary') {
         runDictionary(tabId, m)
-    } else if (m.action === 'dictionarySound') {
-        runDictionarySound(tabId, m)
+    } else if (m.action === 'playSound') {
+        runPlaySound(tabId, m)
     } else if (m.action === 'menu') {
         changeMenu(m.name, m.isAdd)
     } else if (m.action === 'saveSetting') {
@@ -84,63 +84,67 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
 })
 
 function runTranslate(tabId, m) {
+    let {action, text, srcLan, tarLan} = m
     setting.translateList.forEach(name => {
         sdkInit(`${name}Translate`).then(sd => {
-            sd.query(m.text, m.srcLan, m.tarLan).then(r => {
-                debug(`${name}:`, r)
-                sendTabMessage(tabId, {action: m.action, name: name, result: r})
-            }).catch(e => {
-                sendTabMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
+            sd.query(text, srcLan, tarLan).then(result => {
+                debug(`${name}:`, result)
+                sendTabMessage(tabId, {action, name, result})
+            }).catch(error => {
+                sendTabMessage(tabId, {action, name, text, error})
             })
 
             // 链接
-            let url = sd.link(m.text, m.srcLan, m.tarLan)
-            sendTabMessage(tabId, {action: 'link', type: m.action, name: name, link: url})
+            let link = sd.link(text, srcLan, tarLan)
+            sendTabMessage(tabId, {action: 'link', type: action, name, link})
         })
     })
 
     // 自动朗读
     setTimeout(() => {
-        autoPlayTTS(tabId, m.text, m.srcLan, conf.translateTTSList, setting.translateTTSList)
+        autoPlayTTS(tabId, text, srcLan, conf.translateTTSList, setting.translateTTSList)
     }, 300)
 }
 
 function runTranslateTTS(tabId, m) {
     let list = conf.translateList
     let tList = conf.translateTTSList
-    let message = {action: m.action, name: m.name, type: m.type, status: 'end'}
-    playTTS(m.name, m.text, m.lang).then(() => {
+    let {name, type, text, lang} = m
+    let message = {action: 'playSound', nav: 'translate', name, type, status: 'end'}
+    playTTS(name, text, lang).then(() => {
         sendTabMessage(tabId, message)
     }).catch(err => {
-        debug(`${m.name} sound error:`, err)
-        let errMsg = `${tList[m.name] ? tList[m.name] : list[m.name] + '朗读'}出错`
+        debug(`${name} sound error:`, err)
+        let errMsg = `${tList[name] ? tList[name] : list[name] + '朗读'}出错`
         sendTabMessage(tabId, Object.assign({}, message, {error: errMsg}))
     })
 }
 
 function runDictionary(tabId, m) {
+    let {action, text} = m
     setting.dictionaryList.forEach(name => {
         sdkInit(`${name}Dictionary`).then(sd => {
-            sd.query(m.text).then(r => {
-                debug(`${name}:`, r)
-                sendTabMessage(tabId, {action: m.action, name: name, result: r})
-            }).catch(e => {
-                sendTabMessage(tabId, {action: m.action, name: name, text: m.text, error: e})
+            sd.query(text).then(result => {
+                debug(`${name}:`, result)
+                sendTabMessage(tabId, {action, name, result})
+            }).catch(error => {
+                sendTabMessage(tabId, {action, name, text, error})
             })
 
             // 链接
-            sendTabMessage(tabId, {action: 'link', type: m.action, name: name, link: sd.link(m.text)})
+            sendTabMessage(tabId, {action: 'link', type: action, name, link: sd.link(text)})
         })
     })
 }
 
-function runDictionarySound(tabId, m) {
-    playAudio(m.url).then(() => {
-        sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, status: 'end'})
+function runPlaySound(tabId, m) {
+    let {action, nav, name, type, url} = m
+    playAudio(url).then(() => {
+        sendTabMessage(tabId, {action, nav, name, type, status: 'end'})
     }).catch(err => {
-        debug(`${m.name} sound error:`, err)
-        let title = conf.dictionaryList[m.name] || ''
-        sendTabMessage(tabId, {action: m.action, name: m.name, type: m.type, error: `${title}发音出错`})
+        debug(`${name} sound error:`, err)
+        let title = conf.dictionaryList[name] || ''
+        sendTabMessage(tabId, {action, nav, name, type, error: `${title}发音出错`})
     })
 }
 
@@ -167,7 +171,7 @@ function changeMenu(name, isAdd) {
 }
 
 function addMenu(name, title, url) {
-    // {id: "separator1", type: "separator", contexts: ['selection']}
+    // {type: "separator"}
     B.contextMenus.create({
         id: name + '_page',
         title: title + '首页',
@@ -215,7 +219,7 @@ function autoPlayTTS(tabId, text, lang, list, arr) {
         }
         for (let k = 0; k < arr.length; k++) {
             let name = arr[k]
-            let message = {action: 'translateTTS', name: name, type: 'source', status: 'end'}
+            let message = {action: 'playSound', nav: 'translate', name, type: 'source', status: 'end'}
             await sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
             await playTTS(name, text, lang).then(() => {
                 sendTabMessage(tabId, message)
