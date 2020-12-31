@@ -636,10 +636,12 @@ a:hover {
     text-decoration: none;
     display: inline-block;
     margin-right: 5px;
-    padding: 1px 5px;
-    color: #999;
-    background: #f2f2f2;
+    padding: 0 5px;
+    color: #909399;
+    background: #f4f4f5;
+    border: 1px solid #e9e9eb;
     border-radius: 4px;
+    font-size: 90%;
 }
 
 .case_top {
