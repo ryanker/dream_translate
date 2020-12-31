@@ -72,8 +72,8 @@ function qqTranslate() {
                 let qtk = this.token.qtk
                 let body = ''
                 if (qtv && qtk) body = `qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}`
-                // todo: 腾讯老改版，浪费时间
-                httpPost({url: 'https://fanyi.qq.com/api/reauth123f', body: body}).then(r => {
+                // todo: 腾讯做的不怎么样，还老改版，浪费时间。收购了搜狗，看样子这个部门要被合并掉了！
+                httpPost({url: 'https://fanyi.qq.com/api/reauth1230', body: body}).then(r => {
                     if (r) {
                         let token = {qtv: r.qtv, qtk: r.qtk}
                         this.setToken(token)
