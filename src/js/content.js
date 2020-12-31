@@ -503,54 +503,40 @@ function loadingSearch() {
 function resultTranslate(name, isBilingual) {
     let el = $(`${name}_translate_case`)
     if (!el) return
-    let r = msgList[name]
+    let {srcLan, tarLan, lanTTS, data, extra} = msgList[name] || {}
 
     // 显示发音图标
-    if (r && r.srcLan && r.tarLan) {
-        let sourceStr = soundIconHTML(r.srcLan, r.lanTTS, 'source')
-        let targetStr = soundIconHTML(r.tarLan, r.lanTTS, 'target')
+    if (srcLan && tarLan) {
+        let sourceStr = soundIconHTML(srcLan, lanTTS, 'source')
+        let targetStr = soundIconHTML(tarLan, lanTTS, 'target')
         el.querySelector('.case_language').innerHTML = `${sourceStr} » ${targetStr}`
 
         let sourceEl = el.querySelector('[data-type=source]')
         let targetEl = el.querySelector('[data-type=target]')
         sourceEl && sourceEl.addEventListener('click', function () {
             activeRipple(this)
-            sendPlayTTS(name, 'source', r.srcLan, dQuery.text) // 播放原音
+            sendPlayTTS(name, 'source', srcLan, dQuery.text) // 播放原音
         })
         targetEl && targetEl.addEventListener('click', function () {
             activeRipple(this)
             let s = ''
-            r.data && r.data.forEach(v => {
-                s += v.tarText
+            data && data.forEach(v => {
+                s += v.tarText + '\n'
             })
-            s && sendPlayTTS(name, 'target', r.tarLan, s) // 播放译音
+            s && sendPlayTTS(name, 'target', tarLan, s) // 播放译音
         })
     }
 
     // 显示翻译结果
     let s = ''
-    if (r) {
-        r.data && r.data.forEach(v => {
-            if (isBilingual) {
-                s += `<p class="source_text">${v.srcText}</p><p>${v.tarText}</p>`
-            } else {
-                s += `<p>${v.tarText}</p>`
-            }
-        })
-
-        // 重点词汇
-        if (r.keywords && r.keywords.length > 0) {
-            s += `<div class="case_keywords">`
-            s += `<div class="case_keywords_head">重点词汇</div>`
-            r.keywords.forEach(v => {
-                if (v.word && v.means) s += `<p><b data-search="true">${v.word}</b>${v.means.join('；')}</p>`
-            })
-            s += `</div>`
+    data && data.forEach(v => {
+        if (isBilingual) {
+            s += `<p class="source_text">${v.srcText}</p><p>${v.tarText}</p>`
+        } else {
+            s += `<p>${v.tarText}</p>`
         }
-
-        // 单词含义
-        if (r.word_means) s += r.word_means
-    }
+    })
+    if (extra) s += extra // 重点词汇 && 单词含义
     if (!s) s = '网络错误，请稍后再试'
     el.querySelector('.case_content').innerHTML = s
 
@@ -562,24 +548,22 @@ function resultDictionary(m) {
     let el = $(`${m.name}_dictionary_case`)
     if (!el) return
     let s = '', pron = ''
-    let r = m.result
-    if (r) {
-        if (r.html) s = r.html
+    let {html, phonetic, sound} = m.result || {}
+    if (html) s = html
 
-        // 音标
-        if (r.phonetic) {
-            if (r.phonetic.uk && r.phonetic.us) {
-                pron += `[${r.phonetic.uk} $ ${r.phonetic.us}]`
-            } else if (r.phonetic.uk) {
-                pron += `[${r.phonetic.uk}]`
-            }
+    // 音标
+    if (phonetic) {
+        if (phonetic.uk && phonetic.us) {
+            pron += `[${phonetic.uk} $ ${phonetic.us}]`
+        } else if (phonetic.uk) {
+            pron += `[${phonetic.uk}]`
         }
-
-        // 发音
-        r.sound && r.sound.forEach(v => {
-            pron += ` <i class="dmx-icon dmx_ripple${v.isWoman ? ' dmx_pink' : ''}" data-type="${v.type}" data-src-mp3="${v.url}" title="${v.title}"></i>`
-        })
     }
+
+    // 发音
+    sound && sound.forEach(v => {
+        pron += ` <i class="dmx-icon dmx_ripple${v.isWoman ? ' dmx_pink' : ''}" data-type="${v.type}" data-src-mp3="${v.url}" title="${v.title}"></i>`
+    })
     if (!s) s = '网络错误，请稍后再试'
     el.querySelector('.case_content').innerHTML = s
     el.querySelector('.case_pronunciation').innerHTML = pron

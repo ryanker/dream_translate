@@ -89,20 +89,29 @@ function baiduTranslate() {
             // console.log('baidu:', r, text, srcLan, tarLan)
             // console.log(JSON.stringify(r))
             let res = r && r.trans_result
-            let data = [], keywords = []
+            let data = []
             if (res.data) {
                 res.data.forEach(v => {
                     if (v.src && v.dst) data.push({srcText: v.src, tarText: v.dst})
                 })
             }
-            if (res.keywords && res.keywords.length > 0) keywords = res.keywords
+
+            // 重点词汇
+            let s = ''
+            if (res.keywords && res.keywords.length > 0) {
+                s += `<div class="case_dd"><div class="case_dd_head">重点词汇</div>`
+                s += `<div class="case_dd_parts">`
+                res.keywords.forEach(v => {
+                    if (v.word && v.means) s += `<p><b data-search="true">${v.word}</b>${v.means.join('；')}</p>`
+                })
+                s += `</div></div>`
+            }
 
             // 百度支持牛津，格林斯，英英等，如果全显示，会很复杂，小框显示也会很乱，所以只显示最简单的部分即可。
-            let s = ''
             let sm = r?.dict_result?.simple_means
             if (sm) {
-                s += `<div class="case_means">`
-                if (sm.word_name) s += `<div class="case_means_head">${sm.word_name}</div>`  // 查询的单词
+                s += `<div class="case_dd">`
+                if (sm.word_name) s += `<div class="case_dd_head">${sm.word_name}</div>`  // 查询的单词
 
                 let getIconHTML = function (type, text, title) {
                     let lan = type === 'uk' ? 'uk' : 'en'
@@ -114,7 +123,7 @@ function baiduTranslate() {
                         // 音标
                         let {ph_en, ph_am, parts} = sym
                         if (ph_en || ph_am) {
-                            s += `<div class="case_means_ph">`
+                            s += `<div class="case_dd_ph">`
                             s += `[${ph_en}${ph_en !== ph_am ? ' $ ' + ph_am : ''}]`
                             s += getIconHTML('uk', text, '英音')
                             s += getIconHTML('us', text, '美音')
@@ -122,14 +131,14 @@ function baiduTranslate() {
                         }
 
                         // 释义
-                        s += `<div class="case_means_parts">`
+                        s += `<div class="case_dd_parts">`
                         parts && parts.forEach(v => {
                             s += `<p>${v.part ? `<b>${v.part}</b>` : ''}${v.means.join('；')}</p>`
                         })
                         s += `</div>`
                     })
                 } else if (sm.word_means) {
-                    s += `<div class="case_means_parts"><p>${sm.word_means.join('；')}</p></div>`
+                    s += `<div class="case_dd_parts"><p>${sm.word_means.join('；')}</p></div>`
                 }
 
                 // 单词形式
@@ -144,7 +153,7 @@ function baiduTranslate() {
                         word_est: '最高级',
                         word_proto: '原型',
                     }
-                    s += `<div class="case_means_exchange">`
+                    s += `<div class="case_dd_exchange">`
                     for (let [k, v] of Object.entries(sm.exchange)) {
                         let wordStr = ''
                         v.forEach(word => {
@@ -157,7 +166,7 @@ function baiduTranslate() {
 
                 // 单词标签
                 if (sm.tags) {
-                    s += `<div class="case_means_tags">`
+                    s += `<div class="case_dd_tags">`
                     for (let [k, v] of Object.entries(sm.tags)) {
                         let tagStr = ''
                         v.forEach(tag => {
@@ -170,7 +179,7 @@ function baiduTranslate() {
                 s += `</div>`
             }
 
-            return {text, srcLan, tarLan, lanTTS: this.lanTTS, data, keywords, word_means: s}
+            return {text, srcLan, tarLan, lanTTS: this.lanTTS, data, extra: s}
         },
         async query(q, srcLan, tarLan, noCache) {
             let t = Math.floor(Date.now() / 36e5)

@@ -583,35 +583,30 @@ a:hover {
     margin-top: 0;
 }
 
-.case_keywords,
-.case_means {
+.case_dd {
     margin-top: 10px;
     border-top: thin dashed #ccc;
 }
 
-.case_keywords_head,
-.case_means_head {
+.case_dd_head {
     padding: 10px 0 0;
     font-weight: bold;
     font-size: 120%;
 }
 
-.case_means_ph .dmx-icon {
+.case_dd_ph .dmx-icon {
     margin-left: 5px;
 }
 
-.case_keywords p,
-.case_means_parts p {
+.case_dd_parts p {
     padding: 3px 0 0;
 }
 
-.case_keywords p:first-child,
-.case_means_parts p:first-child {
+.case_dd_parts p:first-child {
     padding: 0;
 }
 
-.case_keywords p b,
-.case_means_parts p b {
+.case_dd_parts p b {
     color: #409eff;
     background: #ecf5ff;
     border: 1px solid #d9ecff;
@@ -620,24 +615,24 @@ a:hover {
     margin-right: 10px;
 }
 
-.case_means_exchange, .case_means_tags {
+.case_dd_exchange, .case_dd_tags {
     margin-top: 5px;
 }
 
-.case_means_exchange b {
+.case_dd_exchange b {
     font-weight: 500;
 }
 
-.case_means_exchange u {
+.case_dd_exchange u {
     text-decoration: none;
     margin-right: 10px;
 }
 
-.case_means_exchange u a {
+.case_dd_exchange u a {
     margin-left: 5px;
 }
 
-.case_means_tags u {
+.case_dd_tags u {
     text-decoration: none;
     display: inline-block;
     margin-right: 5px;
