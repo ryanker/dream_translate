@@ -583,31 +583,67 @@ a:hover {
     margin-top: 0;
 }
 
-.case_keywords {
+.case_keywords,
+.case_means {
     margin-top: 10px;
     border-top: thin dashed #ccc;
 }
 
-.case_keywords_title {
+.case_keywords_head,
+.case_means_head {
     padding: 10px 0 0;
     font-weight: bold;
+    font-size: 120%;
 }
 
-.case_keywords p {
+.case_means_ph .dmx-icon {
+    margin-left: 5px;
+}
+
+.case_keywords p,
+.case_means_parts p {
     padding: 3px 0 0;
 }
 
-.case_keywords p:first-child {
+.case_keywords p:first-child,
+.case_means_parts p:first-child {
     padding: 0;
 }
 
-.case_keywords p b {
-    border: 1px solid #f9f9f9;
-    background: #f9f9f9;
-    color: #3d8bea;
-    border-radius: 5px;
+.case_keywords p b,
+.case_means_parts p b {
+    color: #999;
+    background: #f5f5f5;
+    border-radius: 4px;
     padding: 0 3px;
     margin-right: 10px;
+}
+
+.case_means_exchange, .case_means_tags {
+    margin-top: 5px;
+}
+
+.case_means_exchange b {
+    font-weight: 500;
+}
+
+.case_means_exchange u {
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.case_means_exchange u a {
+    margin-left: 5px;
+}
+
+.case_means_tags u {
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
+    padding: 1px 5px;
+    color: #999;
+    background: #f2f2f2;
+    border-radius: 4px;
 }
 
 .case_top {

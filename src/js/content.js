@@ -541,7 +541,7 @@ function resultTranslate(name, isBilingual) {
         // 重点词汇
         if (r.keywords && r.keywords.length > 0) {
             s += `<div class="case_keywords">`
-            s += `<div class="case_keywords_title">重点词汇</div>`
+            s += `<div class="case_keywords_head">重点词汇</div>`
             r.keywords.forEach(v => {
                 if (v.word && v.means) s += `<p><b data-search="true">${v.word}</b>${v.means.join('；')}</p>`
             })

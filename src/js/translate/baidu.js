@@ -112,15 +112,18 @@ function baiduTranslate() {
                 if (sm.symbols) {
                     sm.symbols.forEach(sym => {
                         // 音标
-                        s += `<div class="case_means_ph">`
-                        s += `[${sym.ph_en || ''}${sym.ph_am && sym.ph_am !== sym.ph_en ? ' $ ' + sym.ph_am : ''}]`
-                        s += getIconHTML('uk', text, '英音')
-                        s += getIconHTML('us', text, '美音')
-                        s += `</div>`
+                        let {ph_en, ph_am, parts} = sym
+                        if (ph_en || ph_am) {
+                            s += `<div class="case_means_ph">`
+                            s += `[${ph_en}${ph_en !== ph_am ? ' $ ' + ph_am : ''}]`
+                            s += getIconHTML('uk', text, '英音')
+                            s += getIconHTML('us', text, '美音')
+                            s += `</div>`
+                        }
 
                         // 释义
                         s += `<div class="case_means_parts">`
-                        if (sym.parts) sym.parts.forEach(v => {
+                        parts && parts.forEach(v => {
                             s += `<p>${v.part ? `<b>${v.part}</b>` : ''}${v.means.join('；')}</p>`
                         })
                         s += `</div>`
@@ -144,8 +147,10 @@ function baiduTranslate() {
                     s += `<div class="case_means_exchange">`
                     for (let [k, v] of Object.entries(sm.exchange)) {
                         let wordStr = ''
-                        v.forEach(word => wordStr += `<a data-search="true">${word}</a>`)
-                        s += `<span>${exchangeObj[k] || '其他'}</span>${wordStr}`
+                        v.forEach(word => {
+                            if (word) wordStr += `<a data-search="true">${word}</a>`
+                        })
+                        s += `<b>${exchangeObj[k] || '其他'}</b><u>${wordStr}</u>`
                     }
                     s += `</div>`
                 }
@@ -155,7 +160,9 @@ function baiduTranslate() {
                     s += `<div class="case_means_tags">`
                     for (let [k, v] of Object.entries(sm.tags)) {
                         let tagStr = ''
-                        v.forEach(tag => tagStr += `<u>${tag}</u>`)
+                        v.forEach(tag => {
+                            if (tag) tagStr += `<u>${tag}</u>`
+                        })
                         s += tagStr
                     }
                     s += `</div>`
