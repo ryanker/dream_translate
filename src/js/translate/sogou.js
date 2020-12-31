@@ -241,9 +241,10 @@ function sogouTranslate() {
                 s += `</div></div>`
             }
 
-            // 搜狗用的牛津词典
-            let dict = res.common_dict && res.common_dict.dict && res.common_dict.dict[0] && res.common_dict.dict[0].content && res.common_dict.dict[0].content[0] && res.common_dict.dict[0].content[0].value
-            if (dict && dict.length > 0) {
+            // 搜狗用的牛津词典 (层级太深，吐了)
+            let dict = res.common_dict && res.common_dict.dict && res.common_dict.dict[0] && res.common_dict.dict[0].content
+                && res.common_dict.dict[0].content[0] && res.common_dict.dict[0].content[0].value && res.common_dict.dict[0].content[0].value[0]
+            if (dict) {
                 s += `<div class="case_dd">`
                 s += `<div class="case_dd_head">${text}</div>`  // 查询的单词
                 let getIconHTML = function (type, filename) {
@@ -251,64 +252,62 @@ function sogouTranslate() {
                     let title = type === 'uk' ? '英音' : '美音'
                     return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="https:${filename}" title="${title}"></i>`
                 }
-                dict.forEach(lv => {
-                    let {phonetic, usual, info_from_exam_dict, exchange_info, levelList} = lv
+                let {phonetic, usual, info_from_exam_dict, exchange_info, levelList} = dict
 
-                    // 音标
-                    if (phonetic && phonetic.length > 0) {
-                        let ph_uk = '', ph_us = '', ph_mp3 = ''
-                        phonetic.forEach(v => {
-                            if (!v.text || !v.type || !v.filename) return
-                            if (v.type === 'uk') ph_uk = v.text
-                            if (v.type === 'usa') ph_us = v.text
-                            ph_mp3 += getIconHTML(v.type, v.filename)
+                // 音标
+                if (phonetic && phonetic.length > 0) {
+                    let ph_uk = '', ph_us = '', ph_mp3 = ''
+                    phonetic.forEach(v => {
+                        if (!v.text || !v.type || !v.filename) return
+                        if (v.type === 'uk') ph_uk = v.text
+                        if (v.type === 'usa') ph_us = v.text
+                        ph_mp3 += getIconHTML(v.type, v.filename)
+                    })
+                    if (ph_uk && ph_mp3) s += `<div class="case_dd_ph">[${ph_uk}${ph_uk !== ph_us ? ' $ ' + ph_us : ''}]${ph_mp3}</div>`
+                }
+
+                // 释义
+                if (usual && usual.length > 0) {
+                    s += `<div class="case_dd_parts">`
+                    usual.forEach(v => {
+                        s += `<p>${v.pos ? `<b>${v.pos}</b>` : ''}${v.values}</p>`
+                    })
+                    s += `</div>`
+                } else if (info_from_exam_dict.word_family && info_from_exam_dict.word_family.mean) {
+                    s += `<div class="case_dd_parts"><p>${info_from_exam_dict.word_family.mean}</p></div>`
+                }
+
+                // 单词形式
+                if (exchange_info) {
+                    s += `<div class="case_dd_exchange">`
+                    let exchangeObj = {
+                        word_third: '第三人称单数',
+                        word_pl: '复数',
+                        word_ing: '现在分词',
+                        word_past: '过去式',
+                        word_done: '过去分词',
+                        word_er: '比较级',
+                        word_est: '最高级',
+                        word_proto: '原型',
+                    }
+                    for (let [k, v] of Object.entries(exchange_info)) {
+                        let wordStr = ''
+                        v.forEach(word => {
+                            if (word) wordStr += `<a data-search="true">${word}</a>`
                         })
-                        if (ph_uk && ph_mp3) s += `<div class="case_dd_ph">[${ph_uk}${ph_uk !== ph_us ? ' $ ' + ph_us : ''}]${ph_mp3}</div>`
+                        s += `<b>${exchangeObj[k] || '其他'}</b><u>${wordStr}</u>`
                     }
+                    s += `</div>`
+                }
 
-                    // 释义
-                    if (usual && usual.length > 0) {
-                        s += `<div class="case_dd_parts">`
-                        usual.forEach(v => {
-                            s += `<p>${v.pos ? `<b>${v.pos}</b>` : ''}${v.values}</p>`
-                        })
-                        s += `</div>`
-                    } else if (info_from_exam_dict.word_family && info_from_exam_dict.word_family.mean) {
-                        s += `<div class="case_dd_parts"><p>${info_from_exam_dict.word_family.mean}</p></div>`
-                    }
-
-                    // 单词形式
-                    if (exchange_info) {
-                        s += `<div class="case_dd_exchange">`
-                        let exchangeObj = {
-                            word_third: '第三人称单数',
-                            word_pl: '复数',
-                            word_ing: '现在分词',
-                            word_past: '过去式',
-                            word_done: '过去分词',
-                            word_er: '比较级',
-                            word_est: '最高级',
-                            word_proto: '原型',
-                        }
-                        for (let [k, v] of Object.entries(exchange_info)) {
-                            let wordStr = ''
-                            v.forEach(word => {
-                                if (word) wordStr += `<a data-search="true">${word}</a>`
-                            })
-                            s += `<b>${exchangeObj[k] || '其他'}</b><u>${wordStr}</u>`
-                        }
-                        s += `</div>`
-                    }
-
-                    // 单词标签
-                    if (levelList && levelList.length > 0) {
-                        s += `<div class="case_dd_tags">`
-                        levelList.forEach(tag => {
-                            if (tag) s += `<u>${tag}</u>`
-                        })
-                        s += `</div>`
-                    }
-                })
+                // 单词标签
+                if (levelList && levelList.length > 0) {
+                    s += `<div class="case_dd_tags">`
+                    levelList.forEach(tag => {
+                        if (tag) s += `<u>${tag}</u>`
+                    })
+                    s += `</div>`
+                }
                 s += `</div>`
             }
 
