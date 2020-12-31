@@ -589,7 +589,7 @@ function resultBindEvent(el, nav, name) {
     // 绑定点击搜索
     el.querySelectorAll('[data-search=true]').forEach(e => {
         e.addEventListener('click', function () {
-            let text = e.innerText?.trim()
+            let text = this.innerText && this.innerText.trim()
             sendQuery(text) // 结果点击查询
         })
     })
@@ -682,11 +682,11 @@ function initQuery(text, clientX, clientY) {
 
 function sendQuery(text) {
     if (!text) return
-    let nav = $('dmx_navigate')
-    let action = nav.querySelector('.active')?.getAttribute('action')
+    let el = $('dmx_navigate')
+    let action = el.querySelector('.active') && el.querySelector('.active').getAttribute('action')
     if (!action) {
         action = dialogConf.action
-        nav.querySelector(`u[action="${action}"]`).click()
+        el.querySelector(`u[action="${action}"]`).click()
     }
     if (!checkChange(action, text)) return
 

@@ -108,7 +108,7 @@ function baiduTranslate() {
             }
 
             // 百度支持牛津，格林斯，英英等，如果全显示，会很复杂，小框显示也会很乱，所以只显示最简单的部分即可。
-            let simple_means = r?.dict_result?.simple_means
+            let simple_means = r.dict_result && r.dict_result.simple_means
             if (simple_means) {
                 s += `<div class="case_dd">`
                 let {word_name, symbols, word_means, exchange, tags} = simple_means

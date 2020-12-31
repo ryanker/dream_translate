@@ -72,7 +72,7 @@ Sec-Fetch-Site: same-origin`
         tts(q, lan) {
             return new Promise((resolve, reject) => {
                 let isEn = lan === 'en'
-                let r = this.data?.speak_url
+                let r = this.data && this.data.speak_url
                 if (r) {
                     let arr = {}
                     if (r.word_type === 'en2zh') {

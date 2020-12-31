@@ -198,7 +198,7 @@ function sogouTranslate() {
                         }
                     }
                     // console.log(data)
-                    if (data?.translate?.translateData?.translate) {
+                    if (data.translate && data.translate.translateData && data.translate.translateData.translate) {
                         let d = {}
                         d.data = data.translate.translateData
                         d.data.keywords = data.translate.keyword
@@ -215,7 +215,7 @@ function sogouTranslate() {
         unify(r, text, srcLan, tarLan) {
             // console.log('sogou:', r, q, srcLan, tarLan)
             // console.log(JSON.stringify(r))
-            if (srcLan === 'auto' && r?.data?.detect?.detect) srcLan = r.data.detect.detect
+            if (srcLan === 'auto' && r.data && r.data.detect && r.data.detect.detect) srcLan = r.data.detect.detect
             let map = this.langMapInvert
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
@@ -242,7 +242,7 @@ function sogouTranslate() {
             }
 
             // 搜狗用的牛津词典
-            let dict = res.common_dict?.dict[0]?.content[0]?.value
+            let dict = res.common_dict && res.common_dict.dict && res.common_dict.dict[0] && res.common_dict.dict[0].content && res.common_dict.dict[0].content[0] && res.common_dict.dict[0].content[0].value
             if (dict && dict.length > 0) {
                 s += `<div class="case_dd">`
                 s += `<div class="case_dd_head">${text}</div>`  // 查询的单词
@@ -273,7 +273,7 @@ function sogouTranslate() {
                             s += `<p>${v.pos ? `<b>${v.pos}</b>` : ''}${v.values}</p>`
                         })
                         s += `</div>`
-                    } else if (info_from_exam_dict?.word_family?.mean) {
+                    } else if (info_from_exam_dict.word_family && info_from_exam_dict.word_family.mean) {
                         s += `<div class="case_dd_parts"><p>${info_from_exam_dict.word_family.mean}</p></div>`
                     }
 
