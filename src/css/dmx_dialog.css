@@ -594,6 +594,10 @@ a:hover {
     font-size: 120%;
 }
 
+.case_dd_ph, .case_dd_parts, .case_dd_exchange, .case_dd_tags {
+    margin-top: 5px;
+}
+
 .case_dd_ph .dmx-icon {
     margin-left: 5px;
 }
@@ -613,10 +617,6 @@ a:hover {
     border-radius: 4px;
     padding: 0 5px;
     margin-right: 10px;
-}
-
-.case_dd_exchange, .case_dd_tags {
-    margin-top: 5px;
 }
 
 .case_dd_exchange b {

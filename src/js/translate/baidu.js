@@ -108,18 +108,20 @@ function baiduTranslate() {
             }
 
             // 百度支持牛津，格林斯，英英等，如果全显示，会很复杂，小框显示也会很乱，所以只显示最简单的部分即可。
-            let sm = r?.dict_result?.simple_means
-            if (sm) {
+            let simple_means = r?.dict_result?.simple_means
+            if (simple_means) {
                 s += `<div class="case_dd">`
-                if (sm.word_name) s += `<div class="case_dd_head">${sm.word_name}</div>`  // 查询的单词
+                let {word_name, symbols, word_means, exchange, tags} = simple_means
+                if (word_name) s += `<div class="case_dd_head">${word_name}</div>`  // 查询的单词
 
                 let getIconHTML = function (type, text, title) {
                     let lan = type === 'uk' ? 'uk' : 'en'
                     let src = `https://fanyi.baidu.com/gettts?lan=${lan}&text=${encodeURIComponent(text)}&spd=3&source=web`
                     return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="${src}" title="${title}"></i>`
                 }
-                if (sm.symbols) {
-                    sm.symbols.forEach(sym => {
+                let hasParts = false
+                if (symbols) {
+                    symbols.forEach(sym => {
                         // 音标
                         let {ph_en, ph_am, parts} = sym
                         if (ph_en || ph_am) {
@@ -131,18 +133,20 @@ function baiduTranslate() {
                         }
 
                         // 释义
-                        s += `<div class="case_dd_parts">`
-                        parts && parts.forEach(v => {
-                            s += `<p>${v.part ? `<b>${v.part}</b>` : ''}${v.means.join('；')}</p>`
-                        })
-                        s += `</div>`
+                        if (parts && parts.length > 0) {
+                            hasParts = true
+                            s += `<div class="case_dd_parts">`
+                            parts.forEach(v => {
+                                s += `<p>${v.part ? `<b>${v.part}</b>` : ''}${v.means.join('；')}</p>`
+                            })
+                            s += `</div>`
+                        }
                     })
-                } else if (sm.word_means) {
-                    s += `<div class="case_dd_parts"><p>${sm.word_means.join('；')}</p></div>`
                 }
+                if (!hasParts) s += `<div class="case_dd_parts"><p>${word_means.join('；')}</p></div>`
 
                 // 单词形式
-                if (sm.exchange) {
+                if (exchange) {
                     let exchangeObj = {
                         word_third: '第三人称单数',
                         word_pl: '复数',
@@ -154,7 +158,7 @@ function baiduTranslate() {
                         word_proto: '原型',
                     }
                     s += `<div class="case_dd_exchange">`
-                    for (let [k, v] of Object.entries(sm.exchange)) {
+                    for (let [k, v] of Object.entries(exchange)) {
                         let wordStr = ''
                         v.forEach(word => {
                             if (word) wordStr += `<a data-search="true">${word}</a>`
@@ -165,9 +169,9 @@ function baiduTranslate() {
                 }
 
                 // 单词标签
-                if (sm.tags) {
+                if (tags) {
                     s += `<div class="case_dd_tags">`
-                    for (let [k, v] of Object.entries(sm.tags)) {
+                    for (let [k, v] of Object.entries(tags)) {
                         let tagStr = ''
                         v.forEach(tag => {
                             if (tag) tagStr += `<u>${tag}</u>`
@@ -176,6 +180,7 @@ function baiduTranslate() {
                     }
                     s += `</div>`
                 }
+
                 s += `</div>`
             }
 

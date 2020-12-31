@@ -212,37 +212,107 @@ function sogouTranslate() {
                 })
             })
         },
-        unify(r, q, srcLan, tarLan) {
+        unify(r, text, srcLan, tarLan) {
             // console.log('sogou:', r, q, srcLan, tarLan)
+            // console.log(JSON.stringify(r))
             if (srcLan === 'auto' && r?.data?.detect?.detect) srcLan = r.data.detect.detect
             let map = this.langMapInvert
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
-            let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: null, data: []}
-            let data = r && r.data
-            let tar = data.translate && data.translate.dit
+            let res = r && r.data
+            let tar = res.translate && res.translate.dit
+            let data = []
             if (tar) {
-                let srcArr = q.split('\n')
+                let srcArr = text.split('\n')
                 let tarArr = tar.split('\n')
                 tarArr.forEach((tar, key) => {
-                    if (tar) ret.data.push({srcText: srcArr[key] || '', tarText: tar})
+                    if (tar) data.push({srcText: srcArr[key] || '', tarText: tar})
                 })
             }
-            if (data.keywords) {
-                ret.keywords = []
-                data.keywords.forEach(v => {
-                    let valArr = v.value
-                    let vArr = []
-                    if (valArr && valArr.length > 0) {
-                        valArr.forEach(v2 => {
-                            vArr.push(v2?.replace(/；$/g, ''))
+
+            // 重点词汇
+            let s = ''
+            if (res.keywords && res.keywords.length > 0) {
+                s += `<div class="case_dd"><div class="case_dd_head">重点词汇</div>`
+                s += `<div class="case_dd_parts">`
+                res.keywords.forEach(v => {
+                    if (v.key && v.value) s += `<p><b data-search="true">${v.key}</b>${v.value.join('')}</p>`
+                })
+                s += `</div></div>`
+            }
+
+            // 搜狗用的牛津词典
+            let dict = res.common_dict?.dict[0]?.content[0]?.value
+            if (dict && dict.length > 0) {
+                s += `<div class="case_dd">`
+                s += `<div class="case_dd_head">${text}</div>`  // 查询的单词
+                let getIconHTML = function (type, filename) {
+                    if (type !== 'uk') type = 'us'
+                    let title = type === 'uk' ? '英音' : '美音'
+                    return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="https:${filename}" title="${title}"></i>`
+                }
+                dict.forEach(lv => {
+                    let {phonetic, usual, info_from_exam_dict, exchange_info, levelList} = lv
+
+                    // 音标
+                    if (phonetic && phonetic.length > 0) {
+                        let ph_uk = '', ph_us = '', ph_mp3 = ''
+                        phonetic.forEach(v => {
+                            if (!v.text || !v.type || !v.filename) return
+                            if (v.type === 'uk') ph_uk = v.text
+                            if (v.type === 'usa') ph_us = v.text
+                            ph_mp3 += getIconHTML(v.type, v.filename)
                         })
+                        if (ph_uk && ph_mp3) s += `<div class="case_dd_ph">[${ph_uk}${ph_uk !== ph_us ? ' $ ' + ph_us : ''}]${ph_mp3}</div>`
                     }
-                    ret.keywords.push({word: v.key, means: vArr})
+
+                    // 释义
+                    if (usual && usual.length > 0) {
+                        s += `<div class="case_dd_parts">`
+                        usual.forEach(v => {
+                            s += `<p>${v.pos ? `<b>${v.pos}</b>` : ''}${v.values}</p>`
+                        })
+                        s += `</div>`
+                    } else if (info_from_exam_dict?.word_family?.mean) {
+                        s += `<div class="case_dd_parts"><p>${info_from_exam_dict.word_family.mean}</p></div>`
+                    }
+
+                    // 单词形式
+                    if (exchange_info) {
+                        s += `<div class="case_dd_exchange">`
+                        let exchangeObj = {
+                            word_third: '第三人称单数',
+                            word_pl: '复数',
+                            word_ing: '现在分词',
+                            word_past: '过去式',
+                            word_done: '过去分词',
+                            word_er: '比较级',
+                            word_est: '最高级',
+                            word_proto: '原型',
+                        }
+                        for (let [k, v] of Object.entries(exchange_info)) {
+                            let wordStr = ''
+                            v.forEach(word => {
+                                if (word) wordStr += `<a data-search="true">${word}</a>`
+                            })
+                            s += `<b>${exchangeObj[k] || '其他'}</b><u>${wordStr}</u>`
+                        }
+                        s += `</div>`
+                    }
+
+                    // 单词标签
+                    if (levelList && levelList.length > 0) {
+                        s += `<div class="case_dd_tags">`
+                        levelList.forEach(tag => {
+                            if (tag) s += `<u>${tag}</u>`
+                        })
+                        s += `</div>`
+                    }
                 })
+                s += `</div>`
             }
-            // if (data.keyword_dict) ret.keyword_dict = data.keyword_dict
-            return ret
+
+            return {text, srcLan, tarLan, lanTTS: null, data, extra: s}
         },
         async query(q, srcLan, tarLan) {
             return this.trans(q, srcLan, tarLan)
