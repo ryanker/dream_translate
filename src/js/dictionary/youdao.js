@@ -63,7 +63,15 @@ function youdaoDictionary() {
 
                 // 单词形式
                 let addiEl = transEl.querySelector('.additional')
-                if (addiEl) s += `<div class="case_dd_exchange">${addiEl.innerText}</div>`
+                if (addiEl) {
+                    let shapeStr = addiEl.innerText.trim()
+                    shapeStr = shapeStr.replace(/^\[|]$/g, '')
+                    shapeStr = shapeStr.trim()
+                    shapeStr = shapeStr.replace(/[a-z]+/ig, function (str) {
+                        return `<a data-search="true">${str}</a>`
+                    })
+                    s += `<div class="case_dd_exchange">${shapeStr}</div>`
+                }
             }
 
             return {text, phonetic, sound, html: s}

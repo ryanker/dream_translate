@@ -66,7 +66,17 @@ function dictcnDictionary() {
 
             // 单词形式
             let shapeEl = el.querySelector('.shape')
-            if (shapeEl) s += `<div class="case_dd_exchange">${shapeEl.innerText}</div>`
+            if (shapeEl) {
+                let shapeStr = ''
+                shapeEl.querySelectorAll('label,a').forEach(e => {
+                    if (e.tagName === 'LABEL') {
+                        shapeStr += `<b>${e.innerText}</b>`
+                    } else if (e.tagName === 'A') {
+                        shapeStr += `<a data-search="true">${e.innerText}</a>`
+                    }
+                })
+                s += `<div class="case_dd_exchange">${shapeStr}</div>`
+            }
 
             // 单词标签
             let levelEl = el.querySelector('span.level-title')
