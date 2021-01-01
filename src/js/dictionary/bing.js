@@ -49,7 +49,7 @@ function bingDictionary() {
 
             // 释义
             let liEl = el.querySelectorAll('.qdef > ul > li')
-            if (liEl) {
+            if (liEl && liEl.length > 0) {
                 s += `<div class="case_dd_parts">`
                 liEl.forEach(e => {
                     let bEl = e.querySelector('span.pos')
@@ -73,6 +73,21 @@ function bingDictionary() {
                     }
                 })
                 if (shapeStr) s += `<div class="case_dd_exchange">${shapeStr}</div>`
+            }
+
+            // 单词图片
+            let imgEl = el.querySelectorAll('.img_area > .simg > a')
+            if (imgEl && imgEl.length > 0) {
+                let imgStr = ''
+                imgEl.forEach(e => {
+                    let url = e.getAttribute('href')
+                    let iEl = e.querySelector('img')
+                    if (url && iEl) {
+                        let src = iEl.getAttribute('src')
+                        imgStr += `<a href="https://cn.bing.com${url}" target="_blank" rel="noreferrer"><img src="${src}" rel="noreferrer"></a>`
+                    }
+                })
+                if (imgStr) s += `<div class="case_dd_img">${imgStr}</div>`
             }
 
             return {text: q, phonetic, sound, html: s}

@@ -62,7 +62,7 @@ function icibaDictionary() {
 
             // 释义
             let liEl = el.querySelectorAll('ul[class^=Mean_part] > li')
-            if (liEl) {
+            if (liEl && liEl.length > 0) {
                 s += `<div class="case_dd_parts">`
                 liEl.forEach(e => {
                     let bEl = e.querySelector('i')
@@ -72,6 +72,12 @@ function icibaDictionary() {
                     if (part) s += `<p>${bStr}${part}</p>`
                 })
                 s += `</div>`
+            } else {
+                let transEl = el.querySelector('div[class^=Mean_trans]')
+                if (transEl) {
+                    removeD(transEl.querySelectorAll('h3,[class^=Mean_desc]'))
+                    s += transEl.innerHTML
+                }
             }
 
             // 单词形态

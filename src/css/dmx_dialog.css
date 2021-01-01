@@ -662,6 +662,17 @@ a:hover {
     font-size: 90%;
 }
 
+.case_dd_img a {
+    margin-right: 5px;
+}
+
+.case_dd_img img {
+    border: 1px solid #ccc;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
 .case_top {
     padding: 2px 10px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
