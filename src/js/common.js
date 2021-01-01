@@ -375,6 +375,20 @@ function httpPost(options) {
     })
 }
 
+// 解决 JSON 太深问题
+function getJSONValue(data, keys, value) {
+    value = value || {}
+    if (!data) return value // 默认值
+    keys = keys.trim()
+    let arr = keys.split('.')
+    let val = Object.assign({}, data)
+    for (let key of arr) {
+        if (!val[key]) return value // 默认值
+        val = val[key]
+    }
+    return val
+}
+
 function debug(...data) {
     isDebug && console.log('[DMX DEBUG]', ...data)
 }
