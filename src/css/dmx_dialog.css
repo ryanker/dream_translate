@@ -278,7 +278,7 @@
 #dmx_iframe {
     box-sizing: border-box;
     width: 100%;
-    height: calc(100% - 5px);
+    height: calc(100% - 6px);
     border: none;
 }
 
@@ -568,6 +568,10 @@ a:hover {
 .case_content {
     padding: 7px 10px;
     line-height: 1.6;
+}
+
+.case_content div:first-child {
+    padding-top: 0 !important;
 }
 
 .case_content [data-search="true"] {

@@ -553,17 +553,24 @@ function resultDictionary(m) {
 
     // 音标
     if (phonetic) {
-        if (phonetic.uk && phonetic.us) {
-            pron += `[${phonetic.uk} $ ${phonetic.us}]`
-        } else if (phonetic.uk) {
-            pron += `[${phonetic.uk}]`
+        let {uk, us} = phonetic
+        if (uk && us) {
+            pron += `[${uk} $ ${us}]`
+        } else if (uk) {
+            pron += `[${uk}]`
+        } else if (us) {
+            pron += `[$ ${us}]`
         }
     }
 
     // 发音
     sound && sound.forEach(v => {
-        pron += ` <i class="dmx-icon dmx_ripple${v.isWoman ? ' dmx_pink' : ''}" data-type="${v.type}" data-src-mp3="${v.url}" title="${v.title}"></i>`
+        let {isWoman, type, url, title} = v
+        let className = isWoman ? 'dmx_pink' : ''
+        if (!title) title = type === 'uk' ? '英音' : type === 'us' ? '美音' : ''
+        pron += ` <i class="dmx-icon dmx_ripple ${className}" data-type="${type}" data-src-mp3="${url}" title="${title}"></i>`
     })
+
     if (!s) s = '网络错误，请稍后再试'
     el.querySelector('.case_content').innerHTML = s
     el.querySelector('.case_pronunciation').innerHTML = pron
@@ -574,7 +581,7 @@ function resultDictionary(m) {
 function resultBindEvent(el, nav, name) {
     // 绑定播放音频
     el.querySelectorAll('[data-src-mp3]').forEach(e => {
-        let obj = {uk: '&#xe69f;', us: '&#xe674;', other: '&#xe67a;'}
+        let obj = {uk: '&#xe69f;', us: '&#xe674;', en: '&#xe6a8;', other: '&#xe67a;'}
         let type = e.getAttribute('data-type')
         if (!obj[type]) type = 'other'
         e.innerHTML = obj[type] // 喇叭字体
