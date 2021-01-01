@@ -64,6 +64,26 @@ function dictcnDictionary() {
                 }
             }
 
+            let getChart = function (sel) {
+                try {
+                    let d = el.querySelector(sel).getAttribute('data')
+                    d = decodeURIComponent(d)
+                    d = JSON.parse(d)
+                    let arr = Object.values(d)
+                    if (arr && arr.length > 0) {
+                        let str = ''
+                        for (let v of arr) {
+                            let {sense, percent, pos} = v
+                            str += `${sense || pos || ''}<u>${percent}%</u>`
+                        }
+                        if (str) s += `<div class="case_dd_chart">${str}</div>`
+                    }
+                } catch (e) {
+                }
+            }
+            getChart('#dict-chart-basic') // 单词常用度
+            getChart('#dict-chart-examples') // 词性常用度
+
             // 单词形式
             let shapeEl = el.querySelector('.shape')
             if (shapeEl) {
@@ -75,7 +95,7 @@ function dictcnDictionary() {
                         shapeStr += `<a data-search="true">${e.innerText}</a>`
                     }
                 })
-                s += `<div class="case_dd_exchange">${shapeStr}</div>`
+                if (shapeStr) s += `<div class="case_dd_exchange">${shapeStr}</div>`
             }
 
             // 单词标签

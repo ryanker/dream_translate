@@ -570,7 +570,11 @@ a:hover {
     line-height: 1.6;
 }
 
-.case_content div:first-child {
+.case_content > div {
+    margin-top: 5px;
+}
+
+.case_content > div:first-child {
     padding-top: 0 !important;
 }
 
@@ -596,10 +600,6 @@ a:hover {
     padding: 10px 0 0;
     font-weight: bold;
     font-size: 110%;
-}
-
-.case_dd_ph, .case_dd_parts, .case_dd_exchange, .case_dd_tags {
-    margin-top: 5px;
 }
 
 .case_dd_ph .dmx-icon {
@@ -634,6 +634,20 @@ a:hover {
 
 .case_dd_exchange u a {
     margin: 0 5px;
+}
+
+.case_dd_chart {
+    color: #e6a23c;
+    background-color: #fdf6ec;
+    border: 1px solid #faecd8;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.case_dd_chart u {
+    text-decoration: none;
+    margin: 0 10px 0 5px;
+    color: #ffc942;
 }
 
 .case_dd_tags u {
