@@ -17,8 +17,8 @@ function youdaoDictionary() {
 
             // 查询单词
             let s = ''
-            let keyEl = el.querySelector('.wordbook-js .keyword')
-            if (keyEl) s = `<div class="case_dd_head">${keyEl.innerText}</div>`
+            let wordEl = el.querySelector('.wordbook-js .keyword')
+            if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText}</div>`
 
             let phonetic = {} // 音标
             let sound = [] // 发音
@@ -51,7 +51,7 @@ function youdaoDictionary() {
                 let liEl = transEl.querySelectorAll('li')
                 if (liEl) {
                     s += `<div class="case_dd_parts">`
-                    transEl.querySelectorAll('li').forEach(e => {
+                    liEl.forEach(e => {
                         let part = e.innerText && e.innerText.trim()
                         part = part.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
                             return k === 0 ? `<b>${str.trim()}</b>` : str
@@ -60,6 +60,8 @@ function youdaoDictionary() {
                     })
                     s += `</div>`
                 }
+
+                // 单词形式
                 let addiEl = transEl.querySelector('.additional')
                 if (addiEl) s += `<div class="case_dd_exchange">${addiEl.innerText}</div>`
             }
