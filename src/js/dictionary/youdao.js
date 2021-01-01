@@ -14,9 +14,9 @@ function youdaoDictionary() {
         },
         unify(r, text) {
             let el = r.querySelector('#results-contents')
+            let s = ''
 
             // 查询单词
-            let s = ''
             let wordEl = el.querySelector('.wordbook-js .keyword')
             if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText}</div>`
 

@@ -14,9 +14,9 @@ function dictcnDictionary() {
         },
         unify(r, q) {
             let el = r.querySelector('#content > .main')
+            let s = ''
 
             // 查询单词
-            let s = ''
             let wordEl = el.querySelector('.word-cont > .keyword')
             if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText}</div>`
 
