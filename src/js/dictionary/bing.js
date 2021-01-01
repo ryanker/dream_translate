@@ -61,7 +61,7 @@ function bingDictionary() {
                 s += `</div>`
             }
 
-            // 单词形式
+            // 单词形态
             let shapeEl = el.querySelector('.hd_div1')
             if (shapeEl) {
                 let shapeStr = ''

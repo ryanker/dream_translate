@@ -84,7 +84,7 @@ function dictcnDictionary() {
             getChart('#dict-chart-basic') // 单词常用度
             getChart('#dict-chart-examples') // 词性常用度
 
-            // 单词形式
+            // 单词形态
             let shapeEl = el.querySelector('.shape')
             if (shapeEl) {
                 let shapeStr = ''

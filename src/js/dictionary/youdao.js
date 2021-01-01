@@ -61,7 +61,7 @@ function youdaoDictionary() {
                     s += `</div>`
                 }
 
-                // 单词形式
+                // 单词形态
                 let addiEl = transEl.querySelector('.additional')
                 if (addiEl) {
                     let shapeStr = addiEl.innerText.trim()

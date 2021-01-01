@@ -277,7 +277,7 @@ function sogouTranslate() {
                     s += `<div class="case_dd_parts"><p>${info_from_exam_dict.word_family.mean}</p></div>`
                 }
 
-                // 单词形式
+                // 单词形态
                 if (exchange_info) {
                     s += `<div class="case_dd_exchange">`
                     let exchangeObj = {

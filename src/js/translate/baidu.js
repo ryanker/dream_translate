@@ -145,7 +145,7 @@ function baiduTranslate() {
                 }
                 if (!hasParts) s += `<div class="case_dd_parts"><p>${word_means.join('；')}</p></div>`
 
-                // 单词形式
+                // 单词形态
                 if (exchange) {
                     let exchangeObj = {
                         word_third: '第三人称单数',

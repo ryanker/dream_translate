@@ -74,6 +74,17 @@ function icibaDictionary() {
                 s += `</div>`
             }
 
+            // 单词形态
+            let shapeEl = el.querySelector('ul[class^=Morphology_morphology]')
+            if (shapeEl) {
+                let shapeStr = shapeEl.innerText.trim()
+                shapeStr = shapeStr.replace(/;/g, ' ')
+                shapeStr = shapeStr.replace(/[a-z]+/ig, function (str) {
+                    return `<a data-search="true">${str}</a>`
+                })
+                s += `<div class="case_dd_exchange">${shapeStr}</div>`
+            }
+
             return {text: q, phonetic, sound, html: s}
         },
         query(q) {
