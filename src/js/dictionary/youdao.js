@@ -25,8 +25,8 @@ function youdaoDictionary() {
             el.querySelectorAll('.wordbook-js .baav .pronounce').forEach(e => {
                 let pEl = e.querySelector('.phonetic')
                 let aEl = e.querySelector('a')
-                if (!pEl || !aEl) return
-                let phStr = pEl.innerText && pEl.innerText.replace(/(^\[|]$)/g, '')
+                if (!aEl) return
+                let phStr = pEl && pEl.innerText && pEl.innerText.replace(/(^\[|]$)/g, '')
                 let rel = aEl.getAttribute('data-rel') || ''
                 let voice = aEl.getAttribute('data-4log') || ''
                 let url = 'https://dict.youdao.com/dictvoice?audio=' + rel
@@ -43,7 +43,7 @@ function youdaoDictionary() {
                 }
                 sound.push({type, url})
             })
-            if (phonetic.uk === phonetic.us) delete phonetic.us // 如果音标一样，只保留一个
+            if (phonetic.us && phonetic.uk === phonetic.us) delete phonetic.us // 如果音标一样，只保留一个
 
             // 释义
             let transEl = el.querySelector('#phrsListTab .trans-container')

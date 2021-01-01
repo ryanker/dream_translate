@@ -595,7 +595,7 @@ a:hover {
 .case_dd_head {
     padding: 10px 0 0;
     font-weight: bold;
-    font-size: 120%;
+    font-size: 110%;
 }
 
 .case_dd_ph, .case_dd_parts, .case_dd_exchange, .case_dd_tags {
