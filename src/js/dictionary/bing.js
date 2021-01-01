@@ -39,6 +39,7 @@ function bingDictionary() {
                     if (aEl) {
                         let clickStr = aEl.getAttribute('onclick')
                         clickStr && clickStr.replace(/'(http[^']+)'/, url => {
+                            url = url.replace(/'/g, '')
                             sound.push({type, url})
                         })
                     }
