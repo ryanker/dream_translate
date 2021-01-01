@@ -570,11 +570,11 @@ a:hover {
     line-height: 1.6;
 }
 
-.case_content > div {
+.case_content > div, .case_dd > div {
     margin-top: 5px;
 }
 
-.case_content > div:first-child {
+.case_content > div:first-child, .case_dd > div:first-child {
     padding-top: 0 !important;
 }
 
@@ -648,6 +648,11 @@ a:hover {
     text-decoration: none;
     margin: 0 10px 0 5px;
     color: #ffc942;
+}
+
+.case_dd_example em {
+    font-style: normal;
+    color: #e6a23c;
 }
 
 .case_dd_tags u {

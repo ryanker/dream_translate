@@ -22,7 +22,6 @@ function rrdictDictionary() {
 
             let phonetic = {} // 音标
             let sound = [] // 发音
-            console.log(el.querySelectorAll('.vos > span > a'))
             el.querySelectorAll('.vos > span').forEach((e, k) => {
                 let ph = e.innerText && e.innerText.replace(/[\[\]英美]/g, '').trim() || ''
                 if (!ph) return
@@ -44,14 +43,14 @@ function rrdictDictionary() {
             let liEl = el.querySelector('.tmInfo .listBox')
             if (liEl && liEl.childNodes.length > 0) {
                 s += `<div class="case_dd_parts">`
-                liEl.childNodes.forEach(node => {
-                    if (node.nodeType === 3) {
-                        let part = node.textContent.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
-                            return k === 0 ? `<b>${str.trim()}</b>` : str
-                        })
-                        if (part) s += `<p>${part}</p>`
-                    }
-                })
+                let liHtml = liEl.innerHTML.trim()
+                for (let part of liHtml.split('<br>')) {
+                    if (part.includes('<a href=')) continue
+                    part = part.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
+                        return k === 0 ? `<b>${str.trim()}</b>` : str
+                    })
+                    if (part) s += `<p>${part}</p>`
+                }
                 s += `</div>`
             }
 
@@ -63,6 +62,41 @@ function rrdictDictionary() {
                     return `<a data-search="true">${str}</a>`
                 })
                 s += `<div class="case_dd_exchange">${shapeStr}</div>`
+            }
+
+            // 场景例句
+            let flexEl = el.querySelectorAll('#flexslider_2 ul li')
+            if (flexEl && flexEl.length > 0) {
+                s += `<div class="case_dd_example">`
+                flexEl.forEach(e => {
+                    let imgBox = e.querySelector('.imgMainbox')
+                    if (imgBox) {
+                        // let imgEl = imgBox.querySelector('img[src]')
+                        let auEl = imgBox.querySelector('audio[src]')
+                        let enEl = imgBox.querySelector('.mBottom')
+                        let zhEl = imgBox.querySelector('.mFoot')
+                        let url = auEl.src
+                        if (url && enEl && zhEl) {
+                            s += `<p><i class="dmx-icon dmx_ripple" data-type="en" data-src-mp3="${url}"></i>${enEl.innerHTML}</p><p>${zhEl.innerText}</p>`
+                        }
+                    }
+                    // e.querySelectorAll('.mTextend > .box').forEach(bEl => {
+                    //     let tEl = bEl.querySelector('.sty1')
+                    //     let cEl = bEl.querySelector('.sty2')
+                    // })
+                })
+                s += `</div>`
+            }
+
+            // 单词标签
+            let tagEl = el.querySelectorAll('.tag > a')
+            if (tagEl && tagEl.length > 0) {
+                s += `<div class="case_dd_tags">`
+                tagEl.forEach(e => {
+                    let tag = e.innerText && e.innerText.trim()
+                    if (tag) s += `<u>${tag}</u>`
+                })
+                s += `</div>`
             }
 
             return {text: q, phonetic, sound, html: s}
