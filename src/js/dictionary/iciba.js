@@ -38,11 +38,11 @@ function icibaDictionary() {
                 let ph = e.innerText && e.innerText.replace(/[\[\]英美]/g, '').trim() || ''
                 let type = ''
                 if (e.innerText.includes('美')) {
-                    if (ph) phonetic.uk = ph
-                    type = 'uk'
+                    if (ph) phonetic.us = ph
+                    type = 'us'
                 } else {
                     if (ph) phonetic.uk = ph
-                    type = 'en'
+                    type = 'uk'
                 }
 
                 // 发音
@@ -50,7 +50,7 @@ function icibaDictionary() {
                 if (symbols) {
                     let url = ''
                     let {ph_am_mp3, ph_am_mp3_bk, ph_en_mp3, ph_en_mp3_bk, ph_tts_mp3, ph_tts_mp3_bk} = symbols
-                    if (type === 'uk') {
+                    if (type === 'us') {
                         url = ph_am_mp3 || ph_am_mp3_bk || ph_tts_mp3_bk
                     } else {
                         url = ph_en_mp3 || ph_en_mp3_bk || ph_tts_mp3

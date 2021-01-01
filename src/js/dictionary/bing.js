@@ -26,10 +26,10 @@ function bingDictionary() {
                 let ph = e.innerText && e.innerText.replace(/[\[\]美英]/g, '').trim() || ''
                 let type = ''
                 if (e.innerText.includes('美')) {
-                    type = 'uk'
-                    if (ph) phonetic.uk = ph
+                    type = 'us'
+                    if (ph) phonetic.us = ph
                 } else {
-                    type = 'en'
+                    type = 'uk'
                     if (ph) phonetic.uk = ph
                 }
 

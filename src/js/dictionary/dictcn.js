@@ -27,14 +27,11 @@ function dictcnDictionary() {
                 let bdoEl = spanEl.querySelector('bdo')
                 let ph = bdoEl && bdoEl.innerText && bdoEl.innerText.replace(/(^\[|]$)/g, '')
                 let type = ''
-                if (spStr.includes('英')) {
-                    type = 'uk'
-                    if (ph) phonetic.uk = ph
-                } else if (spStr.includes('美')) {
+                if (spStr.includes('美')) {
                     type = 'us'
                     if (ph) phonetic.us = ph
                 } else {
-                    type = 'en'
+                    type = 'uk'
                     if (ph) phonetic.uk = ph
                 }
 
@@ -65,7 +62,9 @@ function dictcnDictionary() {
 
             let getChart = function (sel) {
                 try {
-                    let d = el.querySelector(sel).getAttribute('data')
+                    let e = el.querySelector(sel)
+                    if (!e) return
+                    let d = e.getAttribute('data')
                     d = decodeURIComponent(d)
                     d = JSON.parse(d)
                     let arr = Object.values(d)
