@@ -41,18 +41,25 @@ function rrdictDictionary() {
 
             // 释义
             let liEl = el.querySelector('.tmInfo .listBox')
+            let interStr = ''
             if (liEl && liEl.childNodes.length > 0) {
-                s += `<div class="case_dd_parts">`
+                let poEl = liEl.querySelector('.poBottom')
+                if (poEl) poEl.remove()
                 let liHtml = liEl.innerHTML.trim()
                 for (let part of liHtml.split('<br>')) {
+                    part = part.trim()
                     if (part.includes('<a href=')) continue
                     part = part.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
                         return k === 0 ? `<b>${str.trim()}</b>` : str
                     })
-                    if (part) s += `<p>${part}</p>`
+                    if (part) interStr += `<p>${part}</p>`
                 }
-                s += `</div>`
             }
+            if (!interStr) {
+                let vosEl = el.querySelector('.vos')
+                if (vosEl) interStr += vosEl.innerText.trim()
+            }
+            if (interStr) s += `<div class="case_dd_parts">${interStr}</div>`
 
             // 单词形态
             let transEl = el.querySelector('.tmInfo .listBox:nth-child(2)')
