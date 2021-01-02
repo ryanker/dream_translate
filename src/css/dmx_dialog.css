@@ -381,6 +381,14 @@ a:hover {
     clear: both;
 }
 
+.mt-1 {
+    margin-top: 10px;
+}
+
+.mb-1 {
+    margin-bottom: 10px;
+}
+
 /* ==================== translate ==================== */
 #translate_input {
     background: #fff;

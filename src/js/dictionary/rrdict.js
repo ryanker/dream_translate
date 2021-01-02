@@ -75,9 +75,11 @@ function rrdictDictionary() {
                         let auEl = imgBox.querySelector('audio[src]')
                         let enEl = imgBox.querySelector('.mBottom')
                         let zhEl = imgBox.querySelector('.mFoot')
+                        let fromEl = imgBox.querySelector('.mTop')
                         let url = auEl.src
-                        if (url && enEl && zhEl) {
-                            s += `<p><i class="dmx-icon dmx_ripple" data-type="en" data-src-mp3="${url}"></i>${enEl.innerHTML}</p><p>${zhEl.innerText}</p>`
+                        if (url && enEl && zhEl && fromEl) {
+                            let form = fromEl.innerText ? ' —— ' + fromEl.innerText.trim() : ''
+                            s += `<p class="mt-1"><i class="dmx-icon dmx_ripple" data-type="en" data-src-mp3="${url}"></i>${enEl.innerHTML}</p><p>${zhEl.innerText}${form}</p>`
                         }
                     }
                     // e.querySelectorAll('.mTextend > .box').forEach(bEl => {
