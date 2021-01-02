@@ -189,6 +189,16 @@ function onBeforeRequestRemoveListener(callback) {
     B.webRequest.onBeforeRequest.removeListener(callback)
 }
 
+function onHeadersReceivedAddListener(callback, filter, extraInfoSpec) {
+    console.log(B.webRequest)
+    if (!extraInfoSpec) extraInfoSpec = Object.values(B.webRequest.OnHeadersReceivedOptions)
+    B.webRequest.onHeadersReceived.addListener(callback, filter, extraInfoSpec)
+}
+
+function onHeadersReceivedRemoveListener(callback) {
+    B.webRequest.onHeadersReceived.removeListener(callback)
+}
+
 function onCompletedAddListener(callback, filter, extraInfoSpec) {
     if (!extraInfoSpec) extraInfoSpec = Object.values(B.webRequest.OnCompletedOptions)
     B.webRequest.onCompleted.addListener(callback, filter, extraInfoSpec)
@@ -199,13 +209,14 @@ function onCompletedRemoveListener(callback) {
 }
 
 function onRemoveFrame(details) {
-    for (let i = 0; i < details.responseHeaders.length; ++i) {
-        if (details.responseHeaders[i].name === 'X-Frame-Options') {
-            details.responseHeaders.splice(i, 1)
+    let headers = Object.assign([], details.responseHeaders)
+    for (let i = 0; i < headers.length; i++) {
+        if (headers[i].name.toLowerCase() === 'x-frame-options') {
+            headers.splice(i, 1)
             break
         }
     }
-    return {responseHeaders: details.requestHeaders}
+    return {responseHeaders: headers}
 }
 
 // 获得所有语音的列表 (firefox 不支持)

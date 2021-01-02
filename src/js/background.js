@@ -328,6 +328,34 @@ function invertObject(obj) {
     return r
 }
 
+function openIframe(id, url, timeout) {
+    timeout = timeout || 60 * 1000 // 1分钟后释放
+    id = id || 'iframe_' + Date.now()
+
+    // 超时删除，减小内存占用
+    let timeoutId = `timeoutId_${id}`
+    _clearTimeout(timeoutId)
+    window[timeoutId] = setTimeout(() => el && el.remove(), timeout)
+
+    let el = document.getElementById(id)
+    if (!el) {
+        el = document.createElement('iframe')
+        el.id = id
+        el.src = url
+        document.body.appendChild(el)
+    } else {
+        el.src = url
+    }
+    return el
+}
+
+function _clearTimeout(timeoutId) {
+    let id = window[timeoutId]
+    if (!id) return
+    clearTimeout(id)
+    id = null
+}
+
 function sliceStr(text, maxLen) {
     let r = []
     if (text.length <= maxLen) {

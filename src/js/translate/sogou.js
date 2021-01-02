@@ -77,11 +77,11 @@ function sogouTranslate() {
                 if (q.length > 5000) return reject('The text is too large!')
 
                 // 取消 Frame 嵌入限制
-                onCompletedAddListener(onRemoveFrame, {urls: ["*://fanyi.sogou.com/*"]})
+                onHeadersReceivedAddListener(onRemoveFrame, {urls: ["*://fanyi.sogou.com/*"]})
 
                 // Frame 请求
                 let url = this.link(q, srcLan, tarLan)
-                let el = this.openIframe(url)
+                openIframe('iframe_soGou', url)
 
                 // 获取请求参数
                 let urls = ['*://fanyi.sogou.com/reventondc/translateV*']
@@ -113,7 +113,7 @@ function sogouTranslate() {
                 // 销毁
                 let removeListener = function () {
                     // el.remove()
-                    onCompletedRemoveListener(onRemoveFrame)
+                    onHeadersReceivedRemoveListener(onRemoveFrame)
                     onBeforeSendHeadersRemoveListener(onBeforeSendHeaders)
                     onBeforeRequestRemoveListener(onBeforeRequest)
                 }
@@ -136,29 +136,6 @@ function sogouTranslate() {
                 }
             })
         },
-        openIframe(url) {
-            let eid = 'soGouIframe'
-            let el = document.getElementById(eid)
-            if (!el) {
-                el = document.createElement('iframe')
-                el.id = eid
-                el.src = url
-                document.body.appendChild(el)
-            } else {
-                el.src = url
-            }
-
-            // 超时删除，减小内容占用
-            if (this.timeoutId) {
-                clearTimeout(this.timeoutId)
-                this.timeoutId = null
-            }
-            this.timeoutId = setTimeout(() => {
-                el && el.remove()
-            }, 300000) // 5分钟后释放
-
-            return el
-        },
         trans(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh-CHS'
@@ -166,7 +143,7 @@ function sogouTranslate() {
                 if (q.length > 5000) return reject('The text is too large!')
 
                 let url = this.link(q, srcLan, tarLan)
-                this.openIframe(url)
+                openIframe('iframe_soGou', url)
                 httpGet(url, 'document').then(r => {
                     let transOld = function () {
                         this.transOld(q, srcLan, tarLan).then((rOld) => {
