@@ -210,7 +210,7 @@ function onCompletedRemoveListener(callback) {
 function onRemoveFrame(details) {
     let headers = Object.assign([], details.responseHeaders)
     for (let i = 0; i < headers.length; i++) {
-        if (headers[i].name.toLowerCase() === 'x-frame-options') {
+        if (headers[i].name.toLowerCase().includes('frame-options')) {
             headers.splice(i, 1)
             break
         }
