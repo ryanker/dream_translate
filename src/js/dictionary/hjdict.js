@@ -16,13 +16,19 @@ function hjdictDictionary() {
         unify(r, q) {
             let el = r.querySelector('.word-details')
             let s = ''
+            let phonetic = {} // 音标
+            let sound = [] // 发音
+
+            // 没有找到结果
+            if (!el) {
+                let notEl = r.querySelector('.word-notfound-inner h2')
+                if (notEl) return {text: q, phonetic, sound, html: notEl.innerText}
+            }
 
             // 查询单词
             let wordEl = el.querySelector('.word-info .word-text h2')
             if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText.trim()}</div>`
 
-            let phonetic = {} // 音标
-            let sound = [] // 发音
             let pronEl = el.querySelector('.word-info .pronounces')
             if (pronEl && pronEl.childNodes.length > 0) {
                 let ukEl = pronEl.querySelector('.pronounce-value-en')

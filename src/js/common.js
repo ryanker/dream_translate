@@ -190,7 +190,6 @@ function onBeforeRequestRemoveListener(callback) {
 }
 
 function onHeadersReceivedAddListener(callback, filter, extraInfoSpec) {
-    console.log(B.webRequest)
     if (!extraInfoSpec) extraInfoSpec = Object.values(B.webRequest.OnHeadersReceivedOptions)
     B.webRequest.onHeadersReceived.addListener(callback, filter, extraInfoSpec)
 }
