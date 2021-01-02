@@ -144,8 +144,8 @@
 }
 
 #dmx_dialog_title {
-    height: 30px;
-    line-height: 30px;
+    height: 32px;
+    line-height: 32px;
     padding: 0 10px;
     background: #f5f8fa;
     border-bottom: 1px solid #cfd0d2;
@@ -243,8 +243,8 @@
     border-radius: 5px 5px 0 0;
     padding: 0 8px;
     margin-right: 5px;
-    height: 28px;
-    line-height: 28px;
+    height: 30px;
+    line-height: 30px;
     overflow: hidden;
     font-size: 15px;
     font-weight: 600;
