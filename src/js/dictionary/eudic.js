@@ -41,17 +41,25 @@ function eudicDictionary() {
 
             // 释义
             let liEl = el.querySelectorAll('#ExpFCChild li')
+            let partStr = ''
             if (liEl && liEl.length > 0) {
-                s += `<div class="case_dd_parts">`
                 liEl.forEach(e => {
-                    let part = e.innerText && e.innerText.trim()
-                    part = part.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
+                    let str = e.innerText && e.innerText.trim()
+                    str = str.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
                         return k === 0 ? `<b>${str.trim()}</b>` : str
                     })
-                    if (part) s += `<p>${part}</p>`
+                    if (str) partStr += `<p>${str}</p>`
                 })
-                s += `</div>`
             }
+            if (!partStr) {
+                let expEl = el.querySelector('#ExpFCChild .exp')
+                if (expEl) {
+                    let str = expEl.textContent && expEl.textContent.trim()
+                    if (str) partStr += `<p>${str}</p>`
+                }
+            }
+            if (!partStr) s += '查不到该词'
+            if (partStr) s += `<div class="case_dd_parts">${partStr}</div>`
 
             // 单词形态
             let transEl = el.querySelector('#trans')
