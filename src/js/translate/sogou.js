@@ -227,7 +227,7 @@ function sogouTranslate() {
                 let getIconHTML = function (type, filename) {
                     if (type !== 'uk') type = 'us'
                     let title = type === 'uk' ? '英音' : '美音'
-                    return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="https:${filename}" title="${title}"></i>`
+                    return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="https://fanyi.sogou.com${filename}" title="${title}"></i>`
                 }
                 let {phonetic, usual, info_from_exam_dict, exchange_info, levelList} = dict
 

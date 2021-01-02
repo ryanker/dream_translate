@@ -621,7 +621,7 @@ function resultSound(m) {
     if (status === 'start') {
         let sEl = el.querySelector(`[data-type=${type}]`)
         if (sEl) addClass(sEl, 'active')
-    } else if (status === 'end') {
+    } else {
         let dEl = el.querySelectorAll(`[data-type=${type}]`)
         rmClassD(dEl, 'active')
     }
