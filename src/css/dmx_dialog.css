@@ -1025,3 +1025,13 @@ a:hover {
 .dict_collins .hom:first-of-type {
     margin-top: 0;
 }
+
+.dict_collins .imageRight {
+    float: right;
+    width: 30%;
+    min-width: 150px;
+    padding: 2px;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    margin: 0 0 5px 5px;
+}

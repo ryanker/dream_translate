@@ -19,8 +19,14 @@ function collinsDictionary() {
             let sound = []
             let el = r.querySelector('.page')
 
-            // 释义
+            // 图片
             let part = ''
+            let imgEl = el.querySelector('#images img[data-image]')
+            if (imgEl) {
+                part += `<img class="imageRight" src="https://www.collinsdictionary.com${imgEl.dataset.image}">`
+            }
+
+            // 释义
             let dEl = el.querySelectorAll('.dictionaries > .dictentry')
             if (dEl && dEl.length > 0) {
                 dEl.forEach(vEl => {
@@ -38,8 +44,10 @@ function collinsDictionary() {
                     let pEl = vEl.querySelector('.mini_h2 .pron')
                     if (pEl) {
                         let pStr = pEl.innerText && pEl.innerText.trim()
-                        if (type === 'uk') phonetic.uk = pStr
-                        else if (type === 'us') phonetic.us = pStr
+                        if (pStr) {
+                            if (type === 'uk') phonetic.uk = pStr
+                            else if (type === 'us') phonetic.us = pStr
+                        }
                         let srcEl = pEl.querySelector('a[data-src-mp3]')
                         if (srcEl && ['uk', 'us'].includes(type)) {
                             let url = srcEl.getAttribute('data-src-mp3')
