@@ -9,18 +9,25 @@
 
 function collinsDictionary() {
     return {
-        enUrl: 'https://www.collinsdictionary.com/dictionary/english/',
+        // enUrl: 'https://www.collinsdictionary.com/dictionary/english/',
+        enUrl: 'https://www.collinsdictionary.com/search/?dictCode=english&q=',
         init() {
             return this
         },
         unify(r, q) {
             let s = ''
+            let part = ''
             let phonetic = {}
             let sound = []
             let el = r.querySelector('.page')
 
+            // 视频
+            let videoEl = el.querySelector('#videos .youtube-video[data-embed]')
+            if (videoEl) {
+                part += `<div style="margin:0 auto 10px;width:400px;height:224px;background:#000"><iframe width="400" height="224" src="https://www.youtube.com/embed/${videoEl.dataset.embed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+            }
+
             // 图片
-            let part = ''
             let imgEl = el.querySelector('#images img[data-image]')
             if (imgEl) {
                 part += `<img class="imageRight" src="https://www.collinsdictionary.com${imgEl.dataset.image}">`
