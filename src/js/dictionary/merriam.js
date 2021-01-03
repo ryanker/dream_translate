@@ -49,6 +49,10 @@ function merriamDictionary() {
                     deepCommentRemove(vEl)
                     vEl.querySelectorAll('.vi_more,.d_hidden,a.play_pron').forEach(e => e.remove())
                     vEl.querySelectorAll('.sn_block_num').forEach(e => e.style.float = 'left')
+                    vEl.querySelectorAll('.hw_d').forEach(e => {
+                        e.style.color = '#5d2fc1'
+                        e.style.fontSize = '110%'
+                    })
                     vEl.querySelectorAll('.sblock_c').forEach(e => e.style.marginTop = '10px')
                     vEl.querySelectorAll('.sgram_internal').forEach(e => e.style.color = '#757575')
                     vEl.querySelectorAll('*').forEach(e => {
@@ -62,7 +66,7 @@ function merriamDictionary() {
                             }
                         }
                     })
-                    part += vEl.innerHTML
+                    part += vEl.innerHTML.replace(/\s+/g, ' ')
                 })
             }
             if (part) s += `<div class="dict_cambridge">${part}</div>`

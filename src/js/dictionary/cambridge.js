@@ -17,34 +17,36 @@ function cambridgeDictionary() {
         unify(r, q) {
             let el = r.querySelector('.entry-body')
             let s = ''
-
-            // 查询单词
-            let wordEl = el.querySelector('.pos-header .di-title')
-            if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText}</div>`
-
             let phonetic = {} // 音标
             let sound = [] // 发音
-            el.querySelectorAll('.pos-header .dpron-i').forEach((e, k) => {
-                if (k > 1) return // 只需要前两个
-                let pEl = e.querySelector('.ipa')
-                let mEl = e.querySelector('source[type="audio/mpeg"]')
-                let ph = pEl && pEl.innerText && pEl.innerText.trim()
-                let src = mEl && mEl.getAttribute('src') || ''
-                let pre = 'https://dictionary.cambridge.org/'
-                let type = ''
-                if (e.className.includes('uk')) {
-                    type = 'uk'
-                    if (ph) phonetic.uk = ph
-                } else if (e.className.includes('us')) {
-                    type = 'us'
-                    if (ph) phonetic.us = ph
-                } else {
-                    type = 'en'
-                    if (ph) phonetic.uk = ph
-                }
-                if (src) sound.push({type, url: pre + src})
-            })
-            if (phonetic.us && phonetic.uk === phonetic.us) delete phonetic.us // 如果音标一样，只保留一个
+
+            let posHeadEl = el.querySelector('.pos-header')
+            if (posHeadEl) {
+                // 查询单词
+                let wordEl = posHeadEl.querySelector('.di-title')
+                if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText}</div>`
+
+                posHeadEl.querySelectorAll('.dpron-i').forEach(e => {
+                    let pEl = e.querySelector('.ipa')
+                    let mEl = e.querySelector('source[type="audio/mpeg"]')
+                    let ph = pEl && pEl.innerText && pEl.innerText.trim()
+                    let src = mEl && mEl.getAttribute('src') || ''
+                    let pre = 'https://dictionary.cambridge.org/'
+                    let type = ''
+                    if (e.className.includes('uk')) {
+                        type = 'uk'
+                        if (ph) phonetic.uk = ph
+                    } else if (e.className.includes('us')) {
+                        type = 'us'
+                        if (ph) phonetic.us = ph
+                    } else {
+                        type = 'en'
+                        if (ph) phonetic.uk = ph
+                    }
+                    if (src) sound.push({type, url: pre + src})
+                })
+                if (phonetic.us && phonetic.uk === phonetic.us) delete phonetic.us // 如果音标一样，只保留一个
+            }
 
             // 释义
             let part = ''

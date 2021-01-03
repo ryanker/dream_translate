@@ -4,6 +4,10 @@ p, h1, h2, h3, h4, h5, h6, ul, li, ol, dl, dt, dd {
     list-style: none;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-size: 18px;
+}
+
 .dmx_unselectable {
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
