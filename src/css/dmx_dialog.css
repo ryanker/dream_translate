@@ -8,6 +8,12 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 18px;
 }
 
+blockquote {
+    margin: 10px 0;
+    padding-left: 5px;
+    border-left: 6px solid #e4dfca;
+}
+
 .dmx_unselectable {
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
@@ -1034,4 +1040,10 @@ a:hover {
     border: 1px solid #bbb;
     border-radius: 5px;
     margin: 0 0 5px 5px;
+}
+
+.dict_etymonline [class^="word__name--"] {
+    font-size: 120%;
+    font-weight: 700;
+    color: #0580e8;
 }

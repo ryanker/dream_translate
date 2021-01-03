@@ -9,22 +9,30 @@
 
 function etymonlineDictionary() {
     return {
+        url: 'https://www.etymonline.com/word/',
+        // url: 'https://www.etymonline.com/search?q=',
         init() {
             return this
         },
         unify(r, q) {
-            let el = r.querySelector('#root > div > div > div.main > div > div:nth-child(2) > div:nth-child(2) > object')
-
-            // 清理
-            el.querySelectorAll('script,style').forEach(e => {
-                e.remove()
+            // let el = r.querySelector('#root > div > div > div.main > div > div:nth-child(2) > div:nth-child(2) > object')
+            let s = ''
+            r.querySelectorAll('#root div.main div[class^="word--"] > object').forEach(el => {
+                el.querySelectorAll('[style]').forEach(e => e.removeAttribute('style'))
+                el.querySelectorAll('*').forEach(e => {
+                    for (let v of e.attributes) {
+                        let name = v.name.toLowerCase()
+                        if (!['title', 'class'].includes(name)) e.removeAttribute(name) // 过滤白名单
+                    }
+                })
+                s += el.innerHTML
             })
-            return {text: q, phonetic: {}, sound: [], html: el.innerHTML}
+            return {text: q, phonetic: {}, sound: [], html: `<div class="dict_etymonline">${s}</div>`}
         },
         query(q) {
             return new Promise((resolve, reject) => {
                 if (q.length > 100) return reject('The text is too large!')
-                let url = `https://www.etymonline.com/search?q=${encodeURIComponent(q)}`
+                let url = this.url + encodeURIComponent(q)
                 httpGet(url, 'document').then(r => {
                     if (r) {
                         resolve(this.unify(r, q))
@@ -37,7 +45,7 @@ function etymonlineDictionary() {
             })
         },
         link(q) {
-            return `https://www.etymonline.com/search?q=${encodeURIComponent(q)}`
+            return this.url + encodeURIComponent(q)
         },
     }
 }
