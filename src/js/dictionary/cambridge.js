@@ -15,10 +15,10 @@ function cambridgeDictionary() {
             return this
         },
         unify(r, q) {
-            let el = r.querySelector('.entry-body')
             let s = ''
             let phonetic = {} // 音标
             let sound = [] // 发音
+            let el = r.querySelector('.entry-body')
 
             let posHeadEl = el.querySelector('.pos-header')
             if (posHeadEl) {

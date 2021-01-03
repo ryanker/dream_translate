@@ -15,11 +15,12 @@ function merriamDictionary() {
             return this
         },
         unify(r, q) {
-            let el = r.querySelector('#ld_entries_v2_all')
             let s = ''
+            let phonetic = {}
+            let sound = []
+            let el = r.querySelector('#ld_entries_v2_all')
 
             // 音标
-            let phonetic = {}
             let pronEl = el.querySelector('.hpron_word')
             if (pronEl) {
                 let pron = pronEl.textContent && pronEl.textContent.replace(/\//g, '').trim()
@@ -27,7 +28,6 @@ function merriamDictionary() {
             }
 
             // 发音
-            let sound = []
             let pEl = el.querySelector('a.play_pron[data-file]')
             if (pEl) {
                 let file = pEl.getAttribute('data-file')

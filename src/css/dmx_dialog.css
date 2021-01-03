@@ -995,3 +995,21 @@ a:hover {
     display: block;
     color: #0580e8;
 }
+
+.dict_collins .dictlink {
+    margin-top: 5px;
+}
+
+.dict_collins .dictlink:first-child {
+    margin-top: 0;
+}
+
+.dict_collins .sn_block_num {
+    float: left;
+}
+
+.dict_collins .pos {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #c12d30;
+}
