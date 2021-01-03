@@ -50,7 +50,7 @@ function merriamDictionary() {
                     vEl.querySelectorAll('.vi_more,.d_hidden,a.play_pron').forEach(e => e.remove())
                     vEl.querySelectorAll('.sn_block_num').forEach(e => e.style.float = 'left')
                     vEl.querySelectorAll('.hw_d').forEach(e => {
-                        e.style.color = '#5d2fc1'
+                        e.style.color = '#0580e8'
                         e.style.fontSize = '110%'
                     })
                     vEl.querySelectorAll('.sblock_c').forEach(e => e.style.marginTop = '10px')

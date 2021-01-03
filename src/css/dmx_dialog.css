@@ -965,6 +965,10 @@ a:hover {
 }
 
 /* dict */
+.dict_cambridge .sense-body {
+    margin-top: 10px;
+}
+
 .dict_cambridge .dxref {
     margin-right: 3px;
     padding: 2px 6px;
