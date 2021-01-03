@@ -1,3 +1,9 @@
+p, h1, h2, h3, h4, h5, h6, ul, li, ol, dl, dt, dd {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
 .dmx_unselectable {
     -webkit-user-select: none !important;
     -moz-user-select: none !important;
@@ -952,4 +958,32 @@ a:hover {
     background-color: #ef473a;
     border-color: #dd1419;
     color: #fff;
+}
+
+/* dict */
+.dict_cambridge .dxref {
+    margin-right: 3px;
+    padding: 2px 6px;
+    color: #fff;
+    font-weight: 700;
+    font-size: .75rem;
+    text-align: center;
+    background: #1d2956;
+    border-radius: 50px;
+}
+
+.dict_cambridge .ddef_h {
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.dict_cambridge .dsense_h, .dict_cambridge .ca_h {
+    margin-top: 10px;
+    font-weight: 700;
+    color: #5d2fc1;
+}
+
+.dict_cambridge .dtrans {
+    display: block;
+    color: #0580e8;
 }
