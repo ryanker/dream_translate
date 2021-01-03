@@ -69,7 +69,7 @@ function merriamDictionary() {
                     part += vEl.innerHTML.replace(/\s+/g, ' ')
                 })
             }
-            if (part) s += `<div class="dict_cambridge">${part}</div>`
+            if (part) s += `<div class="dict_merriam">${part}</div>`
 
             return {text: q, phonetic, sound, html: s}
         },

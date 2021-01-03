@@ -997,19 +997,31 @@ a:hover {
 }
 
 .dict_collins .dictlink {
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .dict_collins .dictlink:first-child {
     margin-top: 0;
 }
 
-.dict_collins .sn_block_num {
-    float: left;
+.dict_collins .sensenum, .dict_collins .def, .dict_collins .word-frequency-container .label {
+    display: inline-block;
+}
+
+.dict_collins .title_frequency_container {
+    color: #c12d30;
 }
 
 .dict_collins .pos {
     text-transform: uppercase;
     font-weight: bold;
     color: #c12d30;
+}
+
+.dict_collins .hom {
+    margin-top: 10px;
+}
+
+.dict_collins .hom:first-of-type {
+    margin-top: 0;
 }
