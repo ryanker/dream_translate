@@ -27,6 +27,7 @@ function etymonlineDictionary() {
                 })
                 s += el.innerHTML
             })
+            if (!s) s += `The ${q} you're looking for can't be found.`
             return {text: q, phonetic: {}, sound: [], html: `<div class="dict_etymonline">${s}</div>`}
         },
         query(q) {
