@@ -9,22 +9,58 @@
 
 function lexicoDictionary() {
     return {
+        ukUrl: 'https://www.thefreedictionary.com/',
+        usUrl: 'https://www.lexico.com/en/definition/',
         init() {
             return this
         },
         unify(r, q) {
+            let s = ''
+            let phonetic = {}
+            let sound = []
             let el = r.querySelector('.entryWrapper')
 
-            // 清理
-            el.querySelectorAll('script,style').forEach(e => {
-                e.remove()
-            })
-            return {text: q, phonetic: {}, sound: [], html: el.innerHTML}
+            // 查询单词
+            let wordEl = el.querySelector('.hwg > .hw')
+            if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText.trim()}</div>`
+
+            // 音标
+            let pronEl = el.querySelector('.pronunciations .phoneticspelling')
+            if (pronEl) {
+                let pron = pronEl.innerText && pronEl.innerText.replace(/\//g, '')
+                if (pron) phonetic.us = pron
+            }
+
+            // 发音
+            let mp3El = el.querySelector('.pronunciations audio[src]')
+            if (mp3El) sound.push({type: 'us', url: mp3El.src})
+
+            // 释义
+            let liEl = el.querySelectorAll('.gramb')
+            if (liEl && liEl.length > 0) {
+                liEl.forEach(e => {
+                    removeD(e.querySelectorAll('script,style,.moreInfo')) // 清理
+                    cleanAttr(e, ['title', 'class'])
+                    s += e.innerHTML
+                })
+            } else {
+                let simEl = el.querySelector('.similar-results')
+                if (simEl) {
+                    cleanAttr(simEl, ['title', 'class', 'href'])
+                    simEl.querySelectorAll('a[href]').forEach(e => {
+                        e.setAttribute('data-search', 'true')
+                        e.removeAttribute('href')
+                    })
+                    s += simEl.innerHTML
+                }
+            }
+
+            return {text: q, phonetic, sound, html: s}
         },
         query(q) {
             return new Promise((resolve, reject) => {
                 if (q.length > 100) return reject('The text is too large!')
-                let url = `https://www.lexico.com/definition/${encodeURIComponent(q)}`
+                let url = this.usUrl + encodeURIComponent(q)
                 httpGet(url, 'document').then(r => {
                     if (r) {
                         resolve(this.unify(r, q))
@@ -37,7 +73,7 @@ function lexicoDictionary() {
             })
         },
         link(q) {
-            return `https://www.lexico.com/definition/${encodeURIComponent(q)}`
+            return this.usUrl + encodeURIComponent(q)
         },
     }
 }

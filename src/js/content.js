@@ -545,13 +545,19 @@ function resultTranslate(name, isBilingual) {
 }
 
 function resultDictionary(m) {
-    let el = $(`${m.name}_dictionary_case`)
+    let {name, result, error} = m
+    let el = $(`${name}_dictionary_case`)
     if (!el) return
-    let s = '', pron = ''
-    let {html, phonetic, sound} = m.result || {}
-    if (html) s = html
+    let cEl = el.querySelector('.case_content')
+    if (error) {
+        cEl.innerHTML = '网络错误，请稍后再试'
+        return
+    }
+
+    let {html, phonetic, sound} = result || {}
 
     // 音标
+    let pron = ''
     if (phonetic) {
         let {uk, us} = phonetic
         if (uk && us) {
@@ -571,8 +577,8 @@ function resultDictionary(m) {
         pron += ` <i class="dmx-icon dmx_ripple ${className}" data-type="${type}" data-src-mp3="${url}" title="${title}"></i>`
     })
 
-    if (!s) s = '网络错误，请稍后再试'
-    el.querySelector('.case_content').innerHTML = s
+    if (!html) html = 'Sorry! 没有查询到结果。'
+    el.querySelector('.case_content').innerHTML = html
     el.querySelector('.case_pronunciation').innerHTML = pron
 
     resultBindEvent(el, 'dictionary', m.name)
