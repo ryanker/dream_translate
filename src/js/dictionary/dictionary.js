@@ -26,7 +26,7 @@ function dictionaryDictionary() {
             let soundEl = r.querySelector('source[type="audio/mpeg"]')
             if (soundEl) sound.push({type: 'us', url: soundEl.src})
 
-            removeD(el.querySelectorAll('script,style,#top-definitions-section,.expandable-control')) // 清理
+            removeD(el.querySelectorAll('script,style,img,#top-definitions-section,.expandable-control')) // 清理
             cleanAttr(el, ['title'])
 
             return {text: q, phonetic, sound, html: el.innerHTML}
@@ -35,7 +35,7 @@ function dictionaryDictionary() {
             return new Promise((resolve, reject) => {
                 if (q.length > 100) return reject('The text is too large!')
                 let url = this.url + encodeURIComponent(q)
-                httpGet(url, 'document').then(r => {
+                httpGet(url, 'document', null, true).then(r => {
                     if (r) {
                         resolve(this.unify(r, q))
                     } else {
