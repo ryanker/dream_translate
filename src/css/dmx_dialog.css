@@ -1047,3 +1047,7 @@ a:hover {
     font-weight: 700;
     color: #0580e8;
 }
+
+.dict_oxford .examples {
+    margin-left: 10px;
+}

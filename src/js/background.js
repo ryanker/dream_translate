@@ -328,6 +328,20 @@ function invertObject(obj) {
     return r
 }
 
+// 清理元素属性
+function cleanAttr(el, attrs) {
+    el.querySelectorAll('*').forEach(e => {
+        for (let i = e.attributes.length - 1; i >= 0; i--) {
+            let v = e.attributes[i]
+            if (typeof attrs === 'object') {
+                if (!attrs.includes(v.name)) e.removeAttribute(v.name) // 过滤白名单
+            } else {
+                e.removeAttribute(v.name) // 全部删除
+            }
+        }
+    })
+}
+
 function openIframe(id, url, timeout) {
     timeout = timeout || 60 * 1000 // 1分钟后释放
     id = id || 'iframe_' + Date.now()

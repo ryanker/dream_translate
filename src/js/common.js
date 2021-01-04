@@ -293,6 +293,20 @@ function inArray(val, arr) {
     return arr.includes(val)
 }
 
+// 解决 JSON 太深问题
+function getJSONValue(data, keys, value) {
+    value = value || {}
+    if (!data) return value // 默认值
+    keys = keys.trim()
+    let arr = keys.split('.')
+    let val = Object.assign({}, data)
+    for (let key of arr) {
+        if (!val[key]) return value // 默认值
+        val = val[key]
+    }
+    return val
+}
+
 function createTextarea() {
     let t = document.createElement("textarea")
     t.style.position = 'fixed'
@@ -318,16 +332,20 @@ function execPaste() {
     return v
 }
 
-function httpGet(url, type, headers) {
+function httpGet(url, type, headers, notStrict) {
     return new Promise((resolve, reject) => {
         let c = new XMLHttpRequest()
         c.responseType = type || 'text'
         c.timeout = 10000
         c.onload = function (e) {
-            if (this.status === 200) {
+            if (notStrict) {
                 resolve(this.response)
             } else {
-                reject(e)
+                if (this.status === 200) {
+                    resolve(this.response)
+                } else {
+                    reject(e)
+                }
             }
         }
         c.ontimeout = function (e) {
@@ -383,20 +401,6 @@ function httpPost(options) {
         })
         c.send(o.body)
     })
-}
-
-// 解决 JSON 太深问题
-function getJSONValue(data, keys, value) {
-    value = value || {}
-    if (!data) return value // 默认值
-    keys = keys.trim()
-    let arr = keys.split('.')
-    let val = Object.assign({}, data)
-    for (let key of arr) {
-        if (!val[key]) return value // 默认值
-        val = val[key]
-    }
-    return val
 }
 
 function debug(...data) {
