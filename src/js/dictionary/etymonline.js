@@ -18,13 +18,7 @@ function etymonlineDictionary() {
             // let el = r.querySelector('#root > div > div > div.main > div > div:nth-child(2) > div:nth-child(2) > object')
             let s = ''
             r.querySelectorAll('#root div.main div[class^="word--"] > object').forEach(el => {
-                el.querySelectorAll('[style]').forEach(e => e.removeAttribute('style'))
-                el.querySelectorAll('*').forEach(e => {
-                    for (let v of e.attributes) {
-                        let name = v.name.toLowerCase()
-                        if (!['title', 'class'].includes(name)) e.removeAttribute(name) // 过滤白名单
-                    }
-                })
+                cleanAttr(el, ['title', 'class'])
                 s += el.innerHTML
             })
             if (!s) s += `The ${q} you're looking for can't be found.`

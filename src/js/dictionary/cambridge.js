@@ -55,16 +55,10 @@ function cambridgeDictionary() {
             let transEl = el.querySelectorAll('.pos-body .dsense')
             if (transEl && transEl.length > 0) {
                 transEl.forEach(tEl => {
-                    tEl.querySelectorAll('*').forEach(e => {
-                        for (let v of e.attributes) {
-                            let name = v.name.toLowerCase()
-                            if (!['title', 'class', 'href', 'data-search'].includes(name)) e.removeAttribute(name) // 过滤白名单
-                            if (name === 'href') {
-                                if (v.value.includes('dictionary/english-chinese-simplified/')) e.setAttribute('data-search', 'true')
-                                // e.setAttribute('_href', v.value)
-                                e.removeAttribute('href')
-                            }
-                        }
+                    cleanAttr(tEl, ['title', 'class', 'href'])
+                    el.querySelectorAll('a[href]').forEach(e => {
+                        if (e.href.includes('dictionary/english-chinese-simplified/')) e.setAttribute('data-search', 'true')
+                        e.removeAttribute('href')
                     })
                     part += tEl.innerHTML
                 })
