@@ -1051,3 +1051,7 @@ a:hover {
 .dict_oxford .examples {
     margin-left: 10px;
 }
+
+.dict_wr .rh_pdef {
+    display: block;
+}
