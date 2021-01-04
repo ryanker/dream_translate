@@ -1055,3 +1055,23 @@ a:hover {
 .dict_wr .rh_pdef {
     display: block;
 }
+
+.dict_macmillan .dflex {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+}
+
+.dict_macmillan .SENSE-NUM, .dict_macmillan .note {
+    display: inline-block;
+    min-width: 1.2em;
+    height: 1.2em;
+    line-height: 1.2em;
+    padding: .2em;
+    margin-right: .2em;
+    border-radius: 1em;
+    background: #d70a20;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+}
