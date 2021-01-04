@@ -71,17 +71,13 @@ function collinsDictionary() {
                         e.setAttribute('data-type', 'en')
                     })
 
-                    vEl.querySelectorAll('*').forEach(e => {
-                        for (let v of e.attributes) {
-                            let name = v.name.toLowerCase()
-                            if (!['title', 'class', 'href', '_href', 'data-search', 'data-src-mp3'].includes(name)) e.removeAttribute(name) // 过滤白名单
-                            if (name === 'href') {
-                                // e.setAttribute('data-search', 'true')
-                                e.setAttribute('_href', v.value)
-                                e.removeAttribute('href')
-                            }
-                        }
+                    cleanAttr(vEl, ['title', 'class', 'href', 'data-src-mp3'])
+                    vEl.querySelectorAll('a[href]').forEach(e => {
+                        if (e.href.includes('/dictionary/english/')) e.setAttribute('data-search', 'true')
+                        e.setAttribute('_href', e.href)
+                        e.removeAttribute('href')
                     })
+
                     part += vEl.innerHTML
                 })
             }
