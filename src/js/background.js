@@ -102,7 +102,7 @@ function runTranslate(tabId, m) {
 
     // 自动朗读
     setTimeout(() => {
-        autoPlayTTS(tabId, text, srcLan, conf.translateTTSList, setting.translateTTSList).then(_ => null)
+        autoPlayTTS(tabId, text, srcLan).then(_ => null)
     }, 300)
 }
 
@@ -212,7 +212,9 @@ function minCss(s) {
     return s
 }
 
-async function autoPlayTTS(tabId, text, lang, list, arr) {
+async function autoPlayTTS(tabId, text, lang) {
+    let list = conf.translateTTSList || {}
+    let arr = setting.translateTTSList || []
     if (lang === 'auto') {
         lang = 'en' // 默认值
         await httpPost({
@@ -224,15 +226,14 @@ async function autoPlayTTS(tabId, text, lang, list, arr) {
             debug(err)
         })
     }
-    for (let k = 0; k < arr.length; k++) {
-        let name = arr[k]
+    for (let name of arr) {
         let message = {action: 'playSound', nav: 'translate', name, type: 'source', status: 'end'}
         await sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
         await playTTS(name, text, lang).then(() => {
             sendTabMessage(tabId, message)
         }).catch(err => {
             debug(`${name} sound error:`, err)
-            sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name]}出错`}))
+            sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name] || '发音'}出错`}))
         })
     }
 }
