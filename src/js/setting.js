@@ -22,11 +22,18 @@ document.addEventListener('DOMContentLoaded', async function () {
 })
 
 function init() {
+    // 词典发音列表
+    let dictionarySoundList = {}
+    for (let [k, v] of Object.entries(conf.dictionaryList)) {
+        if (conf.dictionarySoundExcluded.includes(k)) continue // 排除
+        dictionarySoundList[k] = v
+    }
+
     // 初始展示
     settingBoxHTML('setting_translate_list', 'translateList', conf.translateList)
     settingBoxHTML('setting_translate_tts_list', 'translateTTSList', conf.translateTTSList)
     settingBoxHTML('setting_dictionary_list', 'dictionaryList', conf.dictionaryList)
-    settingBoxHTML('setting_dictionary_sound_list', 'dictionarySoundList', conf.dictionarySoundList)
+    settingBoxHTML('setting_dictionary_sound_list', 'dictionarySoundList', dictionarySoundList)
     settingBoxHTML('setting_search_list', 'searchList', conf.searchList)
     settingBoxHTML('setting_search_menus', 'searchMenus', conf.searchList)
 
@@ -66,7 +73,7 @@ function init() {
     bindSortHTML('展示顺序：', 'setting_translate_sort', 'translateList', setting.translateList, conf.translateList)
     bindSortHTML('朗读顺序：', 'setting_translate_tts_sort', 'translateTTSList', setting.translateTTSList, conf.translateTTSList)
     bindSortHTML('展示顺序：', 'setting_dictionary_sort', 'dictionaryList', setting.dictionaryList, conf.dictionaryList)
-    bindSortHTML('朗读顺序：', 'setting_dictionary_sound_sort', 'dictionarySoundList', setting.dictionarySoundList, conf.dictionarySoundList)
+    bindSortHTML('朗读顺序：', 'setting_dictionary_sound_sort', 'dictionarySoundList', setting.dictionarySoundList, dictionarySoundList)
     bindSortHTML('展示顺序：', 'setting_search_sort', 'searchList', setting.searchList, conf.searchList)
     bindSortHTML('展示顺序：', 'setting_search_menus_sort', 'searchMenus', setting.searchMenus, conf.searchList)
 

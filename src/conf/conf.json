@@ -79,13 +79,10 @@
   "dictionaryCSS": [
     "longman"
   ],
-  "dictionarySoundList": {
-    "youdao": "有道词典",
-    "bing": "必应词典",
-    "dictcn": "海词词典",
-    "longman": "朗文词典",
-    "merriam": "韦伯词典"
-  },
+  "dictionarySoundExcluded": [
+    "etymonline",
+    "urban"
+  ],
   "searchList": {
     "baidu": {
       "title": "百度搜索",

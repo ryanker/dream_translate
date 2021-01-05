@@ -102,7 +102,7 @@ function runTranslate(tabId, m) {
 
     // 自动朗读
     setTimeout(() => {
-        autoPlayTTS(tabId, text, srcLan, conf.translateTTSList, setting.translateTTSList)
+        autoPlayTTS(tabId, text, srcLan, conf.translateTTSList, setting.translateTTSList).then(_ => null)
     }, 300)
 }
 
@@ -122,10 +122,13 @@ function runTranslateTTS(tabId, m) {
 
 function runDictionary(tabId, m) {
     let {action, text} = m
+    window.dictionarySounds = {} // 返回的发音缓存
     setting.dictionaryList.forEach(name => {
         sdkInit(`${name}Dictionary`).then(sd => {
             sd.query(text).then(result => {
                 debug(`${name}:`, result)
+                let {sound} = result
+                if (sound && sound.length > 0) dictionarySounds[name] = sound // 记录发音
                 sendTabMessage(tabId, {action, name, result})
             }).catch(error => {
                 sendTabMessage(tabId, {action, name, text, error})
@@ -135,6 +138,11 @@ function runDictionary(tabId, m) {
             sendTabMessage(tabId, {action: 'link', type: action, name, link: sd.link(text)})
         })
     })
+
+    // 自动朗读
+    setTimeout(() => {
+        autoPlayAudio(tabId, text).then(_ => null)
+    }, 300)
 }
 
 function runPlaySound(tabId, m) {
@@ -204,31 +212,29 @@ function minCss(s) {
     return s
 }
 
-function autoPlayTTS(tabId, text, lang, list, arr) {
-    (async () => {
-        if (lang === 'auto') {
-            lang = 'en' // 默认值
-            await httpPost({
-                url: `https://fanyi.baidu.com/langdetect`,
-                body: `query=${encodeURIComponent(text)}`
-            }).then(r => {
-                if (r && r.lan) lang = r.lan
-            }).catch(err => {
-                debug(err)
-            })
-        }
-        for (let k = 0; k < arr.length; k++) {
-            let name = arr[k]
-            let message = {action: 'playSound', nav: 'translate', name, type: 'source', status: 'end'}
-            await sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
-            await playTTS(name, text, lang).then(() => {
-                sendTabMessage(tabId, message)
-            }).catch(err => {
-                debug(`${name} sound error:`, err)
-                sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name]}出错`}))
-            })
-        }
-    })()
+async function autoPlayTTS(tabId, text, lang, list, arr) {
+    if (lang === 'auto') {
+        lang = 'en' // 默认值
+        await httpPost({
+            url: `https://fanyi.baidu.com/langdetect`,
+            body: `query=${encodeURIComponent(text)}`
+        }).then(r => {
+            if (r && r.lan) lang = r.lan
+        }).catch(err => {
+            debug(err)
+        })
+    }
+    for (let k = 0; k < arr.length; k++) {
+        let name = arr[k]
+        let message = {action: 'playSound', nav: 'translate', name, type: 'source', status: 'end'}
+        await sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
+        await playTTS(name, text, lang).then(() => {
+            sendTabMessage(tabId, message)
+        }).catch(err => {
+            debug(`${name} sound error:`, err)
+            sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name]}出错`}))
+        })
+    }
 }
 
 function playTTS(name, text, lang) {
@@ -261,6 +267,44 @@ function playTTS(name, text, lang) {
             })
         })
     })
+}
+
+async function autoPlayAudio(tabId, text) {
+    let list = conf.dictionaryList || {}
+    let sounds = window.dictionarySounds
+    let type = setting.dictionaryReader || 'us'
+    let arr = setting.dictionarySoundList || []
+    for (let name of arr) {
+        let message = {action: 'playSound', nav: 'dictionary', name, type, status: 'end'}
+        await sendTabMessage(tabId, Object.assign({}, message, {status: 'start'})) // 显示开始朗读图标
+        let url = ''
+        if (sounds[name]) {
+            url = getSoundUrl(sounds[name], type) // 缓存中获取
+        } else {
+            let sdkRun = {}
+            await sdkInit(`${name}Dictionary`).then(r => {
+                sdkRun = r
+            })
+            await sdkRun.query(text).then(r => {
+                if (r.sound) url = getSoundUrl(r.sound, type) // 接口中获取
+            }).catch(error => {
+                debug(`${name} dictionary error:`, error)
+            })
+        }
+
+        // 播放声音
+        await playAudio(url).then(() => {
+            sendTabMessage(tabId, {action, nav, name, type, status: 'end'})
+        }).catch(err => {
+            debug(`${name} sound error:`, err)
+            sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name] || ''}发音出错`}))
+        })
+    }
+}
+
+function getSoundUrl(arr, type) {
+    for (let v of arr) if (v.type === type && !v.isWoman) return v.url
+    return ''
 }
 
 function playAudio(url) {
