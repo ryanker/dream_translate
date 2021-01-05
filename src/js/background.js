@@ -291,15 +291,18 @@ async function autoPlayAudio(tabId, text) {
                 debug(`${name} dictionary error:`, error)
             })
         }
+        debug('_playAudio_', name, type, url)
+        if (!url) continue // 没有发音跳过
 
         // 播放声音
         await playAudio(url).then(() => {
-            sendTabMessage(tabId, {action, nav, name, type, status: 'end'})
+            sendTabMessage(tabId, message)
         }).catch(err => {
             debug(`${name} sound error:`, err)
             sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name] || ''}发音出错`}))
         })
     }
+    debug('_playAudio_ finish.')
 }
 
 function getSoundUrl(arr, type) {
