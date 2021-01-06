@@ -108,6 +108,7 @@ function baiduTranslate() {
             }
 
             // 百度支持牛津，格林斯，英英等，如果全显示，会很复杂，小框显示也会很乱，所以只显示最简单的部分即可。
+            // 在翻译领域，除了国际巨头谷歌，在国内做的最好的非百度莫属，然后是搜狗，有道；如今搜狗被腾讯收购，或许未来会改名。-- 2021.1.6
             let simple_means = getJSONValue(r, 'dict_result.simple_means', null)
             if (simple_means) {
                 s += `<div class="case_dd">`
@@ -194,6 +195,12 @@ function baiduTranslate() {
                 }
 
                 s += `</div>`
+            }
+
+            // 视频显示，如果有的话。
+            let videoObj = getJSONValue(r, 'dict_result.queryExplainVideo', null)
+            if (videoObj && videoObj.thumbUrl && videoObj.videoUrl) {
+                s += `<div style="margin:10px auto;width:400px;height:224px;background:#000"><video width="400" height="224" src=${videoObj.videoUrl}" poster="${videoObj.thumbUrl}" controls="controls"></video></div>`
             }
 
             return {text, srcLan, tarLan, lanTTS: this.lanTTS, data, extra: s}
