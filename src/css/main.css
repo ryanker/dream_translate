@@ -78,7 +78,7 @@ input[type=radio], input[type=checkbox] {
     height: 18px;
     margin: 0 5px 0 5px;
     position: relative;
-    bottom: -4px;
+    -webkit-bottom: -4px; /*排除 Firefox*/
 }
 
 select {
