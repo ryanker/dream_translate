@@ -96,7 +96,7 @@ function icibaDictionary() {
         },
         query(q) {
             return new Promise((resolve, reject) => {
-                if (q.length > 100) return reject('The text is too large!')
+                // if (q.length > 100) return reject('The text is too large!')
                 let url = `http://www.iciba.com/word?w=${encodeURIComponent(q)}`
                 httpGet(url, 'document').then(r => {
                     if (r) {
