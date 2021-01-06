@@ -335,7 +335,7 @@ function isFunction(o) {
 
 // 解决 JSON 太深问题
 function getJSONValue(data, keys, value) {
-    value = value || {}
+    // if (!data || !isObject(data)) return value // 默认值
     if (!data) return value // 默认值
     keys = keys.trim()
     let arr = keys.split('.')

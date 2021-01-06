@@ -109,7 +109,7 @@ function baiduTranslate() {
 
             // 百度支持牛津，格林斯，英英等，如果全显示，会很复杂，小框显示也会很乱，所以只显示最简单的部分即可。
             // 在翻译领域，除了国际巨头谷歌，在国内做的最好的非百度莫属，然后是搜狗，有道；如今搜狗被腾讯收购，或许未来会改名。-- 2021.1.6
-            let simple_means = getJSONValue(r, 'dict_result.simple_means', null)
+            let simple_means = getJSONValue(r, 'dict_result.simple_means')
             if (simple_means) {
                 s += `<div class="case_dd">`
                 let {word_name, symbols, word_means, exchange, tags} = simple_means
@@ -139,11 +139,11 @@ function baiduTranslate() {
                             s += `<div class="case_dd_parts">`
                             parts.forEach(v => {
                                 let {part, means} = v
-                                let firstVal = getJSONValue(means, '0', null)
+                                let firstVal = getJSONValue(means, '0')
                                 if (firstVal && isString(firstVal)) {
                                     s += `<p>${part ? `<b>${part}</b>` : ''}${means.join('；')}</p>`
                                 } else {
-                                    let firstVal = getJSONValue(means, '0.text', null)
+                                    let firstVal = getJSONValue(means, '0.text')
                                     if (firstVal && isString(firstVal)) {
                                         for (let mv of means) {
                                             let {text, part, means} = mv
@@ -156,7 +156,7 @@ function baiduTranslate() {
                         }
                     })
                 }
-                if (!hasParts) s += `<div class="case_dd_parts"><p>${word_means.join('；')}</p></div>`
+                if (!hasParts && word_means) s += `<div class="case_dd_parts"><p>${word_means.join('；')}</p></div>`
 
                 // 单词形态
                 if (exchange) {
@@ -198,7 +198,7 @@ function baiduTranslate() {
             }
 
             // 视频显示，如果有的话。
-            let videoObj = getJSONValue(r, 'dict_result.queryExplainVideo', null)
+            let videoObj = getJSONValue(r, 'dict_result.queryExplainVideo')
             if (videoObj && videoObj.thumbUrl && videoObj.videoUrl) {
                 s += `<div style="margin:10px auto;width:400px;height:224px;background:#000"><video width="400" height="224" src="${videoObj.videoUrl}" poster="${videoObj.thumbUrl}" controls="controls" rel="noreferrer"></video></div>`
             }
