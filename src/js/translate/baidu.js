@@ -200,7 +200,7 @@ function baiduTranslate() {
             // 视频显示，如果有的话。
             let videoObj = getJSONValue(r, 'dict_result.queryExplainVideo', null)
             if (videoObj && videoObj.thumbUrl && videoObj.videoUrl) {
-                s += `<div style="margin:10px auto;width:400px;height:224px;background:#000"><video width="400" height="224" src=${videoObj.videoUrl}" poster="${videoObj.thumbUrl}" controls="controls"></video></div>`
+                s += `<div style="margin:10px auto;width:400px;height:224px;background:#000"><video width="400" height="224" src="${videoObj.videoUrl}" poster="${videoObj.thumbUrl}" controls="controls" rel="noreferrer"></video></div>`
             }
 
             return {text, srcLan, tarLan, lanTTS: this.lanTTS, data, extra: s}
