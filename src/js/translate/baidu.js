@@ -88,7 +88,7 @@ function baiduTranslate() {
         unify(r, text, srcLan, tarLan) {
             // console.log('baidu:', r, text, srcLan, tarLan)
             // console.log(JSON.stringify(r))
-            let res = r && r.trans_result
+            let res = getJSONValue(r, 'trans_result', {})
             let data = []
             if (res.data) {
                 res.data.forEach(v => {
