@@ -13,15 +13,16 @@ function bingDictionary() {
             return this
         },
         unify(r, q) {
-            let el = r.querySelector('.lf_area')
             let s = ''
+            let phonetic = {} // 音标
+            let sound = [] // 发音
+            let el = r.querySelector('.lf_area')
 
             // 查询单词
             let wordEl = el.querySelector('#headword')
             if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText.trim()}</div>`
 
-            let phonetic = {} // 音标
-            let sound = [] // 发音
+            let soundTmp = {}
             el.querySelectorAll('.hd_tf_lh .b_primtxt').forEach(e => {
                 let ph = e.innerText && e.innerText.replace(/[\[\]美英]/g, '').trim() || ''
                 let type = ''
@@ -40,12 +41,16 @@ function bingDictionary() {
                         let clickStr = aEl.getAttribute('onclick')
                         clickStr && clickStr.replace(/'(http[^']+)'/, url => {
                             url = url.replace(/'/g, '')
-                            sound.push({type, url})
+                            soundTmp[type] = url
                         })
                     }
                 }
             })
             if (phonetic.us && phonetic.uk === phonetic.us) delete phonetic.us // 如果音标一样，只保留一个
+
+            // 修正顺序
+            if (soundTmp.uk) sound.push({type: 'uk', url: soundTmp.uk})
+            if (soundTmp.us) sound.push({type: 'us', url: soundTmp.us})
 
             // 释义
             let liEl = el.querySelectorAll('.qdef > ul > li')
@@ -59,6 +64,13 @@ function bingDictionary() {
                     if (part) s += `<p>${bStr}${part}</p>`
                 })
                 s += `</div>`
+            } else {
+                let str = ''
+                el.querySelectorAll('div[class^="p1-"]').forEach(e => {
+                    let tex = e.textContent && e.textContent.trim()
+                    if (tex) str += `<p>${tex}</p>`
+                })
+                if (str) s += `<div class="case_dd_parts">${str}</div>`
             }
 
             // 单词形态
@@ -94,7 +106,7 @@ function bingDictionary() {
         },
         query(q) {
             return new Promise((resolve, reject) => {
-                if (q.length > 100) return reject('The text is too large!')
+                // if (q.length > 100) return reject('The text is too large!')
                 let url = `https://cn.bing.com/dict/search?q=${encodeURIComponent(q)}`
                 httpGet(url, 'document').then(r => {
                     if (r) {
