@@ -293,6 +293,46 @@ function inArray(val, arr) {
     return arr.includes(val)
 }
 
+function isObject(o) {
+    return Object.prototype.toString.call(o) === '[object Object]'
+}
+
+function isArray(o) {
+    return Object.prototype.toString.call(o) === '[object Array]'
+}
+
+function isString(o) {
+    return Object.prototype.toString.call(o) === '[object String]'
+}
+
+function isNumber(o) {
+    return Object.prototype.toString.call(o) === '[object Number]'
+}
+
+function isDate(o) {
+    return Object.prototype.toString.call(o) === '[object Date]'
+}
+
+function isRegExp(o) {
+    return Object.prototype.toString.call(o) === '[object RegExp]'
+}
+
+function isError(o) {
+    return Object.prototype.toString.call(o) === '[object Error]'
+}
+
+function isSymbol(o) {
+    return Object.prototype.toString.call(o) === '[object Symbol]'
+}
+
+function isArrayBuffer(o) {
+    return Object.prototype.toString.call(o) === '[object ArrayBuffer]'
+}
+
+function isFunction(o) {
+    return Object.prototype.toString.call(o) === '[object Function]'
+}
+
 // 解决 JSON 太深问题
 function getJSONValue(data, keys, value) {
     value = value || {}

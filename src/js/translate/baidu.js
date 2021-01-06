@@ -108,7 +108,7 @@ function baiduTranslate() {
             }
 
             // 百度支持牛津，格林斯，英英等，如果全显示，会很复杂，小框显示也会很乱，所以只显示最简单的部分即可。
-            let simple_means = r.dict_result && r.dict_result.simple_means
+            let simple_means = getJSONValue(r, 'dict_result.simple_means', null)
             if (simple_means) {
                 s += `<div class="case_dd">`
                 let {word_name, symbols, word_means, exchange, tags} = simple_means
@@ -137,7 +137,19 @@ function baiduTranslate() {
                             hasParts = true
                             s += `<div class="case_dd_parts">`
                             parts.forEach(v => {
-                                s += `<p>${v.part ? `<b>${v.part}</b>` : ''}${v.means.join('；')}</p>`
+                                let {part, means} = v
+                                let firstVal = getJSONValue(means, '0', null)
+                                if (firstVal && isString(firstVal)) {
+                                    s += `<p>${part ? `<b>${part}</b>` : ''}${means.join('；')}</p>`
+                                } else {
+                                    let firstVal = getJSONValue(means, '0.text', null)
+                                    if (firstVal && isString(firstVal)) {
+                                        for (let mv of means) {
+                                            let {text, part, means} = mv
+                                            s += `<p>${part ? `<b>${part}</b>` : ''}${text} ${means ? means.join('；') : ''}</p>`
+                                        }
+                                    }
+                                }
                             })
                             s += `</div>`
                         }
