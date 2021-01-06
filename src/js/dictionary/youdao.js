@@ -13,15 +13,15 @@ function youdaoDictionary() {
             return this
         },
         unify(r, text) {
-            let el = r.querySelector('#results-contents')
             let s = ''
+            let phonetic = {} // 音标
+            let sound = [] // 发音
+            let el = r.querySelector('#results-contents')
 
             // 查询单词
             let wordEl = el.querySelector('.wordbook-js .keyword')
             if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText}</div>`
 
-            let phonetic = {} // 音标
-            let sound = [] // 发音
             el.querySelectorAll('.wordbook-js .baav .pronounce').forEach(e => {
                 let pEl = e.querySelector('.phonetic')
                 let aEl = e.querySelector('a')
@@ -72,13 +72,19 @@ function youdaoDictionary() {
                     })
                     s += `<div class="case_dd_exchange">${shapeStr}</div>`
                 }
+            } else {
+                let transEl = el.querySelector('#fanyiToggle .trans-container')
+                if (transEl) {
+                    transEl.querySelectorAll('p:last-child').forEach(e => e.remove()) // 清理最后一行
+                    s += `<div class="case_dd_exchange">${transEl.innerHTML}</div>`
+                }
             }
 
             return {text, phonetic, sound, html: s}
         },
         query(q) {
             return new Promise((resolve, reject) => {
-                if (q.length > 100) return reject('The text is too large!')
+                // if (q.length > 100) return reject('The text is too large!')
                 let url = `https://www.youdao.com/w/eng/${encodeURIComponent(q)}`
                 httpGet(url, 'document').then(r => {
                     if (r) {
