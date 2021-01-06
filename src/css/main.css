@@ -78,7 +78,14 @@ input[type=radio], input[type=checkbox] {
     height: 18px;
     margin: 0 5px 0 5px;
     position: relative;
-    -webkit-bottom: -4px; /*排除 Firefox*/
+    bottom: -4px;
+}
+
+/* Firefox */
+@-moz-document url-prefix() {
+    input[type=radio], input[type=checkbox] {
+        bottom: auto;
+    }
 }
 
 select {
