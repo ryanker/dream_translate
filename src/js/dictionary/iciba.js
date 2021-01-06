@@ -13,8 +13,10 @@ function icibaDictionary() {
             return this
         },
         unify(r, q) {
-            let el = r.querySelector('#__next > main > div > div[class^=Content_center]')
             let s = ''
+            let phonetic = {} // 音标
+            let sound = [] // 发音
+            let el = r.querySelector('#__next > main > div > div[class^=Content_center]')
 
             // JSON 数据
             let data = {}
@@ -32,8 +34,6 @@ function icibaDictionary() {
             let wordEl = el.querySelector('h1')
             if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText.trim()}</div>`
 
-            let phonetic = {} // 音标
-            let sound = [] // 发音
             el.querySelectorAll('ul[class^=Mean_symbols] > li').forEach(e => {
                 let ph = e.innerText && e.innerText.replace(/[\[\]英美]/g, '').trim() || ''
                 let type = ''
@@ -73,11 +73,12 @@ function icibaDictionary() {
                 })
                 s += `</div>`
             } else {
-                let transEl = el.querySelector('div[class^=Mean_trans]')
-                if (transEl) {
-                    removeD(transEl.querySelectorAll('h3,[class^=Mean_desc]'))
-                    s += transEl.innerHTML
-                }
+                let str = ''
+                let senEl = el.querySelector('h2[class^=Mean_sentence]')
+                if (senEl) str += `<p>${senEl.textContent}</p>`
+                let transEl = el.querySelector('div[class^=Mean_trans] > p')
+                if (transEl) str += `<p>${transEl.textContent}</p>`
+                if (str) s += `<div class="case_dd_parts">${str}</div>`
             }
 
             // 单词形态

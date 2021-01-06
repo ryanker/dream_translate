@@ -84,7 +84,7 @@ function hjdictDictionary() {
                 let run = () => {
                     openIframe('iframe_hjDict', url)
                     setTimeout(() => {
-                        httpGet(url, 'document').then(r => {
+                        httpGet(url, 'document', null, true).then(r => {
                             if (r) {
                                 resolve(this.unify(r, q))
                             } else {

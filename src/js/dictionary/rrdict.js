@@ -114,7 +114,7 @@ function rrdictDictionary() {
             return new Promise((resolve, reject) => {
                 if (q.length > 100) return reject('The text is too large!')
                 let url = `https://www.91dict.com/words?w=${encodeURIComponent(q)}`
-                httpGet(url, 'document').then(r => {
+                httpGet(url, 'document', null, true).then(r => {
                     if (r) {
                         resolve(this.unify(r, q))
                     } else {

@@ -13,14 +13,15 @@ function eudicDictionary() {
             return this
         },
         unify(r, q) {
-            let el = r.querySelector('#dict-body')
             let s = ''
+            let phonetic = {} // 音标
+            let sound = [] // 发音
+            let el = r.querySelector('#dict-body')
 
             // 查询单词
             let wordEl = el.querySelector('h1.explain-Word .word')
             if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText.trim()}</div>`
 
-            let phonetic = {} // 音标
             el.querySelectorAll('.phonitic-line .Phonitic').forEach((e, k) => {
                 let ph = e.innerText && e.innerText.replace(/\//g, '').trim() || ''
                 if (!ph) return
@@ -29,7 +30,6 @@ function eudicDictionary() {
             })
             if (phonetic.us && phonetic.uk === phonetic.us) delete phonetic.us // 如果音标一样，只保留一个
 
-            let sound = [] // 发音
             el.querySelectorAll('.phonitic-line a.voice-button-en').forEach(e => {
                 let rel = e.getAttribute('data-rel')
                 if (!rel) return
@@ -41,25 +41,24 @@ function eudicDictionary() {
 
             // 释义
             let liEl = el.querySelectorAll('#ExpFCChild li')
-            let partStr = ''
             if (liEl && liEl.length > 0) {
+                let str = ''
                 liEl.forEach(e => {
-                    let str = e.innerText && e.innerText.trim()
-                    str = str.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
+                    let tex = e.innerText && e.innerText.trim()
+                    tex = tex.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
                         return k === 0 ? `<b>${str.trim()}</b>` : str
                     })
-                    if (str) partStr += `<p>${str}</p>`
+                    if (tex) str += `<p>${tex}</p>`
                 })
-            }
-            if (!partStr) {
-                let expEl = el.querySelector('#ExpFCChild .exp')
+                if (str) s += `<div class="case_dd_parts">${str}</div>`
+            } else {
+                let expEl = el.querySelector('#ExpFCChild')
                 if (expEl) {
+                    expEl.querySelectorAll('script,style,#word-thumbnail-image').forEach(e => e.remove())
                     let str = expEl.textContent && expEl.textContent.trim()
-                    if (str) partStr += `<p>${str}</p>`
+                    if (str) s += `<div class="case_dd_parts">${str}</div>`
                 }
             }
-            if (!partStr) s += '查不到该词'
-            if (partStr) s += `<div class="case_dd_parts">${partStr}</div>`
 
             // 单词形态
             let transEl = el.querySelector('#trans')
@@ -77,7 +76,7 @@ function eudicDictionary() {
             return new Promise((resolve, reject) => {
                 if (q.length > 100) return reject('The text is too large!')
                 let url = `https://dict.eudic.net/dicts/en/${encodeURIComponent(q)}`
-                httpGet(url, 'document').then(r => {
+                httpGet(url, 'document', null, true).then(r => {
                     if (r) {
                         resolve(this.unify(r, q))
                     } else {
