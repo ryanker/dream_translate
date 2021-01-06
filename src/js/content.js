@@ -59,7 +59,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         allowUserSelect()
     } else if (m.action === 'contextMenus') {
         sendQuery(m.text) // 右键查询
-        dialog.show()
+        showDialog()
     }
 })
 
@@ -128,7 +128,7 @@ function initDialog() {
     iconBut.onclick = function (e) {
         iconBut.style.display = 'none'
         sendQuery(iconText)  // 点击图标查询
-        dialog.show(setting.position === 'fixed' ? {} : {left: e.clientX + 10, top: e.clientY - 35})
+        showDialog(e.clientX + 10, e.clientY - 35)
     }
     iconBut.onmousedown = function (e) {
         e.preventDefault()
@@ -681,7 +681,7 @@ function initQuery(text, clientX, clientY) {
     if (setting.scribble === 'off') return
     if (setting.scribble === 'direct') {
         sendQuery(text) // 划词查询
-        dialog.show(setting.position === 'fixed' ? {} : {left: clientX + 30, top: clientY - 60})
+        showDialog(clientX + 30, clientY - 60)
     } else if (setting.scribble === 'clickIcon') {
         iconText = text
         let x = clientX + 10
@@ -717,6 +717,19 @@ function sendQuery(text) {
         loadingSearch()
     }
     sendBgMessage(message)
+}
+
+function showDialog(left, top) {
+    let options = null
+    let position = setting.position
+    if (position === 'follow') {
+        options = {left, top}
+    } else if (position === 'right') {
+        dialog.el.removeAttribute('style')
+        dialog.el.style.width = dialogConf.width + 'px'
+        dialog.el.className = 'dmx_keep_right'
+    }
+    dialog.show(options)
 }
 
 function checkChange(action, text) {

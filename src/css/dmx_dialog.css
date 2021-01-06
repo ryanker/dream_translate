@@ -79,6 +79,13 @@ blockquote {
     display: none;
 }
 
+#dmx_dialog.dmx_keep_right {
+    height: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
 #dmx_dialog_resize_n {
     cursor: ns-resize;
     position: absolute;
