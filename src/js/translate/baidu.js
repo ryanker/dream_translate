@@ -201,7 +201,8 @@ function baiduTranslate() {
             let videoObj = getJSONValue(r, 'dict_result.queryExplainVideo')
             if (videoObj && videoObj.thumbUrl && videoObj.videoUrl) {
                 // s += `<div style="margin:10px auto;width:400px;height:224px;background:#000"><video width="400" height="224" src="${videoObj.videoUrl}" poster="${videoObj.thumbUrl}" controls="controls" rel="noreferrer"></video></div>`
-                s += `<div style="margin:10px auto;width:400px;height:224px;background:#000"><iframe width="400" height="224" src="${videoObj.videoUrl}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+                let src = B.root + 'html/video.html?' + new URLSearchParams(`thumbUrl=${videoObj.thumbUrl}&videoUrl=${videoObj.videoUrl}`)
+                s += `<div style="margin:10px auto;width:400px;height:224px;background:#000"><iframe width="400" height="224" src="${src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
             }
 
             return {text, srcLan, tarLan, lanTTS: this.lanTTS, data, extra: s}
