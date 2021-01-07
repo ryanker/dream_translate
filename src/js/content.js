@@ -395,6 +395,29 @@ function initSearch() {
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
     })
+
+    // 创建按钮
+    let s = ''
+    let sList = setting.searchList
+    let cList = conf.searchList
+    for (let name of sList) {
+        let v = cList[name]
+        if (v) s += `<div class="dmx_button" data-search="${name}"><i class="dmx-icon dmx-icon-${v.icon || name}"></i>${v.title}</div>`
+    }
+    $('case_list').innerHTML = s
+
+    // 绑定点击事件
+    onD(D('[data-search]'), 'click', function () {
+        let name = this.dataset.search
+        let lv = cList[name]
+        if (!lv) return
+        let text = $('search_input').value.trim()
+        if (text) {
+            open(lv.url.format(decodeURIComponent(text)) + '&tn=dream_translate')
+        } else {
+            open((new URL(lv.url)).origin + '?tn=dream_translate')
+        }
+    })
 }
 
 function initSetting() {
@@ -484,29 +507,6 @@ function loadingDictionary() {
     </div>`
     })
     el.innerHTML = s
-}
-
-function loadingSearch() {
-    let s = ''
-    let sList = setting.searchList
-    let cList = conf.searchList
-    sList.forEach(name => {
-        let v = cList[name]
-        s += `<div class="dmx_button" data-search="${name}"><i class="dmx-icon dmx-icon-${v.icon || name}"></i>${v.title}</div>`
-    })
-    $('case_list').innerHTML = s
-
-    // 绑定点击事件
-    onD(D('[data-search]'), 'click', function () {
-        let name = this.dataset.search
-        let lv = cList[name]
-        let text = $('search_input').value.trim()
-        if (text) {
-            open(lv.url.format(decodeURIComponent(text)) + '&tn=dream_translate')
-        } else {
-            open((new URL(lv.url)).origin + '?tn=dream_translate')
-        }
-    })
 }
 
 function resultTranslate(name, isBilingual) {
@@ -723,7 +723,6 @@ function sendQuery(text) {
         message = {action: action, text: text}
     } else if (action === 'search') {
         $(`search_input`).value = text
-        loadingSearch()
     }
     sendBgMessage(message)
 }
