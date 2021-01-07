@@ -48,18 +48,27 @@ function youdaoDictionary() {
             // 释义
             let transEl = el.querySelector('#phrsListTab .trans-container')
             if (transEl) {
+                let str = ''
                 let liEl = transEl.querySelectorAll('li')
                 if (liEl && liEl.length > 0) {
-                    s += `<div class="case_dd_parts">`
                     liEl.forEach(e => {
                         let part = e.innerText && e.innerText.trim()
                         part = part.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
                             return k === 0 ? `<b>${str.trim()}</b>` : str
                         })
-                        if (part) s += `<p>${part}</p>`
+                        if (part) str += `<p>${part}</p>`
                     })
-                    s += `</div>`
+                } else {
+                    let wordEl = el.querySelector('.wordGroup')
+                    if (wordEl) {
+                        let part = wordEl.innerText && wordEl.innerText.trim()
+                        part = part.replace(/^[a-zA-Z]+\.\s+/, function (str, k) {
+                            return k === 0 ? `<b>${str.trim()}</b>` : str
+                        })
+                        if (part) str += `<p>${part}</p>`
+                    }
                 }
+                if (str) s += `<div class="case_dd_parts">${str}</div>`
 
                 // 单词形态
                 let addiEl = transEl.querySelector('.additional')

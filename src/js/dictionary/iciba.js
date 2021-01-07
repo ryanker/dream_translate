@@ -69,7 +69,12 @@ function icibaDictionary() {
                     let tEl = e.querySelector('div')
                     let bStr = bEl && bEl.innerText ? `<b>${bEl.innerText.trim()}</b>` : ''
                     let part = tEl && tEl.innerText ? tEl.innerText.trim() : ''
-                    if (part) s += `<p>${bStr}${part}</p>`
+                    if (bStr && part) {
+                        s += `<p>${bStr}${part}</p>`
+                    } else {
+                        let part = e.innerText && e.innerText.trim()
+                        if (part) s += `<p>${part}</p>`
+                    }
                 })
                 s += `</div>`
             } else {

@@ -55,8 +55,8 @@ function eudicDictionary() {
                 let expEl = el.querySelector('#ExpFCChild')
                 if (expEl) {
                     expEl.querySelectorAll('script,style,#word-thumbnail-image').forEach(e => e.remove())
-                    let str = expEl.textContent && expEl.textContent.trim()
-                    if (str) s += `<div class="case_dd_parts">${str}</div>`
+                    cleanAttr(expEl, ['title', 'class'])
+                    if (expEl.innerHTML) s += `<div class="case_dd_parts">${expEl.innerHTML}</div>`
                 }
             }
 
