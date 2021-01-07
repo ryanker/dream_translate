@@ -427,6 +427,7 @@ a:hover {
 #translate_input {
     background: #fff;
     color: #4e5053;
+    min-height: 26px;
     line-height: 1.6;
     padding: 5px 10px;
     outline: none;
