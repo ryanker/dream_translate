@@ -7,6 +7,7 @@
  * @license MIT License
  */
 
+let isPopup = window.isPopup
 let dialog, shadow,
     setting, conf, dialogConf,
     languageList, dialogCSS = '', dictionaryCSS = {},
@@ -86,7 +87,7 @@ B.storage.onChanged.addListener(function (data) {
 // 初始对话框
 function initDialog() {
     let isChange = false
-    dialog = dmxDialog({
+    let options = {
         cssText: dialogCSS,
         width: dialogConf.width,
         height: dialogConf.height,
@@ -97,7 +98,15 @@ function initDialog() {
             if (height) dialogConf.height = height
             isChange = true
         }
-    })
+    }
+    if (isPopup) {
+        delete options.onResize
+        options.width = 'auto'
+        options.height = 'auto'
+        options.show = true
+        options.isResize = false
+    }
+    dialog = dmxDialog(options)
 
     // 保存窗口大小
     dialog.el.addEventListener('mouseup', function () {
@@ -111,10 +120,10 @@ function initDialog() {
     shadow = dialog.shadow
 
     // 小屏窗口
-    if (document.documentElement.scrollWidth < 1024) {
-        dialog.el.style.width = document.documentElement.offsetWidth + 'px'
-        $('dmx_pin').remove()
-        $('dmx_fullscreen').remove()
+    if (isPopup) {
+        document.body.className = 'dmx__body'
+        dialog.el.className = 'dmx_popup'
+        D('#dmx_close,#dmx_pin,#dmx_fullscreen').forEach(e => e.remove())
     }
 
     // 划词查询
@@ -1089,8 +1098,8 @@ function dmxDialog(options) {
     window._MxDialog = D
 
     // 初始设置
-    el.style.width = Number(o.width) + 'px'
-    el.style.height = Number(o.height) + 'px'
+    if (o.width !== 'auto') el.style.width = Number(o.width) + 'px'
+    if (o.height !== 'auto') el.style.height = Number(o.height) + 'px'
     o.show ? D.show() : D.hide()
     o.isMove ? D.enableMove() : D.disableMove()
     o.isResize ? D.enableResize() : D.disableResize()

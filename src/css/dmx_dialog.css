@@ -86,6 +86,13 @@ blockquote {
     bottom: 0;
 }
 
+#dmx_dialog.dmx_popup {
+    position: static;
+    border: 0;
+    border-radius: 0;
+    display: block;
+}
+
 #dmx_dialog_resize_n {
     cursor: ns-resize;
     position: absolute;
@@ -252,6 +259,10 @@ blockquote {
     color: #9EA0A3;
     background: #F3F6F9;
     opacity: 0.8;
+}
+
+#dmx_dialog.dmx_popup #dmx_history {
+    margin-left: 0;
 }
 
 #dmx_dialog_title #dmx_navigate {

@@ -63,8 +63,8 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     sendResponse()
     debug('request:', m)
     debug('sender:', sender && sender.url ? sender.url : sender)
-    // if (!sender.tab) return
-    let tabId = sender.tab.id
+    let tabId = getJSONValue(sender, 'tab.id')
+    if (!tabId) tabId = 'popup'
 
     if (m.action === 'translate') {
         runTranslate(tabId, m)
@@ -89,14 +89,14 @@ function runTranslate(tabId, m) {
         sdkInit(`${name}Translate`).then(sd => {
             sd.query(text, srcLan, tarLan).then(result => {
                 debug(`${name}:`, result)
-                sendTabMessage(tabId, {action, name, result})
+                sandFgMessage(tabId, {action, name, result})
             }).catch(error => {
-                sendTabMessage(tabId, {action, name, text, error})
+                sandFgMessage(tabId, {action, name, text, error})
             })
 
             // 链接
             let link = sd.link(text, srcLan, tarLan)
-            sendTabMessage(tabId, {action: 'link', type: action, name, link})
+            sandFgMessage(tabId, {action: 'link', type: action, name, link})
         })
     })
 
@@ -112,11 +112,11 @@ function runTranslateTTS(tabId, m) {
     let {name, type, text, lang} = m
     let message = {action: 'playSound', nav: 'translate', name, type, status: 'end'}
     playTTS(name, text, lang).then(() => {
-        sendTabMessage(tabId, message)
+        sandFgMessage(tabId, message)
     }).catch(err => {
         debug(`${name} sound error:`, err)
         let errMsg = `${tList[name] ? tList[name] : list[name] + '朗读'}出错`
-        sendTabMessage(tabId, Object.assign({}, message, {error: errMsg}))
+        sandFgMessage(tabId, Object.assign({}, message, {error: errMsg}))
     })
 }
 
@@ -129,13 +129,13 @@ function runDictionary(tabId, m) {
                 debug(`${name}:`, result)
                 let {sound} = result
                 if (sound && sound.length > 0) dictionarySounds[name] = sound // 记录发音
-                sendTabMessage(tabId, {action, name, result})
+                sandFgMessage(tabId, {action, name, result})
             }).catch(error => {
-                sendTabMessage(tabId, {action, name, text, error})
+                sandFgMessage(tabId, {action, name, text, error})
             })
 
             // 链接
-            sendTabMessage(tabId, {action: 'link', type: action, name, link: sd.link(text)})
+            sandFgMessage(tabId, {action: 'link', type: action, name, link: sd.link(text)})
         })
     })
 
@@ -148,11 +148,11 @@ function runDictionary(tabId, m) {
 function runPlaySound(tabId, m) {
     let {action, nav, name, type, url} = m
     playAudio(url).then(() => {
-        sendTabMessage(tabId, {action, nav, name, type, status: 'end'})
+        sandFgMessage(tabId, {action, nav, name, type, status: 'end'})
     }).catch(err => {
         debug(`${name} sound error:`, err)
         let title = conf.dictionaryList[name] || ''
-        sendTabMessage(tabId, {action, nav, name, type, error: `${title}发音出错`})
+        sandFgMessage(tabId, {action, nav, name, type, error: `${title}发音出错`})
     })
 }
 
@@ -228,12 +228,12 @@ async function autoPlayTTS(tabId, text, lang) {
     }
     for (let name of arr) {
         let message = {action: 'playSound', nav: 'translate', name, type: 'source', status: 'end'}
-        await sendTabMessage(tabId, Object.assign({}, message, {status: 'start'}))
+        await sandFgMessage(tabId, Object.assign({}, message, {status: 'start'}))
         await playTTS(name, text, lang).then(() => {
-            sendTabMessage(tabId, message)
+            sandFgMessage(tabId, message)
         }).catch(err => {
             debug(`${name} sound error:`, err)
-            sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name] || '发音'}出错`}))
+            sandFgMessage(tabId, Object.assign({}, message, {error: `${list[name] || '发音'}出错`}))
         })
     }
 }
@@ -277,7 +277,7 @@ async function autoPlayAudio(tabId, text) {
     let arr = setting.dictionarySoundList || []
     for (let name of arr) {
         let message = {action: 'playSound', nav: 'dictionary', name, type, status: 'end'}
-        await sendTabMessage(tabId, Object.assign({}, message, {status: 'start'})) // 显示开始朗读图标
+        await sandFgMessage(tabId, Object.assign({}, message, {status: 'start'})) // 显示开始朗读图标
         let url = ''
         if (sounds[name]) {
             url = getSoundUrl(sounds[name], type) // 缓存中获取
@@ -297,10 +297,10 @@ async function autoPlayAudio(tabId, text) {
 
         // 播放声音
         await playAudio(url).then(() => {
-            sendTabMessage(tabId, message)
+            sandFgMessage(tabId, message)
         }).catch(err => {
             debug(`${name} sound error:`, err)
-            sendTabMessage(tabId, Object.assign({}, message, {error: `${list[name] || ''}发音出错`}))
+            sandFgMessage(tabId, Object.assign({}, message, {error: `${list[name] || ''}发音出错`}))
         })
     }
     debug('_playAudio_ finish.')

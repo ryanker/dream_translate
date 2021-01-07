@@ -143,6 +143,10 @@ function sendTabMessage(tabId, message) {
     })
 }
 
+function sandFgMessage(id, message) {
+    return id === 'popup' ? sendMessage(message) : sendTabMessage(id, message)
+}
+
 function getActiveTabId() {
     return new Promise((resolve, reject) => {
         if (!isFirefox) {
