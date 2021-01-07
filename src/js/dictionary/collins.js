@@ -24,7 +24,7 @@ function collinsDictionary() {
             // 视频
             let videoEl = el.querySelector('#videos .youtube-video[data-embed]')
             if (videoEl) {
-                part += `<div style="margin:0 auto 10px;width:400px;height:224px;background:#000"><iframe width="400" height="224" src="https://www.youtube.com/embed/${videoEl.dataset.embed}" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+                part += `<div style="margin:0 auto 10px;width:400px;height:224px;background:#000"><iframe width="400" height="224" src="https://www.youtube.com/embed/${videoEl.dataset.embed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
             }
 
             // 图片
@@ -71,7 +71,7 @@ function collinsDictionary() {
                         e.setAttribute('data-type', 'en')
                     })
 
-                    cleanAttr(vEl, ['title', 'class', 'href', 'data-src-mp3'])
+                    cleanAttr(vEl, ['title', 'class', 'href', 'data-src-mp3', 'data-type'])
                     vEl.querySelectorAll('a[href]').forEach(e => {
                         if (e.href.includes('/dictionary/english/')) e.setAttribute('data-search', 'true')
                         e.setAttribute('_href', e.href)

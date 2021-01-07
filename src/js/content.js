@@ -598,7 +598,10 @@ function resultBindEvent(el, nav, name) {
     el.querySelectorAll('[data-src-mp3]').forEach(e => {
         let obj = {uk: '&#xe69f;', us: '&#xe674;', en: '&#xe6a8;', other: '&#xe67a;'}
         let type = e.getAttribute('data-type')
-        if (!obj[type]) type = 'other'
+        if (!obj[type]) {
+            type = 'other'
+            e.setAttribute('data-type', type)
+        }
         e.innerHTML = obj[type] // 喇叭字体
         e.addEventListener('click', function () {
             activeRipple(this)
