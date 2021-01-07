@@ -19,6 +19,7 @@ const isDebug = true
 const isFirefox = navigator.userAgent.includes("Firefox")
 // const isFirefox = typeof browser !== "undefined" && Object.getPrototypeOf(browser) === Object.prototype
 const B = {
+    extension: chrome.extension,
     getBackgroundPage: chrome.extension.getBackgroundPage,
     id: chrome.runtime.id,
     root: chrome.runtime.getURL(''),
@@ -144,7 +145,16 @@ function sendTabMessage(tabId, message) {
 }
 
 function sandFgMessage(id, message) {
-    return id === 'popup' ? sendMessage(message) : sendTabMessage(id, message)
+    if (id === 'popup') {
+        let popup = B.extension.getViews({type: 'popup'})
+        if (popup.length > 0) {
+            return sendMessage(message)
+        } else {
+            return Promise.resolve()
+        }
+    } else {
+        return sendTabMessage(id, message)
+    }
 }
 
 function getActiveTabId() {
