@@ -56,7 +56,7 @@ function longmanDictionary() {
             // 喇叭
             el.querySelectorAll('[data-src-mp3]').forEach(e => {
                 e.className = 'dmx-icon dmx_ripple'
-                let v = 'other'
+                let v = 'en'
                 let title = e.getAttribute('title')
                 if (title) {
                     if (title.includes('British')) v = 'uk'
