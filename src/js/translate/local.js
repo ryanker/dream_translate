@@ -9,14 +9,17 @@
 
 function localTranslate() {
     return {
+        voiceList: null,
         init() {
             return this
         },
         tts(q, lan) {
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
+                if (!this.voiceList) await getVoices().then(r => this.voiceList = r)
+
                 let ttsConf = setting.ttsConf || {}
-                let lang = conf.ttsList[lan]
-                if (!lang || !voiceList || !voiceList[lang]) return reject('This language is not supported!')
+                let lang = getJSONValue(conf, `ttsList.${lan}`)
+                if (!lang || !this.voiceList || !this.voiceList[lang]) return reject('This language is not supported!')
 
                 let options = {}
                 if (ttsConf['speak_rate']) options.rate = Number(ttsConf['speak_rate'])

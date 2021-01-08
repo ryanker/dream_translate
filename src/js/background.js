@@ -7,7 +7,7 @@
  * @license MIT License
  */
 
-let conf, setting, voiceList, sdk = {}
+let conf, setting, sdk = {}
 document.addEventListener('DOMContentLoaded', async function () {
     let languageList = '', dialogCSS = '', dictionaryCSS = {}
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
@@ -28,11 +28,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     await storageSyncGet(['setting']).then(function (r) {
         saveSettingAll(r.setting, true) // 初始设置参数
-    })
-
-    // 发音列表
-    !isFirefox && await getVoices().then(r => {
-        voiceList = r
     })
 
     // 加载 js
