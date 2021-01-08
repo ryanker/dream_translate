@@ -435,9 +435,23 @@ function cleanAttr(el, attrs) {
     })
 }
 
+// 打开一个几乎不可见的 popup
+function openPopup(id, url, timeout) {
+    id = id || 'dmx_popup'
+    let timeoutId = `timeoutId_${id}`
+    let popupId = `_popup_${id}`
+    let wid = window[popupId]
+    _clearTimeout(timeoutId)
+    setTimeout(() => {
+        wid && B.windows.remove(wid, () => B.runtime.lastError)
+    }, timeout || 20 * 1000) // 默认 20 秒后关闭
+    wid && B.windows.remove(wid, () => B.runtime.lastError) // 直接关闭
+    B.windows.create({type: 'popup', focused: false, width: 1, height: 1, url}, w => window[popupId] = w.id)
+}
+
 function openIframe(id, url, timeout) {
-    timeout = timeout || 60 * 1000 // 1分钟后释放
     id = id || 'iframe_' + Date.now()
+    timeout = timeout || 60 * 1000 // 1分钟后释放
 
     // 超时删除，减小内存占用
     let timeoutId = `timeoutId_${id}`
@@ -460,7 +474,7 @@ function _clearTimeout(timeoutId) {
     let id = window[timeoutId]
     if (!id) return
     clearTimeout(id)
-    id = null
+    window[timeoutId] = null
 }
 
 function sliceStr(text, maxLen) {

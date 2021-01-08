@@ -69,7 +69,8 @@ function qqTranslate() {
         getToken() {
             return new Promise((resolve, reject) => {
                 // 2021.1.8 修正改版
-                openIframe('iframe_qq', 'https://fanyi.qq.com/')
+                // openIframe('iframe_qq', 'https://fanyi.qq.com/')
+                openPopup('popup_qq', 'https://fanyi.qq.com/')
                 setTimeout(() => {
                     this.getCookieAll(() => {
                         let qtk = this.getCookie('qtk')
