@@ -446,9 +446,13 @@ function openPopup(id, url, timeout) {
         // wid && B.windows.remove(wid, () => B.runtime.lastError)
         // 清理所有小窗口
         B.windows.getAll({populate: true}, function (windows) {
+            let curOri = new URL(url).origin
             windows.forEach(w => {
                 if (w.type === 'popup' && w.width === 1 && w.tabs.length === 1) {
-                    B.windows.remove(w.id, () => B.runtime.lastError) // 关闭
+                    // console.log('url:', w.tabs[0].url)
+                    if (!w.tabs[0].url || new URL(w.tabs[0].url).origin === curOri) {
+                        B.windows.remove(w.id, () => B.runtime.lastError) // 关闭
+                    }
                 }
             })
         })
