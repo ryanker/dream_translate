@@ -443,7 +443,15 @@ function openPopup(id, url, timeout) {
     let wid = window[popupId]
     _clearTimeout(timeoutId)
     setTimeout(() => {
-        wid && B.windows.remove(wid, () => B.runtime.lastError)
+        // wid && B.windows.remove(wid, () => B.runtime.lastError)
+        // 清理所有小窗口
+        B.windows.getAll({populate: true}, function (windows) {
+            windows.forEach(w => {
+                if (w.type === 'popup' && w.width === 1 && w.tabs.length === 1) {
+                    B.windows.remove(w.id, () => B.runtime.lastError) // 关闭
+                }
+            })
+        })
     }, timeout || 20 * 1000) // 默认 20 秒后关闭
     wid && B.windows.remove(wid, () => B.runtime.lastError) // 直接关闭
     B.windows.create({type: 'popup', focused: false, width: 1, height: 1, url}, w => window[popupId] = w.id)
