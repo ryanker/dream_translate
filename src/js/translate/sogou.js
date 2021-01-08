@@ -143,7 +143,7 @@ function sogouTranslate() {
                 if (q.length > 5000) return reject('The text is too large!')
 
                 let url = this.link(q, srcLan, tarLan)
-                openIframe('iframe_soGou', url)
+                openPopup('iframe_soGou', url)
                 httpGet(url, 'document').then(r => {
                     // 获取翻译结果
                     let data
