@@ -9,13 +9,6 @@
     overflow: hidden;
 }
 
-.dmx__body {
-    margin: 0;
-    padding: 0;
-    height: 2px;
-    background: #f5f8fa;
-}
-
 div[mx-name="dream-translation"] {
     all: initial;
 }

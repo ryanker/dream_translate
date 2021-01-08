@@ -100,11 +100,13 @@ function initDialog() {
         }
     }
     if (isPopup) {
-        delete options.onResize
         options.width = 'auto'
         options.height = 'auto'
         options.show = true
+        options.autoHide = false
+        options.isMove = false
         options.isResize = false
+        options.onResize = null
     }
     dialog = dmxDialog(options)
 
@@ -121,7 +123,7 @@ function initDialog() {
 
     // 小屏窗口
     if (isPopup) {
-        document.body.className = 'dmx__body'
+        if (location.href === B.root + 'html/popup.html?fullscreen=1') document.documentElement.className = 'fullscreen'
         dialog.el.className = 'dmx_popup'
         D('#dmx_close,#dmx_pin,#dmx_fullscreen').forEach(e => e.remove())
     }
