@@ -72,7 +72,7 @@ function sogouTranslate() {
             return this
         },
         // 2020.12.03 刚写完就改版，白破解了！要吐了。。。
-        transOld(q, srcLan, tarLan) {
+        /*transOld(q, srcLan, tarLan) {
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
 
@@ -135,7 +135,7 @@ function sogouTranslate() {
                     })
                 }
             })
-        },
+        },*/
         trans(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh-CHS'
@@ -145,18 +145,6 @@ function sogouTranslate() {
                 let url = this.link(q, srcLan, tarLan)
                 openIframe('iframe_soGou', url)
                 httpGet(url, 'document').then(r => {
-                    let transOld = function () {
-                        this.transOld(q, srcLan, tarLan).then((rOld) => {
-                            resolve(rOld)
-                        }).catch(e => {
-                            reject(e)
-                        })
-                    }
-                    if (!r) {
-                        transOld()
-                        return
-                    }
-
                     // 获取翻译结果
                     let data
                     let sEl = r.querySelectorAll('script')
@@ -172,17 +160,13 @@ function sogouTranslate() {
                             if (data) break
                         } catch (e) {
                             debug('json error!')
+                            return reject('JSON.parse Error!')
                         }
                     }
-                    // console.log(data)
-                    if (data.translate && data.translate.translateData && data.translate.translateData.translate) {
-                        let d = {}
-                        d.data = data.translate.translateData
-                        d.data.keywords = data.translate.keyword
-                        // console.log(d)
-                        resolve(this.unify(d, q, srcLan, tarLan))
+                    if (data) {
+                        resolve(this.unify(data, q, srcLan, tarLan))
                     } else {
-                        transOld()
+                        reject('Get data is empty!')
                     }
                 }).catch(e => {
                     reject(e)
@@ -192,13 +176,16 @@ function sogouTranslate() {
         unify(r, text, srcLan, tarLan) {
             // console.log('sogou:', r, q, srcLan, tarLan)
             // console.log(JSON.stringify(r))
-            if (srcLan === 'auto' && r.data && r.data.detect && r.data.detect.detect) srcLan = r.data.detect.detect
+            // 修正改版 2021.1.8
+            if (srcLan === 'auto') {
+                let str = getJSONValue(r, 'textTranslate.translateData.detect.detect')
+                if (str && isString(str)) srcLan = str
+            }
             let map = this.langMapInvert
             srcLan = map[srcLan] || 'auto'
             tarLan = map[tarLan] || ''
-            let res = r && r.data
-            let tar = res.translate && res.translate.dit
             let data = []
+            let tar = getJSONValue(r, 'textTranslate.result')
             if (tar) {
                 let srcArr = text.split('\n')
                 let tarArr = tar.split('\n')
@@ -209,53 +196,54 @@ function sogouTranslate() {
 
             // 重点词汇
             let s = ''
-            if (res.keywords && res.keywords.length > 0) {
+            let keywords = getJSONValue(r, 'textTranslate.translateData.keywords')
+            if (keywords && keywords.length > 0) {
                 s += `<div class="case_dd"><div class="case_dd_head">重点词汇</div>`
                 s += `<div class="case_dd_parts">`
-                res.keywords.forEach(v => {
-                    if (v.key && v.value) s += `<p><b data-search="true">${v.key}</b>${v.value.join('')}</p>`
+                keywords.forEach(v => {
+                    if (v.key && v.value) s += `<p><b data-search="true">${v.key}</b>${v.value}</p>`
                 })
                 s += `</div></div>`
             }
 
-            // 搜狗用的牛津词典 (层级太深，吐了)
-            let dict = res.common_dict && res.common_dict.dict && res.common_dict.dict[0] && res.common_dict.dict[0].content
-                && res.common_dict.dict[0].content[0] && res.common_dict.dict[0].content[0].value && res.common_dict.dict[0].content[0].value[0]
-            if (dict) {
-                s += `<div class="case_dd">`
-                s += `<div class="case_dd_head">${text}</div>`  // 查询的单词
+            // 音标
+            let phonetic = getJSONValue(r, 'textTranslate.translateData.voice.phonetic')
+            let phStr = ''
+            if (phonetic && phonetic.length > 0) {
                 let getIconHTML = function (type, filename) {
                     if (type !== 'uk') type = 'us'
                     let title = type === 'uk' ? '英音' : '美音'
                     return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="https://fanyi.sogou.com${filename}" title="${title}"></i>`
                 }
-                let {phonetic, usual, info_from_exam_dict, exchange_info, levelList} = dict
+                let ph_uk = '', ph_us = '', ph_mp3 = ''
+                phonetic.forEach(v => {
+                    if (!v.text || !v.type || !v.filename) return
+                    if (v.type === 'uk') ph_uk = v.text
+                    if (v.type === 'usa') ph_us = v.text
+                    ph_mp3 += getIconHTML(v.type, v.filename)
+                })
+                if (ph_uk && ph_mp3) phStr += `<div class="case_dd_ph">[${ph_uk}${ph_uk !== ph_us ? ' $ ' + ph_us : ''}]${ph_mp3}</div>`
+            }
 
-                // 音标
-                if (phonetic && phonetic.length > 0) {
-                    let ph_uk = '', ph_us = '', ph_mp3 = ''
-                    phonetic.forEach(v => {
-                        if (!v.text || !v.type || !v.filename) return
-                        if (v.type === 'uk') ph_uk = v.text
-                        if (v.type === 'usa') ph_us = v.text
-                        ph_mp3 += getIconHTML(v.type, v.filename)
-                    })
-                    if (ph_uk && ph_mp3) s += `<div class="case_dd_ph">[${ph_uk}${ph_uk !== ph_us ? ' $ ' + ph_us : ''}]${ph_mp3}</div>`
-                }
+            // 搜狗用的牛津词典 (上一个版本，层级太深，这次改版简化了。)
+            let wordCard = getJSONValue(r, 'textTranslate.translateData.wordCard')
+            if (isObject(wordCard)) {
+                s += `<div class="case_dd">`
+                s += `<div class="case_dd_head">${text}</div>`  // 查询的单词
+                s += phStr
 
                 // 释义
-                if (usual && usual.length > 0) {
+                let {usual_Dict, exchange, levelList} = wordCard
+                if (usual_Dict && usual_Dict.length > 0) {
                     s += `<div class="case_dd_parts">`
-                    usual.forEach(v => {
-                        s += `<p>${v.pos ? `<b>${v.pos}</b>` : ''}${v.values}</p>`
+                    usual_Dict.forEach(v => {
+                        s += `<p>${v.pos ? `<b>${v.pos}</b>` : ''}${isArray(v.values) ? v.values.join('；') : v.values}</p>`
                     })
                     s += `</div>`
-                } else if (info_from_exam_dict.word_family && info_from_exam_dict.word_family.mean) {
-                    s += `<div class="case_dd_parts"><p>${info_from_exam_dict.word_family.mean}</p></div>`
                 }
 
                 // 单词形态
-                if (exchange_info) {
+                if (exchange) {
                     s += `<div class="case_dd_exchange">`
                     let exchangeObj = {
                         word_third: '第三人称单数',
@@ -267,7 +255,7 @@ function sogouTranslate() {
                         word_est: '最高级',
                         word_proto: '原型',
                     }
-                    for (let [k, v] of Object.entries(exchange_info)) {
+                    for (let [k, v] of Object.entries(exchange)) {
                         let wordStr = ''
                         v.forEach(word => {
                             if (word) wordStr += `<a data-search="true">${word}</a>`
