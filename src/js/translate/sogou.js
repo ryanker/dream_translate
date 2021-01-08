@@ -227,7 +227,7 @@ function sogouTranslate() {
 
             // 搜狗用的牛津词典 (上一个版本，层级太深，这次改版简化了。)
             let wordCard = getJSONValue(r, 'textTranslate.translateData.wordCard')
-            if (isObject(wordCard)) {
+            if (isObject(wordCard) && wordCard.usual_Dict) {
                 s += `<div class="case_dd">`
                 s += `<div class="case_dd_head">${text}</div>`  // 查询的单词
                 s += phStr
