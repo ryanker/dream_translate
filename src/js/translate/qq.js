@@ -68,11 +68,23 @@ function qqTranslate() {
         },
         getToken() {
             return new Promise((resolve, reject) => {
-                let qtv = this.token.qtv
+                // 2021.1.8 修正改版
+                openIframe('iframe_qq', 'https://fanyi.qq.com/')
+                setTimeout(() => {
+                    this.getCookieAll(() => {
+                        let qtk = this.getCookie('qtk')
+                        let qtv = this.getCookie('qtv')
+                        let token = {qtv, qtk}
+                        this.setToken(token)
+                        resolve(token)
+                    })
+                }, 1000)
+
+                // todo: 腾讯做的不怎么样，还老改版，浪费时间。收购了搜狗，看样子这个部门要被合并掉了！
+                /*let qtv = this.token.qtv
                 let qtk = this.token.qtk
                 let body = ''
                 if (qtv && qtk) body = `qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}`
-                // todo: 腾讯做的不怎么样，还老改版，浪费时间。收购了搜狗，看样子这个部门要被合并掉了！
                 httpPost({url: 'https://fanyi.qq.com/api/reauth1230', body: body}).then(r => {
                     if (r) {
                         let token = {qtv: r.qtv, qtk: r.qtk}
@@ -85,7 +97,7 @@ function qqTranslate() {
                     }
                 }).catch(e => {
                     reject(e)
-                })
+                })*/
                 /*httpGet('https://fanyi.qq.com/').then(r => {
                     let arr = r.match(/var qtv = "([^"]+)";/)
                     let tArr = r.match(/var qtk = "([^"]+)";/)
@@ -175,11 +187,12 @@ Sec-Fetch-Site: same-origin`
                 this.cookie[v.name] = v.value
             })
         },
-        getCookieAll() {
+        getCookieAll(callback) {
             cookies('getAll', {domain: 'fanyi.qq.com'}).then(arr => {
                 arr.forEach(v => {
                     this.cookie[v.name] = v.value
                 })
+                typeof callback === 'function' && callback()
             })
         },
         getCookie(name) {
