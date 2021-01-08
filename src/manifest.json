@@ -59,11 +59,23 @@
   "homepage_url": "https://github.com/ryanker/dream_translate",
   "commands": {
     "_execute_browser_action": {
+      "description": "打开翻译面板",
       "suggested_key": {
-        "default": "Ctrl+Shift+X",
-        "mac": "MacCtrl+Shift+X"
-      },
-      "description": "打开设置"
+        "default": "Alt+D"
+      }
+    },
+    "openWindow": {
+      "description": "打开翻译窗口",
+      "global": true,
+      "suggested_key": {
+        "default": "Ctrl+Shift+9"
+      }
+    },
+    "toggleScribble": {
+      "description": "划词翻译开关",
+      "suggested_key": {
+        "default": "Ctrl+Shift+X"
+      }
     }
   }
 }

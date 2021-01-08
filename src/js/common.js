@@ -20,13 +20,14 @@ const isFirefox = navigator.userAgent.includes("Firefox")
 // const isFirefox = typeof browser !== "undefined" && Object.getPrototypeOf(browser) === Object.prototype
 const B = {
     extension: chrome.extension,
-    windows: chrome.windows,
     getBackgroundPage: chrome.extension.getBackgroundPage,
+    windows: chrome.windows,
+    commands: chrome.commands,
+    runtime: chrome.runtime,
     id: chrome.runtime.id,
     root: chrome.runtime.getURL(''),
     onMessage: chrome.runtime.onMessage,
     sendMessage: chrome.runtime.sendMessage,
-    error: chrome.runtime.lastError,
     storage: chrome.storage,
     browserAction: chrome.browserAction,
     contextMenus: chrome.contextMenus,
@@ -72,7 +73,7 @@ function storage(type, method, options) {
     return new Promise((resolve, reject) => {
         if (!isFirefox) {
             let callback = function (r) {
-                let err = B.error
+                let err = B.runtime.lastError
                 err ? reject(err) : resolve(r)
             }
             let api = type === 'sync' ? B.storage.sync : B.storage.local
@@ -96,7 +97,7 @@ function cookies(method, options) {
     return new Promise((resolve, reject) => {
         if (!isFirefox) {
             let callback = function (r) {
-                let err = B.error
+                let err = B.runtime.lastError
                 err ? reject(err) : resolve(r)
             }
             if (method === 'get') {
@@ -125,7 +126,7 @@ function cookies(method, options) {
 function sendMessage(message) {
     return new Promise((resolve, reject) => {
         if (!isFirefox) {
-            B.sendMessage(message, r => B.error ? reject(B.error) : resolve(r))
+            B.sendMessage(message, r => B.runtime.lastError ? reject(B.runtime.lastError) : resolve(r))
         } else {
             browser.runtime.sendMessage(message).then(r => resolve(r), err => reject(err))
         }
@@ -135,7 +136,7 @@ function sendMessage(message) {
 function sendTabMessage(tabId, message) {
     return new Promise((resolve, reject) => {
         if (!isFirefox) {
-            // B.tabs.sendMessage(tabId, message, r => B.error ? reject(B.error) : resolve(r))
+            // B.tabs.sendMessage(tabId, message, r => B.runtime.lastError ? reject(B.runtime.lastError) : resolve(r))
             tabId && B.tabs.sendMessage(tabId, message)
         } else {
             // browser.tabs.sendMessage(tabId, message).then(r => resolve(r)).catch(err => reject(err))

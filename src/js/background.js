@@ -84,6 +84,18 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     }
 })
 
+// 监听快捷键
+B.commands.onCommand.addListener(function (command) {
+    command = command + ''
+    if (command === 'openWindow') {
+        openTransWindow()
+    } else if (command === 'toggleScribble') {
+        if (!window.scribbleTmp) window.scribbleTmp = setting.scribble === 'off' ? 'direct' : 'off';
+        [setting.scribble, window.scribbleTmp] = [window.scribbleTmp, setting.scribble] // 交换
+        saveSettingAll(setting, true) // 保存
+    }
+})
+
 function runTranslate(tabId, m) {
     let {action, text, srcLan, tarLan} = m
     setting.translateList.forEach(name => {
@@ -205,11 +217,25 @@ function removeMenu(name) {
 }
 
 function openTransWindow() {
-    let screen = window.screen
-    let o = {type: 'popup', width: 600, height: 520, url: B.root + 'html/popup.html?fullscreen=1'}
-    if (screen.width) o.left = (screen.width - o.width) / 2
-    if (screen.height) o.top = (screen.height - o.height) / 2
-    B.windows.create(o)
+    let fn = function () {
+        let screen = window.screen
+        let o = {type: 'popup', width: 600, height: 520, url: B.root + 'html/popup.html?fullscreen=1'}
+        if (screen.width) o.left = (screen.width - o.width) / 2
+        if (screen.height) o.top = (screen.height - o.height) / 2
+        B.windows.create(o, w => window.transWindowId = w.id)
+    }
+    let id = window.transWindowId
+    if (id) {
+        B.windows.get(id, function (w) {
+            if (!B.runtime.lastError && w.id) {
+                B.windows.update(w.id, {focused: true})
+            } else {
+                fn()
+            }
+        })
+    } else {
+        fn()
+    }
 }
 
 function openTab(url) {
