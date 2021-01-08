@@ -164,7 +164,7 @@ function runPlaySound(tabId, m) {
         sandFgMessage(tabId, {action, nav, name, type, status: 'end'})
     }).catch(err => {
         debug(`${name} sound error:`, err)
-        let title = conf.dictionaryList[name] || ''
+        let title = conf.dictionaryList[name] || conf.translateList[name] || ''
         sandFgMessage(tabId, {action, nav, name, type, error: `${title}发音出错`})
     })
 }

@@ -213,7 +213,8 @@ function sogouTranslate() {
                 let getIconHTML = function (type, filename) {
                     if (type !== 'uk') type = 'us'
                     let title = type === 'uk' ? '英音' : '美音'
-                    return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="https://fanyi.sogou.com${filename}" title="${title}"></i>`
+                    filename = (filename.substring(0, 2) === '//' ? 'https:' : 'https://fanyi.sogou.com') + filename
+                    return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="${filename}" title="${title}"></i>`
                 }
                 let ph_uk = '', ph_us = '', ph_mp3 = ''
                 phonetic.forEach(v => {
