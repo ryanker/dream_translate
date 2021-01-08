@@ -19,5 +19,6 @@ html.fullscreen {
 }
 
 body {
+    width: 520px;
     height: 2px;
 }

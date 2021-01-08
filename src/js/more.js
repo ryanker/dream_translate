@@ -8,25 +8,10 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    $('trans_window').addEventListener('click', onTransWindow)
-    $('allow_select').addEventListener('click', onAllowSelect)
-    D('[data-href]').forEach(e => e.addEventListener('click', () => onOpenUrl(e)))
+    $('trans_window').addEventListener('click', () => sendMessage({action: 'transWindow'}))
+    $('allow_select').addEventListener('click', () => sendMessage({action: 'onAllowSelect'}))
+    D('[data-href]').forEach(e => e.addEventListener('click', () => {
+        sendMessage({action: 'openUrl', url: B.root + 'html/' + e.dataset.href})
+    }))
+    if (isFirefox) S('[data-href="speak.html"]').remove() // Firefox 不支持这个功能
 })
-
-function onTransWindow() {
-    let screen = window.screen
-    let o = {type: 'popup', width: 600, height: 520, url: B.root + 'html/popup.html?fullscreen=1'}
-    if (screen.width) o.left = (screen.width - o.width) / 2
-    if (screen.height) o.top = (screen.height - o.height) / 2
-    B.windows.create(o)
-}
-
-function onAllowSelect() {
-    getActiveTabId().then(tabId => {
-        tabId && sendTabMessage(tabId, {action: 'allowSelect'})
-    })
-}
-
-function onOpenUrl(e) {
-    B.tabs.create({url: 'html/' + e.dataset.href})
-}

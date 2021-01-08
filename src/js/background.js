@@ -75,6 +75,12 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         saveSettingAll(m.setting, m.updateIcon, m.resetDialog)
     } else if (m.action === 'copy') {
         execCopy(m.text) // 后台复制，页面才不会失去焦点
+    } else if (m.action === 'transWindow') {
+        openTransWindow()
+    } else if (m.action === 'openUrl') {
+        openTab(m.url)
+    } else if (m.action === 'onAllowSelect') {
+        sendAllowSelect()
     }
 })
 
@@ -196,6 +202,24 @@ function addMenu(name, title, url) {
 function removeMenu(name) {
     B.contextMenus.remove(name + '_page')
     B.contextMenus.remove(name + '_selection')
+}
+
+function openTransWindow() {
+    let screen = window.screen
+    let o = {type: 'popup', width: 600, height: 520, url: B.root + 'html/popup.html?fullscreen=1'}
+    if (screen.width) o.left = (screen.width - o.width) / 2
+    if (screen.height) o.top = (screen.height - o.height) / 2
+    B.windows.create(o)
+}
+
+function openTab(url) {
+    B.tabs.create({url})
+}
+
+function sendAllowSelect() {
+    getActiveTabId().then(tabId => {
+        tabId && sendTabMessage(tabId, {action: 'allowSelect'})
+    })
 }
 
 function minCss(s) {
