@@ -20,6 +20,7 @@ const isFirefox = navigator.userAgent.includes("Firefox")
 // const isFirefox = typeof browser !== "undefined" && Object.getPrototypeOf(browser) === Object.prototype
 const B = {
     extension: chrome.extension,
+    windows: chrome.windows,
     getBackgroundPage: chrome.extension.getBackgroundPage,
     id: chrome.runtime.id,
     root: chrome.runtime.getURL(''),
@@ -280,6 +281,22 @@ function hasClass(el, className) {
 
 function sleep(delay) {
     return new Promise(r => setTimeout(r, delay))
+}
+
+function $(id) {
+    return document.getElementById(id)
+}
+
+function N(id) {
+    return document.getElementsByName(id)
+}
+
+function S(s) {
+    return document.querySelector(s)
+}
+
+function D(s) {
+    return document.querySelectorAll(s)
 }
 
 function onD(el, type, listener, options) {

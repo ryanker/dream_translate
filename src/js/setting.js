@@ -87,14 +87,6 @@ function init() {
     $('clearSetting').addEventListener('click', clearSetting)
 }
 
-function $(id) {
-    return document.getElementById(id)
-}
-
-function N(id) {
-    return document.getElementsByName(id)
-}
-
 function navigate(navId, contentSel) {
     let nav = $(navId)
     let el = nav.querySelectorAll('u')

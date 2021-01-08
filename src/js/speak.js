@@ -83,10 +83,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
 })
 
-function $(id) {
-    return document.getElementById(id)
-}
-
 function voiceListSort(list) {
     if (!list) return {}
     let kArr = Object.keys(list)

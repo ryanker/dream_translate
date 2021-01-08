@@ -794,6 +794,7 @@ function setDialogConf(name, value) {
 }
 
 function allowUserSelect() {
+    alert('解除页面限制完成', 'success')
     if (window.dmxAllowUserSelect) return
     let sty = document.createElement('style')
     sty.textContent = `* {-webkit-user-select:text!important;-moz-user-select:text!important;user-select:text!important}`
@@ -815,7 +816,6 @@ function allowUserSelect() {
     document.addEventListener('contextmenu', onClean, true)
     document.addEventListener('selectstart', onClean, true)
     window.dmxAllowUserSelect = true
-    alert('解除页面限制完成', 'success')
 }
 
 function sendPlayTTS(name, type, lang, text) {

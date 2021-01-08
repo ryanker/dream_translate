@@ -159,12 +159,6 @@ select {
     display: inline-block;
 }
 
-.popup_box {
-    margin: 8px;
-    width: 120px;
-    font-size: 14px;
-}
-
 /* ==================== setting ==================== */
 .navigate u {
     display: block;
@@ -320,4 +314,14 @@ select {
 
 #speak_button {
     float: right;
+}
+
+/* ==================== more ==================== */
+.more_list .dmx_button {
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+.more_list .dmx_button .dmx-icon {
+    margin-right: 5px;
 }
