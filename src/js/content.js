@@ -708,6 +708,7 @@ function initQuery(text, clientX, clientY) {
 }
 
 function sendQuery(text) {
+    if (isPopup && text) addClass(document.documentElement, 'popup')
     if (!text) return
     let el = $('dmx_navigate')
     let action = el.querySelector('.active') && el.querySelector('.active').getAttribute('action')
