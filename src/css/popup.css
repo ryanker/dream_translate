@@ -7,12 +7,8 @@ html, body {
 
 html {
     width: 520px;
-    height: 180px;
-    background: #f5f8fa;
-}
-
-html.popup {
     height: 500px;
+    background: #f5f8fa;
 }
 
 html.fullscreen {

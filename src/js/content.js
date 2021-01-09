@@ -343,6 +343,9 @@ function initTranslate() {
         e.preventDefault()
         this.innerText = (e.clipboardData || window.clipboardData).getData('Text')
     })
+    inputEl.addEventListener('blur', function () {
+        dQuery.text = this.innerText
+    })
 
     // 初始值
     let source = dialogConf.source
@@ -404,11 +407,11 @@ function initSearch() {
         let el = $('case_list').querySelector('[data-search]')
         if (el) el.click()
     }
-    inpEl.addEventListener('keyup', function (e) {
-        e.key === 'Enter' && butEl.click()
-    })
     inpEl.addEventListener('change', function () {
         dQuery.text = this.value
+    })
+    inpEl.addEventListener('keyup', function (e) {
+        e.key === 'Enter' && butEl.click()
     })
 
     // 创建按钮
@@ -721,7 +724,6 @@ function initQuery(text, clientX, clientY) {
 }
 
 function sendQuery(text) {
-    if (isPopup && text) addClass(document.documentElement, 'popup')
     if (!text) return
     let el = $('dmx_navigate')
     let action = el.querySelector('.active') && el.querySelector('.active').getAttribute('action')
