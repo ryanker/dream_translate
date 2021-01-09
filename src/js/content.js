@@ -337,6 +337,13 @@ function initTranslate() {
         })
     })
 
+    // 粘贴事件
+    inputEl.addEventListener('paste', function (e) {
+        e.stopPropagation()
+        e.preventDefault()
+        this.innerText = (e.clipboardData || window.clipboardData).getData('Text')
+    })
+
     // 初始值
     let source = dialogConf.source
     let target = dialogConf.target
