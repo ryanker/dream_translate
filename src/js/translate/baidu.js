@@ -95,6 +95,7 @@ function baiduTranslate() {
                     if (v.src && v.dst) data.push({srcText: v.src, tarText: v.dst})
                 })
             }
+            if (setting.translateThin) return {text, srcLan, tarLan, lanTTS: this.lanTTS, data} // 精简显示
 
             // 重点词汇
             let s = ''

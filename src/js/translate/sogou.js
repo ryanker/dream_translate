@@ -193,6 +193,7 @@ function sogouTranslate() {
                     if (tar) data.push({srcText: srcArr[key] || '', tarText: tar})
                 })
             }
+            if (setting.translateThin) return {text, srcLan, tarLan, lanTTS: null, data} // 精简显示
 
             // 重点词汇
             let s = ''
