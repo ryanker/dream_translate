@@ -346,6 +346,7 @@ function initTranslate() {
     inputEl.addEventListener('blur', function () {
         dQuery.text = this.innerText
     })
+    inputEl.focus()
 
     // 初始值
     let source = dialogConf.source
@@ -384,6 +385,7 @@ function initDictionary() {
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
     })
+    inpEl.focus()
 }
 
 function initSearch() {
@@ -413,6 +415,7 @@ function initSearch() {
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
     })
+    inpEl.focus()
 
     // 创建按钮
     let s = ''
