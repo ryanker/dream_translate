@@ -350,9 +350,9 @@ function initTranslate() {
     })
     inputEl.addEventListener('blur', function () {
         textTmp = this.innerText
-        translateEl.click() // 开始翻译
     })
     inputEl.addEventListener('keyup', function (e) {
+        if (!isPopup) return
         let id = window._translateTimeoutId
         if (id) {
             clearTimeout(id)
@@ -362,7 +362,7 @@ function initTranslate() {
             translateEl.click() // 开始翻译
         }, 500)
     })
-    inputEl.focus()
+    isPopup && focusLast(inputEl) // 光标移到结尾
 
     // 初始值
     let source = dialogConf.source
@@ -756,7 +756,9 @@ function sendQuery(text) {
 
     let message = null
     if (action === 'translate') {
-        $(`translate_input`).innerText = text
+        let inputEl = $(`translate_input`)
+        inputEl.innerText = text
+        isPopup && focusLast(inputEl)
         loadingTranslate()
         message = {action: action, text: text, srcLan: dialogConf.source, tarLan: dialogConf.target}
     } else if (action === 'dictionary') {
@@ -807,6 +809,13 @@ function addHistory(data) {
         rmClass(hEl.querySelector('.dmx-icon-left'), 'disabled')
         addClass(hEl.querySelector('.dmx-icon-right'), 'disabled')
     }
+}
+
+function focusLast(el) {
+    el.focus()
+    let range = window.getSelection()
+    range.selectAllChildren(el)
+    range.collapseToEnd() // 光标移到结尾
 }
 
 function $(id) {
