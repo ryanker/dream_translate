@@ -15,6 +15,7 @@ let dialog, shadow,
     msgList = {},
     root = B.root
 let dQuery = {action: '', text: '', source: '', target: ''}
+let textTmp = ''
 let history = [], historyIndex = 0, disHistory = false
 document.addEventListener('DOMContentLoaded', async function () {
     await storageLocalGet(['conf', 'languageList', 'dialogCSS', 'dictionaryCSS']).then(function (r) {
@@ -348,7 +349,7 @@ function initTranslate() {
         this.innerText = (e.clipboardData || window.clipboardData).getData('Text')
     })
     inputEl.addEventListener('blur', function () {
-        dQuery.text = this.innerText
+        textTmp = this.innerText
     })
     inputEl.focus()
 
@@ -384,7 +385,7 @@ function initDictionary() {
         sendQuery(text) // 词典按钮查询
     }
     inpEl.addEventListener('change', function () {
-        dQuery.text = this.value
+        textTmp = this.value
     })
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
@@ -414,7 +415,7 @@ function initSearch() {
         if (el) el.click()
     }
     inpEl.addEventListener('change', function () {
-        dQuery.text = this.value
+        textTmp = this.value
     })
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
@@ -731,7 +732,8 @@ function initQuery(text, clientX, clientY) {
 }
 
 function sendQuery(text) {
-    if (isPopup && setting.autoPaste === 'on') text = execPaste()
+    if (!text && isPopup && setting.autoPaste === 'on') text = execPaste()
+    if (!text) text = textTmp
     if (!text) return
     let el = $('dmx_navigate')
     let action = el.querySelector('.active') && el.querySelector('.active').getAttribute('action')
