@@ -350,6 +350,17 @@ function initTranslate() {
     })
     inputEl.addEventListener('blur', function () {
         textTmp = this.innerText
+        translateEl.click() // 开始翻译
+    })
+    inputEl.addEventListener('keyup', function (e) {
+        let id = window._translateTimeoutId
+        if (id) {
+            clearTimeout(id)
+            window._translateTimeoutId = null
+        }
+        window._translateTimeoutId = setTimeout(() => {
+            translateEl.click() // 开始翻译
+        }, 500)
     })
     inputEl.focus()
 
