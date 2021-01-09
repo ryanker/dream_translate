@@ -4,6 +4,7 @@
     "position": "fixed",
     "allowSelect": "",
     "autoCopy": "",
+    "autoPaste": "",
     "translateList": [
       "baidu",
       "google",
