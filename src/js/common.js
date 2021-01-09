@@ -253,6 +253,7 @@ function getVoices() {
 }
 
 function addClass(el, className) {
+    if (!el || !className) return
     className = className.trim()
     let oldClassName = el.className.trim()
     if (!oldClassName) {

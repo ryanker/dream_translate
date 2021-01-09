@@ -169,7 +169,10 @@ function initDialog() {
 
     // 初始模块
     let action = dialogConf.action
-    action && nav.querySelector(`u[action="${action}"]`).click()
+    if (action) {
+        let actionEl = nav.querySelector(`u[action="${action}"]`)
+        if (actionEl) actionEl.click()
+    }
 
     // 设置按钮
     $('dmx_setting').addEventListener('click', function () {
