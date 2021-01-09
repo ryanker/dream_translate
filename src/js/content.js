@@ -812,10 +812,11 @@ function addHistory(data) {
 }
 
 function focusLast(el) {
-    el.focus()
-    let range = window.getSelection()
-    range.selectAllChildren(el)
-    range.collapseToEnd() // 光标移到结尾
+    setTimeout(() => el.focus(), 0)
+    // el.focus()
+    // let range = window.getSelection()
+    // range.selectAllChildren(el)
+    // range.collapseToEnd() // 光标移到结尾
 }
 
 function $(id) {
