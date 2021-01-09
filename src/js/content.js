@@ -170,6 +170,7 @@ function initDialog() {
     // 初始模块
     let action = dialogConf.action
     if (action) {
+        if (!['translate', 'dictionary', 'search'].includes(action)) action = 'translate'
         let actionEl = nav.querySelector(`u[action="${action}"]`)
         if (actionEl) actionEl.click()
     }
