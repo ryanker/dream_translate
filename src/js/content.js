@@ -124,8 +124,8 @@ function initDialog() {
 
     // 小屏窗口
     if (isPopup) {
-        if (location.href === B.root + 'html/popup.html?fullscreen=1') document.documentElement.className = 'fullscreen'
-        dialog.el.className = 'dmx_popup'
+        addClass(dialog.el, 'dmx_popup')
+        if (location.href === B.root + 'html/popup.html?fullscreen=1') addClass(dialog.el, 'fullscreen')
         D('#dmx_close,#dmx_pin,#dmx_fullscreen').forEach(e => e.remove())
     }
 
