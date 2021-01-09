@@ -375,6 +375,9 @@ function initDictionary() {
         let text = inpEl.value.trim()
         sendQuery(text) // 词典按钮查询
     }
+    inpEl.addEventListener('change', function () {
+        dQuery.text = this.value
+    })
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
     })
@@ -403,6 +406,9 @@ function initSearch() {
     }
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
+    })
+    inpEl.addEventListener('change', function () {
+        dQuery.text = this.value
     })
 
     // 创建按钮
