@@ -73,6 +73,8 @@ function sogouTranslate() {
         },
         // 2020.12.03 刚写完就改版，白破解了！要吐了。。。
         /*transOld(q, srcLan, tarLan) {
+            srcLan = this.langMap[srcLan] || 'auto'
+            tarLan = this.langMap[tarLan] || 'zh-CHS'
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
 
@@ -80,7 +82,7 @@ function sogouTranslate() {
                 onHeadersReceivedAddListener(onRemoveFrame, {urls: ["*://fanyi.sogou.com/*"]})
 
                 // Frame 请求
-                let url = this.link(q, srcLan, tarLan)
+                let url = `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
                 openIframe('iframe_soGou', url)
 
                 // 获取请求参数
@@ -142,7 +144,7 @@ function sogouTranslate() {
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
 
-                let url = this.link(q, srcLan, tarLan)
+                let url = `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
                 openPopup('iframe_soGou', url)
                 httpGet(url, 'document').then(r => {
                     // 获取翻译结果
@@ -174,7 +176,7 @@ function sogouTranslate() {
             })
         },
         unify(r, text, srcLan, tarLan) {
-            // console.log('sogou:', r, q, srcLan, tarLan)
+            // console.log('sogou:', r, text, srcLan, tarLan)
             // console.log(JSON.stringify(r))
             // 修正改版 2021.1.8
             if (srcLan === 'auto') {
