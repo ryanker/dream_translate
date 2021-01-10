@@ -69,7 +69,8 @@ function qqTranslate() {
         getToken() {
             return new Promise((resolve, reject) => {
                 // 2021.1.8 修正改版
-                openBgPage('iframe_qq', 'https://fanyi.qq.com/')
+                let pageId = 'iframe_qq'
+                openBgPage(pageId, 'https://fanyi.qq.com/')
                 setTimeout(() => {
                     this.getCookieAll(() => {
                         let qtk = this.getCookie('qtk')
@@ -77,6 +78,7 @@ function qqTranslate() {
                         let token = {qtv, qtk}
                         this.setToken(token)
                         resolve(token)
+                        removeBgPage(pageId)
                     })
                 }, 1000)
 

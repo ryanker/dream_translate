@@ -455,39 +455,51 @@ function openBgPage(id, url, timeout) {
     isFirefox ? openIframe(id, url, timeout) : openPopup(id, url, timeout)
 }
 
+function removeBgPage(id) {
+    isFirefox ? removeIframe(id) : removePopup(id)
+}
+
 // 打开一个几乎不可见的 popup
 function openPopup(id, url, timeout) {
-    id = id || 'dmx_popup'
     timeout = timeout || 20 * 1000 // 默认 20 秒
-    let popupId = `_popup_${id}`
-    let wid = window[popupId]
-
-    wid && B.windows.remove(wid, () => B.runtime.lastError) // 直接关闭
+    removePopup(id)
+    let popupId = `_popup_${id || 'one'}`
     B.windows.create({type: 'popup', focused: false, width: 1, height: 1, url}, w => window[popupId] = w.id)
 
     // 定时关闭窗口，减少内存占用
     _setTimeout(id, () => {
-        // wid && B.windows.remove(wid, () => B.runtime.lastError)
-        // 清理所有小窗口
-        B.windows.getAll({populate: true}, function (windows) {
-            let curOri = new URL(url).origin
-            windows.forEach(w => {
-                if (w.type === 'popup' && w.width === 1 && w.tabs.length === 1) {
-                    // console.log('url:', w.tabs[0].url)
-                    if (!w.tabs[0].url || new URL(w.tabs[0].url).origin === curOri) {
-                        B.windows.remove(w.id, () => B.runtime.lastError) // 关闭
-                    }
-                }
-            })
-        })
+        removePopup(id)
+        cleanPopup(url)  // 清理所有小窗口
     }, timeout)
+}
+
+function removePopup(id) {
+    let popupId = `_popup_${id || 'one'}`
+    let wid = window[popupId]
+    if (!wid) return
+    B.windows.remove(wid, () => B.runtime.lastError) // 关闭
+    window[popupId] = null
+}
+
+function cleanPopup(url) {
+    B.windows.getAll({populate: true}, function (windows) {
+        let curOri = new URL(url).origin
+        windows.forEach(w => {
+            if (w.type === 'popup' && w.width === 1 && w.tabs.length === 1) {
+                // console.log('url:', w.tabs[0].url)
+                if (!w.tabs[0].url || new URL(w.tabs[0].url).origin === curOri) {
+                    B.windows.remove(w.id, () => B.runtime.lastError) // 关闭
+                }
+            }
+        })
+    })
 }
 
 // 创建一个临时标签
 function createTmpTab(id, url, timeout) {
     timeout = timeout || 20 * 1000 // 默认 20 秒
     let tabName = `_tmp_tab_${id || 'one'}`
-    removeTmpTab(tabName) // 关闭
+    removeTmpTab(id) // 关闭
     B.tabs.create({active: false, url}, tab => window[tabName] = tab.id)
     _setTimeout(id, () => removeTmpTab(tabName), timeout)  // 定时关闭窗口，减少内存占用
 }
@@ -502,13 +514,12 @@ function removeTmpTab(id) {
 }
 
 function openIframe(id, url, timeout) {
-    id = id || 'iframe_' + Date.now()
-    timeout = timeout || 60 * 1000 // 默认 1 分钟
-
-    let el = document.getElementById(id)
+    timeout = timeout || 20 * 1000 // 默认 20 秒
+    let ifrId = `_iframe_${id || 'one'}`
+    let el = document.getElementById(ifrId)
     if (!el) {
         el = document.createElement('iframe')
-        el.id = id
+        el.id = ifrId
         el.src = url
         document.body.appendChild(el)
     } else {
@@ -518,6 +529,12 @@ function openIframe(id, url, timeout) {
     // 定时删除，减小内存占用
     _setTimeout(id, () => el && el.remove(), timeout)
     return el
+}
+
+function removeIframe(id) {
+    let ifrId = `_iframe_${id || 'one'}`
+    let el = document.getElementById(ifrId)
+    el && el.remove()
 }
 
 function sliceStr(text, maxLen) {

@@ -82,11 +82,13 @@ function hjdictDictionary() {
                 if (q.length > 100) return reject('The text is too large!')
                 let url = `https://www.hjdict.com/w/${encodeURIComponent(q)}`
                 let run = () => {
-                    openBgPage('iframe_hjDict', url)
+                    let pageId = 'iframe_hjDict'
+                    openBgPage(pageId, url)
                     setTimeout(() => {
                         httpGet(url, 'document', null, true).then(r => {
                             if (r) {
                                 resolve(this.unify(r, q))
+                                removeBgPage(pageId)
                             } else {
                                 reject('hjdict.com error!')
                             }

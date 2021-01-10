@@ -145,7 +145,8 @@ function sogouTranslate() {
                 if (q.length > 5000) return reject('The text is too large!')
 
                 let url = `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
-                openBgPage('iframe_soGou', url)
+                let pageId = 'iframe_soGou'
+                openBgPage(pageId, url)
                 httpGet(url, 'document').then(r => {
                     // 获取翻译结果
                     let data
@@ -167,6 +168,7 @@ function sogouTranslate() {
                     }
                     if (data) {
                         resolve(this.unify(data, q, srcLan, tarLan))
+                        // removeBgPage(pageId) // 关闭太快，会被 sogou 防火墙判定为恶意用户
                     } else {
                         reject('Get data is empty!')
                     }
