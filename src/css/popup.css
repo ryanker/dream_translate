@@ -4,3 +4,7 @@ html, body {
     overflow: hidden;
     background: #f5f8fa;
 }
+
+html {
+    height: 100%;
+}

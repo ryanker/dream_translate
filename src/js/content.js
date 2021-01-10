@@ -774,7 +774,9 @@ function sendQuery(text) {
 function showDialog(left, top) {
     let options = null
     let position = setting.position
-    if (position === 'follow') {
+    if (isPopup) {
+        // 跳过
+    } else if (position === 'follow') {
         options = {left, top}
     } else if (position === 'right') {
         dialog.el.removeAttribute('style')
@@ -1152,9 +1154,9 @@ function dmxDialog(options) {
     if (o.width !== 'auto') el.style.width = Number(o.width) + 'px'
     if (o.height !== 'auto') el.style.height = Number(o.height) + 'px'
     o.show ? D.show() : D.hide()
-    o.isMove ? D.enableMove() : D.disableMove()
-    o.isResize ? D.enableResize() : D.disableResize()
-    o.autoHide ? D.pinCancel() : D.pin()
+    o.autoHide && D.pinCancel()
+    o.isMove && D.enableMove()
+    o.isResize && D.enableResize()
 
     // 顶部按钮事件
     $('dmx_close').onclick = function () {
