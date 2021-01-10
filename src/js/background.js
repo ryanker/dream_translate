@@ -483,6 +483,24 @@ function openPopup(id, url, timeout) {
     }, timeout)
 }
 
+// 创建一个临时标签
+function createTmpTab(id, url, timeout) {
+    timeout = timeout || 20 * 1000 // 默认 20 秒
+    let tabName = `_tmp_tab_${id || 'one'}`
+    removeTmpTab(tabName) // 关闭
+    B.tabs.create({active: false, url}, tab => window[tabName] = tab.id)
+    _setTimeout(id, () => removeTmpTab(tabName), timeout)  // 定时关闭窗口，减少内存占用
+}
+
+// 关闭临时标签
+function removeTmpTab(id) {
+    let tabName = `_tmp_tab_${id || 'one'}`
+    let tabId = window[tabName]
+    if (!tabId) return
+    B.tabs.remove(tabId, () => B.runtime.lastError) // 关闭
+    window[tabName] = null
+}
+
 function openIframe(id, url, timeout) {
     id = id || 'iframe_' + Date.now()
     timeout = timeout || 60 * 1000 // 默认 1 分钟

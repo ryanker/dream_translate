@@ -36,9 +36,11 @@ function deeplTranslate() {
                 if (q.length > 5000) return reject('The text is too large!')
 
                 // popup 框
+                let pageId = 'iframe_DeepL'
+                let timeout = 20 * 1000
                 let url = `https://www.deepl.com/translator#${srcLan}/${tarLan}/${encodeURIComponent(q)}`
                 // console.log('url:', url)
-                openBgPage('iframe_DeepL', url, 30 * 1000)
+                isFirefox ? createTmpTab(pageId, url, timeout) : openPopup(pageId, url, timeout)
 
                 // 获取请求参数
                 let filter = {urls: ['*://*.deepl.com/jsonrpc*'], types: ['xmlhttprequest']} // 请求参数
@@ -67,6 +69,7 @@ function deeplTranslate() {
                                     this.isData = true // 表示有数据了
                                     resolve(res)
                                     _clearTimeout(outId)
+                                    removeTmpTab(pageId)
                                 }
                             } else {
                                 reject('DeepL error!')
