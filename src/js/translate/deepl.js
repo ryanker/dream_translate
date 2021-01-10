@@ -47,15 +47,15 @@ function deeplTranslate() {
                 this.isData = false
                 let onBeforeRequest = (details) => {
                     if (this.isData) return
-                    let rBody = details.requestBody
-                    let bytes = getJSONValue(rBody, 'raw.0.bytes')
+                    let {requestBody, url} = details
+                    let bytes = getJSONValue(requestBody, 'raw.0.bytes')
                     if (!bytes) return
                     let body = new TextDecoder().decode(bytes)
 
                     // 获取数据
                     _setTimeout('trans_DeepL', () => {
                         onBeforeSendHeadersAddListener(onBeforeSendHeaders, filter)
-                        let options = {url: details.url, type: 'json', body}
+                        let options = {url, body, type: 'json'}
                         httpPost(options).then(r => {
                             removeListener()
                             if (r) {
