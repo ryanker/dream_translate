@@ -360,7 +360,7 @@ function initTranslate() {
         }
         window._translateTimeoutId = setTimeout(() => {
             translateEl.click() // 开始翻译
-        }, 500)
+        }, 1000)
     })
     isPopup && focusLast(inputEl) // 光标移到结尾
 
@@ -818,7 +818,7 @@ function focusLast(el) {
         range.selectAllChildren(el)
         range.collapseToEnd() // 光标移到结尾
     } else {
-        setTimeout(() => el.focus(), 0)
+        setTimeout(() => el.focus(), 50)
     }
 }
 
