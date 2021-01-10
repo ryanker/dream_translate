@@ -98,7 +98,7 @@ sec-fetch-site: same-origin`
             return ret
         },
         async query(q, srcLan, tarLan) {
-            return this.trans(q, srcLan, tarLan)
+            return checkRetry(() => this.trans(q, srcLan, tarLan))
         },
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'

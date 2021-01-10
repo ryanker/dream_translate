@@ -435,6 +435,22 @@ function cleanAttr(el, attrs) {
     })
 }
 
+// 检测返回结果是否正确，如果不正确，则重试
+async function checkRetry(callback, times) {
+    times = times || 3 // 默认 3 次
+    let isOk = false
+    let p
+    for (let i = 0; i < times; i++) {
+        p = callback()
+        await p.then(r => {
+            if (r.data && r.data.length > 0) isOk = true
+        }).catch(_ => null)
+        if (isOk) return p
+        await sleep(300)
+    }
+    return p
+}
+
 // 打开一个几乎不可见的 popup
 function openPopup(id, url, timeout) {
     id = id || 'dmx_popup'
