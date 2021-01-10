@@ -22,35 +22,35 @@ function bingDictionary() {
             let wordEl = el.querySelector('#headword')
             if (wordEl) s = `<div class="case_dd_head">${wordEl.innerText.trim()}</div>`
 
-            let soundTmp = {}
-            el.querySelectorAll('.hd_tf_lh .b_primtxt').forEach(e => {
-                let ph = e.innerText && e.innerText.replace(/[\[\]美英]/g, '').trim() || ''
-                let type = ''
-                if (e.innerText.includes('美')) {
-                    type = 'us'
-                    if (ph) phonetic.us = ph
-                } else {
-                    type = 'uk'
-                    if (ph) phonetic.uk = ph
-                }
-
-                // 发音链接
-                if (e.nextElementSibling && e.nextElementSibling.className === 'hd_tf') {
-                    let aEl = e.nextElementSibling.querySelector('a')
-                    if (aEl) {
-                        let clickStr = aEl.getAttribute('onclick')
-                        clickStr && clickStr.replace(/'(http[^']+)'/, url => {
-                            url = url.replace(/'/g, '')
-                            soundTmp[type] = url
-                        })
-                    }
-                }
-            })
+            // 音标
+            let prUK = el.querySelector('.hd_pr')
+            if (prUK) {
+                let ph = prUK.innerText ? prUK.innerText.replace(/^UK|[\[\]美英]/g, '').trim() : ''
+                if (ph) phonetic.uk = ph
+            }
+            let prUS = el.querySelector('.hd_prUS')
+            if (prUS) {
+                let ph = prUS.innerText ? prUS.innerText.replace(/^US|[\[\]美英]/g, '').trim() : ''
+                if (ph) phonetic.us = ph
+            }
             if (phonetic.us && phonetic.uk === phonetic.us) delete phonetic.us // 如果音标一样，只保留一个
 
-            // 修正顺序
-            if (soundTmp.uk) sound.push({type: 'uk', url: soundTmp.uk})
-            if (soundTmp.us) sound.push({type: 'us', url: soundTmp.us})
+            // 发音
+            let tfEl = el.querySelectorAll('.hd_tf')
+            if (tfEl && tfEl.length >= 2) {
+                let getSoundUrl = function (e) {
+                    let url = ''
+                    let aEl = e.querySelector('a')
+                    if (!aEl) return url
+                    let str = aEl.getAttribute('onclick')
+                    str && str.replace(/'(http[^']+)'/, r => url = r.replace(/'/g, ''))
+                    return url
+                }
+                let ukUrl = getSoundUrl(tfEl[1])
+                if (ukUrl) sound.push({type: 'uk', url: ukUrl})
+                let usUrl = getSoundUrl(tfEl[0])
+                if (usUrl) sound.push({type: 'us', url: usUrl})
+            }
 
             // 释义
             let liEl = el.querySelectorAll('.qdef > ul > li')
