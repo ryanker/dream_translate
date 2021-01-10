@@ -38,7 +38,7 @@ function deeplTranslate() {
                 // popup 框
                 let url = `https://www.deepl.com/translator#${srcLan}/${tarLan}/${encodeURIComponent(q)}`
                 // console.log('url:', url)
-                openPopup('popup_DeepL', url, 30 * 1000)
+                openBgPage('iframe_DeepL', url, 30 * 1000)
 
                 // 获取请求参数
                 let filter = {urls: ['*://*.deepl.com/jsonrpc*'], types: ['xmlhttprequest']} // 请求参数

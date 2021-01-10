@@ -451,6 +451,10 @@ async function checkRetry(callback, times) {
     return p
 }
 
+function openBgPage(id, url, timeout) {
+    isFirefox ? openIframe(id, url, timeout) : openPopup(id, url, timeout)
+}
+
 // 打开一个几乎不可见的 popup
 function openPopup(id, url, timeout) {
     id = id || 'dmx_popup'
