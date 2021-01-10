@@ -44,6 +44,8 @@ PS：本来很简单的翻译查词功能，没必要做的跟航空母舰一样
 
 360翻译 https://fanyi.so.com
 
+DeepL翻译 https://www.deepl.com/translator (维基百科：评论家认为它的翻译比起 Google 翻译更为准确自然)
+
 ### 在线词典（国内）
 有道词典 https://www.youdao.com
 
