@@ -790,14 +790,15 @@ function checkChange(action, text) {
     return true
 }
 
-function addHistory(data) {
+function addHistory(dQuery) {
     if (disHistory) return disHistory = false
+    if (!['translate', 'dictionary', 'search'].includes(dQuery.action)) return
     if (historyIndex < history.length - 1) {
         history.splice(historyIndex + 1, history.length)
     } else if (history.length >= 1000) {
         history.shift() // 最多只保留 1000 条
     }
-    history.push(data)
+    history.push(dQuery)
     historyIndex = history.length - 1
     debug('history:', history, historyIndex)
     if (history.length > 1) {

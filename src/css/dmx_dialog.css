@@ -87,7 +87,7 @@ blockquote {
 }
 
 #dmx_dialog.dmx_popup {
-    top: 1px;
+    top: 0;
     left: 0;
     width: 520px;
     height: 500px;
