@@ -812,14 +812,11 @@ function addHistory(data) {
 }
 
 function focusLast(el) {
-    if (isFirefox) {
-        el.focus()
-        let range = window.getSelection()
-        range.selectAllChildren(el)
-        range.collapseToEnd() // 光标移到结尾
-    } else {
-        setTimeout(() => el.focus(), 50)
-    }
+    // setTimeout(() => el.focus(), 50)
+    el.focus()
+    let range = window.getSelection()
+    range.selectAllChildren(el)
+    range.collapseToEnd() // 光标移到结尾
 }
 
 function $(id) {
