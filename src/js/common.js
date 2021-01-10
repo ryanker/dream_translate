@@ -476,6 +476,17 @@ function httpPost(options) {
     })
 }
 
+// 时间范围内，只执行最后一次回调函数
+function _setTimeout(tid, callback, timeout) {
+    tid = `mx_timeoutId_${tid}`
+    let id = window[tid]
+    if (id) {
+        clearTimeout(id)
+        window[tid] = null
+    }
+    window[tid] = setTimeout(callback, timeout)
+}
+
 function debug(...data) {
     isDebug && console.log('[DMX DEBUG]', ...data)
 }

@@ -351,16 +351,8 @@ function initTranslate() {
     inputEl.addEventListener('blur', function () {
         textTmp = this.innerText
     })
-    inputEl.addEventListener('keyup', function (e) {
-        if (!isPopup) return
-        let id = window._translateTimeoutId
-        if (id) {
-            clearTimeout(id)
-            window._translateTimeoutId = null
-        }
-        window._translateTimeoutId = setTimeout(() => {
-            translateEl.click() // 开始翻译
-        }, 1000)
+    inputEl.addEventListener('keyup', function () {
+        if (isPopup) _setTimeout('translate', () => translateEl.click(), 1000) // 定时自动开始翻译
     })
     isPopup && focusLast(inputEl) // 光标移到结尾
 
@@ -400,6 +392,7 @@ function initDictionary() {
     })
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
+        if (isPopup) _setTimeout('dictionary', () => butEl.click(), 1000) // 定时自动开始查词
     })
     inpEl.focus()
 }
