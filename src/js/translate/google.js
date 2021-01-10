@@ -202,14 +202,15 @@ function googleTranslate() {
             return ret
         },
         async query(q, srcLan, tarLan, noCache) {
-            let t = Math.floor(Date.now() / 36e5)
-            let d = this.token.tkk
-            if (noCache || !d || Number(d.split('.')[0]) !== t) {
-                await this.getToken().catch(err => {
-                    console.warn(err)
-                })
-            }
-            return this.trans(q, srcLan, tarLan)
+            return checkRetry(async (i) => {
+                let t = Math.floor(Date.now() / 36e5)
+                let d = this.token.tkk
+                if (i > 0) noCache = true
+                if (noCache || !d || Number(d.split('.')[0]) !== t) {
+                    await this.getToken().catch(err => console.warn(err))
+                }
+                return this.trans(q, srcLan, tarLan)
+            })
         },
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'

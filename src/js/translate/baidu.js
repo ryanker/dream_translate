@@ -209,13 +209,6 @@ function baiduTranslate() {
             return {text, srcLan, tarLan, lanTTS: this.lanTTS, data, extra: s}
         },
         async query(q, srcLan, tarLan, noCache) {
-            let t = Math.floor(Date.now() / 36e5)
-            let d = this.token.date
-            if (noCache || !d || Number(d) !== t) {
-                await this.getToken().catch(err => {
-                    debug(err)
-                })
-            }
             if (srcLan === 'auto') {
                 srcLan = 'en' // 默认值
                 await httpPost({
@@ -228,7 +221,18 @@ function baiduTranslate() {
                 })
             }
             if (srcLan === tarLan) tarLan = srcLan === 'zh' ? 'en' : 'zh'
-            return this.trans(q, srcLan, tarLan)
+
+            return checkRetry(async (i) => {
+                let t = Math.floor(Date.now() / 36e5)
+                let d = this.token.date
+                if (i > 0) noCache = true
+                if (noCache || !d || Number(d) !== t) {
+                    await this.getToken().catch(err => {
+                        debug(err)
+                    })
+                }
+                return this.trans(q, srcLan, tarLan)
+            })
         },
         tts(q, lan) {
             return new Promise((resolve, reject) => {

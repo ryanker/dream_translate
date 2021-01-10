@@ -281,7 +281,7 @@ function sogouTranslate() {
             return {text, srcLan, tarLan, lanTTS: null, data, extra: s}
         },
         async query(q, srcLan, tarLan) {
-            return this.trans(q, srcLan, tarLan)
+            return checkRetry(() => this.trans(q, srcLan, tarLan))
         },
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'

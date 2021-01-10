@@ -441,7 +441,7 @@ async function checkRetry(callback, times) {
     let isOk = false
     let p
     for (let i = 0; i < times; i++) {
-        p = callback()
+        p = callback(i)
         await p.then(r => {
             if (r.data && r.data.length > 0) isOk = true
         }).catch(_ => null)

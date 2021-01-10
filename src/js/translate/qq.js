@@ -177,10 +177,10 @@ Sec-Fetch-Site: same-origin`
         },
         async query(q, srcLan, tarLan) {
             this.addListenerRequest()
-            await this.getToken().catch(err => {
-                debug('qq getToken error:', err)
+            return checkRetry(async (i) => {
+                if (i > 0) await this.getToken().catch(err => debug('qq getToken error:', err))
+                return this.trans(q, srcLan, tarLan)
             })
-            return this.trans(q, srcLan, tarLan)
         },
         setCookie(name, value) {
             let domain = 'fanyi.qq.com'
