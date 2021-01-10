@@ -5,6 +5,11 @@ html, body {
     background: #f5f8fa;
 }
 
-html {
-    height: 100%;
+.dmx_popup {
+    width: 520px;
+    height: 500px;
+}
+
+.dmx_popup body {
+    width: 520px;
 }
