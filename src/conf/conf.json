@@ -43,7 +43,8 @@
     "qq": "腾讯翻译",
     "alibaba": "阿里翻译",
     "sogou": "搜狗翻译",
-    "so": "360翻译"
+    "so": "360翻译",
+    "deepl": "DeepL翻译"
   },
   "translateTTSList": {
     "baidu": "百度朗读",
