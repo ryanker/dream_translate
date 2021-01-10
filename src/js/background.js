@@ -8,6 +8,7 @@
  */
 
 let conf, setting, sdk = {}
+var textTmp = ''
 document.addEventListener('DOMContentLoaded', async function () {
     let languageList = '', dialogCSS = '', dictionaryCSS = {}
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
@@ -81,6 +82,8 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         openTab(m.url)
     } else if (m.action === 'onAllowSelect') {
         sendAllowSelect()
+    } else if (m.action === 'textTmp') {
+        textTmp = m.text // 划词文字缓存
     }
 })
 

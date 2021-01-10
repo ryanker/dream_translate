@@ -128,6 +128,7 @@ function initDialog() {
         let isFullscreen = location.href === B.root + 'html/popup.html?fullscreen=1'
         isFullscreen ? addClass(dialog.el, 'fullscreen') : addClass(document.documentElement, 'dmx_popup')
         D('#dmx_close,#dmx_pin,#dmx_fullscreen').forEach(e => e.remove())
+        if (B.getBackgroundPage) textTmp = B.getBackgroundPage().textTmp // 读取后台缓存
     }
 
     // 划词查询
@@ -709,6 +710,7 @@ function soundIconHTML(lan, lanArr, type) {
 }
 
 function initQuery(text, clientX, clientY) {
+    sendBgMessage({action: 'textTmp', text}) // 发送到后台缓存起来
     if (!text) {
         iconBut.style.display = 'none'
         return
