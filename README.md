@@ -34,13 +34,13 @@ PS：本来很简单的翻译查词功能，没必要做的跟航空母舰一样
 
 必应翻译 https://cn.bing.com/translator
 
-有道翻译 http://fanyi.youdao.com
+有道翻译 https://fanyi.youdao.com
 
-腾讯翻译 http://fanyi.qq.com
+腾讯翻译 https://fanyi.qq.com
 
-搜狗翻译 http://fanyi.sogou.com
+搜狗翻译 https://fanyi.sogou.com
 
-阿里翻译 http://translate.alibaba.com
+阿里翻译 https://translate.alibaba.com
 
 360翻译 https://fanyi.so.com
 
@@ -52,9 +52,9 @@ DeepL翻译 https://www.deepl.com/translator (维基百科：专家认为它比 
 
 必应词典 https://cn.bing.com/dict
 
-海词词典 http://dict.cn
+海词词典 https://dict.cn
 
-金山词典 http://www.iciba.com
+金山词典 https://www.iciba.com
 
 欧陆词典 https://dict.eudic.net
 
