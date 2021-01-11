@@ -37,7 +37,7 @@ function dictcnDictionary() {
 
                 spanEl.querySelectorAll('.sound').forEach(e => {
                     let title = e.getAttribute('title') || ''
-                    let url = 'http://audio.dict.cn/' + e.getAttribute('naudio')
+                    let url = 'https://audio.dict.cn/' + e.getAttribute('naudio')
                     let isWoman = e.className && e.className.includes('fsound')
                     sound.push({type, title, url, isWoman})
                 })
@@ -116,7 +116,7 @@ function dictcnDictionary() {
         query(q) {
             return new Promise((resolve, reject) => {
                 if (q.length > 100) return reject('The text is too large!')
-                httpGet(`http://dict.cn/${encodeURIComponent(q)}`, 'document', null, true).then(r => {
+                httpGet(`https://dict.cn/${encodeURIComponent(q)}`, 'document', null, true).then(r => {
                     if (r) {
                         resolve(this.unify(r, q))
                     } else {
@@ -128,7 +128,7 @@ function dictcnDictionary() {
             })
         },
         link(q) {
-            return `http://dict.cn/${encodeURIComponent(q)}`
+            return `https://dict.cn/${encodeURIComponent(q)}`
         },
     }
 }

@@ -187,7 +187,7 @@ function youdaoTranslate() {
         },
         getToken() {
             return new Promise((resolve, reject) => {
-                httpGet('http://fanyi.youdao.com/').then(r => {
+                httpGet('https://fanyi.youdao.com/').then(r => {
                     let arr = r.match(/<script.*?src="(http[^"]+fanyi\.min\.js)"/)
                     if (arr) {
                         httpGet(arr[1]).then(r => {
@@ -226,7 +226,7 @@ function youdaoTranslate() {
                 }
             })*/
             h.push({name: 'Origin', value: 'https://fanyi.youdao.com'})
-            h.push({name: 'Referer', value: 'http://fanyi.youdao.com'})
+            h.push({name: 'Referer', value: 'https://fanyi.youdao.com'})
             return {requestHeaders: h}
         },
         trans(q, srcLan, tarLan) {
@@ -241,7 +241,7 @@ function youdaoTranslate() {
                     salt = ts + Math.floor(10 * Math.random())
                 let sign = this.md5("fanyideskweb" + q + salt + this.token.token)
                 let p = new URLSearchParams(`i=${q}&from=${srcLan}&to=${tarLan}&smartresult=dict&client=fanyideskweb&salt=${salt}&sign=${sign}&lts=${ts}&bv=${bv}&doctype=json&version=2.1&keyfrom=fanyi.web&action=FY_BY_CLICKBUTTION`)
-                let url = 'http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
+                let url = 'https://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
                 httpPost({url: url, body: p.toString()}).then(r => {
                     this.removeListenerRequest()
                     if (r) {
@@ -287,7 +287,7 @@ function youdaoTranslate() {
                 if (!inArray(lan, this.lanTTS)) return reject('This language is not supported!')
                 let lanArr = {en: "eng", zh: 'zh-CHS', jp: "jap", kor: "ko", fra: "fr"}
                 let le = lanArr[lan] || lanArr.en
-                // resolve(`http://tts.youdao.com/fanyivoice?word=${encodeURIComponent(q)}&le=eng&keyfrom=speaker-target`)
+                // resolve(`https://tts.youdao.com/fanyivoice?word=${encodeURIComponent(q)}&le=eng&keyfrom=speaker-target`)
                 let getUrl = (s) => {
                     return `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(s)}&le=${le}`
                 }
@@ -300,7 +300,7 @@ function youdaoTranslate() {
             })
         },
         link(q, srcLan, tarLan) {
-            return `http://fanyi.youdao.com/?tn=dream_translate`
+            return `https://fanyi.youdao.com/?tn=dream_translate`
         },
     }
 }
