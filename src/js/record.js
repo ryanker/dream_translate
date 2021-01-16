@@ -12,7 +12,11 @@ let maxDuration = 5000
 
 let listen = playerListen('player_listen', {
     url,
-    onPlay: () => {
+    onReady: function (duration) {
+        let times = 2
+        if (duration > 10) times *= 2.5 // 时间越长，模仿越难
+        maxDuration = Math.ceil(duration * times) * 1000
+        record.setMaxDuration(maxDuration)
     },
     onFinish: () => {
         record.start() // 开始录音
@@ -27,7 +31,7 @@ let record = playerRecord('player_record', {
             // 恢复 显示开始录音按钮
             let t = setTimeout(() => {
                 listen.showControls() // 显示播放按钮
-            }, maxDuration + 1000)
+            }, maxDuration)
 
             setTimeout(() => {
                 compare.load(URL.createObjectURL(record.blob))
@@ -107,7 +111,7 @@ function playerListen(id, options) {
             p_duration.innerHTML = ' / ' + humanTime(maxDuration)
             p_current.innerHTML = '00:00:000'
         }
-        typeof o.onReady === 'function' && o.onReady.call(ws)
+        typeof o.onReady === 'function' && o.onReady(maxDuration)
     })
     ws.on('loading', function (percents) {
         p_controls.style.display = percents === 100 ? 'flex' : 'none'
