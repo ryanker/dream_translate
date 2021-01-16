@@ -984,8 +984,6 @@ function dmxDialog(options) {
             el.style.top = top + 'px'
             el.style.height = height + 'px'
             typeof o.onResize === 'function' && o.onResize({height: height})
-        } else {
-            onMouseup()
         }
     }
     let _e = function (e) {
@@ -994,8 +992,6 @@ function dmxDialog(options) {
         if (width > o.minWidth && e.clientX < docW - (elW - (clientX - elX))) {
             el.style.width = width + 'px'
             typeof o.onResize === 'function' && o.onResize({width: width})
-        } else {
-            onMouseup()
         }
     }
     let _s = function (e) {
@@ -1004,8 +1000,6 @@ function dmxDialog(options) {
         if (e.clientY < docH - (elH - (clientY - elY)) && height > o.minHeight) {
             el.style.height = height + 'px'
             typeof o.onResize === 'function' && o.onResize({height: height})
-        } else {
-            onMouseup()
         }
     }
     let _w = function (e) {
@@ -1015,8 +1009,6 @@ function dmxDialog(options) {
             el.style.left = left + 'px'
             el.style.width = width + 'px'
             typeof o.onResize === 'function' && o.onResize({width: width})
-        } else {
-            onMouseup()
         }
     }
     let onMousedown = function (e) {
@@ -1067,6 +1059,7 @@ function dmxDialog(options) {
     }
     document.addEventListener('mousemove', onMousemove)
     document.addEventListener('mouseup', onMouseup)
+    document.addEventListener('mouseleave', onMouseup) // 鼠标离开浏览器
     el.addEventListener('mouseup', onMouseup)
 
     let elArr = ['n', 'e', 's', 'w', 'nw', 'ne', 'sw', 'se']

@@ -98,7 +98,7 @@ blockquote {
 #dmx_dialog.dmx_popup.fullscreen {
     width: 100%;
     height: 100%;
-    min-width: 400px;
+    min-width: 500px;
     min-height: 300px;
 }
 
