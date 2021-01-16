@@ -192,6 +192,11 @@ function initDialog() {
         dQuery.action = 'more'
     })
 
+    // 录音练习
+    $('dmx_voice').addEventListener('click', function () {
+        sendMessage({action: 'onRecord'})
+    })
+
     // 历史记录
     let hEl = $('dmx_history')
     let hlEl = hEl.querySelector('.dmx-icon-left')
@@ -675,6 +680,7 @@ function resultSound(m) {
         let dEl = el.querySelectorAll(`[data-type=${type}]`)
         rmClassD(dEl, 'active')
     }
+    addClass($('dmx_voice'), 'dmx_show')
 }
 
 function activeRipple(el) {
@@ -746,7 +752,8 @@ function sendQuery(text) {
     let action = el.querySelector('.active') && el.querySelector('.active').getAttribute('action')
     if (!action) {
         action = dialogConf.action
-        el.querySelector(`u[action="${action}"]`).click()
+        let actionEl = el.querySelector(`u[action="${action}"]`)
+        if (actionEl) actionEl.click()
     }
     if (!checkChange(action, text)) return
 
@@ -948,6 +955,8 @@ function dmxDialog(options) {
         <div class="dmx_right">
             <div id="dmx_setting"><i class="dmx-icon dmx-icon-setting"></i></div>
             <div id="dmx_more"><i class="dmx-icon dmx-icon-more"></i></div>
+            <div id="dmx_voice" class="dmx_hide"><i class="dmx-icon dmx-icon-voice"></i></div>
+            <div id="dmx_heart" class="dmx_hide"><i class="dmx-icon dmx-icon-heart"></i></div>
         </div>
     </div>
     <div id="dmx_dialog_content">${o.contentHTML}</div>

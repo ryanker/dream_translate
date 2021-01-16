@@ -78,6 +78,8 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         execCopy(m.text) // 后台复制，页面才不会失去焦点
     } else if (m.action === 'transWindow') {
         openTransWindow()
+    } else if (m.action === 'onRecord') {
+        openRecord()
     } else if (m.action === 'openUrl') {
         openTab(m.url)
     } else if (m.action === 'onAllowSelect') {
@@ -220,24 +222,41 @@ function removeMenu(name) {
 }
 
 function openTransWindow() {
-    let fn = function () {
+    openWindow('trans', 600, 520, B.root + 'html/popup.html?fullscreen=1')
+}
+
+function openRecord() {
+    openWindow('record', 600, 520, B.root + 'html/record.html', true)
+}
+
+function openWindow(wid, width, height, url, reopen) {
+    let name = `_window_${wid}`
+    let openFn = function () {
+        let o = {type: 'popup', width, height, url}
+
+        // 居中
         let screen = window.screen
-        let o = {type: 'popup', width: 600, height: 520, url: B.root + 'html/popup.html?fullscreen=1'}
         if (screen.width) o.left = (screen.width - o.width) / 2
         if (screen.height) o.top = (screen.height - o.height) / 2
-        B.windows.create(o, w => window.transWindowId = w.id)
+
+        B.windows.create(o, w => window[name] = w.id)
     }
-    let id = window.transWindowId
+    let id = window[name]
     if (id) {
         B.windows.get(id, function (w) {
             if (!B.runtime.lastError && w.id) {
-                B.windows.update(w.id, {focused: true})
+                if (reopen) {
+                    B.windows.remove(w.id)
+                    setTimeout(openFn, 100)
+                } else {
+                    B.windows.update(w.id, {focused: true})
+                }
             } else {
-                fn()
+                openFn()
             }
         })
     } else {
-        fn()
+        openFn()
     }
 }
 

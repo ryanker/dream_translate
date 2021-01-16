@@ -25,6 +25,14 @@ blockquote {
     overflow: hidden;
 }
 
+.dmx_hide {
+    display: none;
+}
+
+.dmx_show {
+    display: block;
+}
+
 #dmx_mouse_icon {
     position: fixed;
     top: 0;
@@ -233,6 +241,14 @@ blockquote {
 
 #dmx_dialog_title #dmx_fullscreen.active:before {
     content: "\e63e";
+}
+
+#dmx_dialog_title .dmx-icon-voice {
+    font-size: 18px;
+}
+
+#dmx_dialog_title .dmx-icon-heart {
+    color: #FC4A4A;
 }
 
 #dmx_dialog_title #dmx_history {

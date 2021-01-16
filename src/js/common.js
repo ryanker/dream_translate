@@ -16,8 +16,8 @@
  * https://crxdoc-zh.appspot.com/extensions/
  */
 const isDebug = true
-const isFirefox = navigator.userAgent.includes("Firefox")
-// const isFirefox = typeof browser !== "undefined" && Object.getPrototypeOf(browser) === Object.prototype
+window.isFirefox = navigator.userAgent.includes("Firefox")
+// window.isFirefox = typeof browser !== "undefined" && Object.getPrototypeOf(browser) === Object.prototype
 const B = {
     extension: chrome.extension,
     getBackgroundPage: chrome.extension.getBackgroundPage,
@@ -378,6 +378,18 @@ function getJSONValue(data, keys, value) {
         val = val[key]
     }
     return val
+}
+
+// 添加 DOM 元素
+function addEl(options) {
+    let {tagName, id, className, text, title, onClick} = options
+    let el = document.createElement(tagName)
+    if (id) el.id = id
+    if (className) el.className = className
+    if (text) el.textContent = text
+    if (title) el.title = title
+    if (onClick) el.addEventListener('click', onClick)
+    return el
 }
 
 function createTextarea() {
