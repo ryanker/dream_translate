@@ -370,7 +370,7 @@ select {
     height: 120px;
     max-width: 920px;
     background: #d7dde8;
-    border-radius: 0 0 5px 5px;
+    border-radius: 5px;
 }
 
 .dmx_player .dmx_surfer {

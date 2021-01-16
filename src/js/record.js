@@ -8,46 +8,67 @@
  */
 
 let url = B.getBackgroundPage().audioSrc
+let urlBlob
 let maxDuration = 5000
+let listen, record, compare
+playerInit()
 
-let listen = playerListen('player_listen', {
-    url,
-    onReady: function (duration) {
-        let times = 2
-        if (duration > 10) times *= 2.5 // 时间越长，模仿越难
-        maxDuration = Math.ceil(duration * times) * 1000
-        record.setMaxDuration(maxDuration)
-    },
-    onFinish: () => {
-        record.start() // 开始录音
-    },
+// 缓存加速
+httpGet(url, 'blob').then(blob => {
+    // console.log(blob)
+    urlBlob = blob
+    listen.loadBlob(blob)
+}).catch(err => {
+    console.warn('httpGet:' + err)
 })
 
-let record = playerRecord('player_record', {
-    maxDuration,
-    onStop: () => {
-        compare.load(url)
-        compare.once('finish', () => {
-            // 恢复 显示开始录音按钮
-            let t = setTimeout(() => {
-                listen.showControls() // 显示播放按钮
-            }, maxDuration)
+function playerInit() {
+    listen = playerListen('player_listen', {
+        onReady: function (duration) {
+            let times = 2
+            if (duration > 10) times *= 2.5 // 时间越长，模仿越难
+            maxDuration = Math.ceil(duration * times) * 1000
+            record.setMaxDuration(maxDuration)
+        },
+        onFinish: () => {
+            record.start() // 开始录音
+        },
+    })
 
-            setTimeout(() => {
-                compare.load(URL.createObjectURL(record.blob))
-                compare.once('finish', () => {
+    record = playerRecord('player_record', {
+        maxDuration,
+        onStop: () => {
+            compare.loadBlob(urlBlob)
+            compare.once('finish', () => {
+                // 恢复 显示开始录音按钮
+                let t = setTimeout(() => {
                     listen.showControls() // 显示播放按钮
-                    if (t) {
-                        clearTimeout(t)
-                        t = null
-                    }
-                })
-            }, 100)
-        })
-    },
-})
+                }, maxDuration)
 
-let compare = playerCompare('player_compare')
+                setTimeout(() => {
+                    // compare.load(URL.createObjectURL(record.blob))
+                    compare.loadBlob(record.blob)
+                    compare.once('finish', () => {
+                        listen.showControls() // 显示播放按钮
+                        if (t) {
+                            clearTimeout(t)
+                            t = null
+                        }
+                    })
+                }, 100)
+            })
+        },
+    })
+
+    compare = playerCompare('player_compare')
+}
+
+// 重新渲染
+window.addEventListener('resize', function (e) {
+    _setTimeout('resize', () => {
+        if (urlBlob) listen.loadBlob(urlBlob)
+    }, 1000)
+})
 
 // 播放
 function playerListen(id, options) {

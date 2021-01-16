@@ -434,10 +434,10 @@ function httpGet(url, type, headers, notStrict) {
             }
         }
         c.ontimeout = function (e) {
-            reject('NETWORK_TIMEOUT', e)
+            reject(e)
         }
         c.onerror = function (e) {
-            reject('NETWORK_ERROR', e)
+            reject(e)
         }
         c.open("GET", url)
         headers && headers.forEach(v => {
@@ -468,10 +468,10 @@ function httpPost(options) {
             }
         }
         c.ontimeout = function (e) {
-            reject('NETWORK_TIMEOUT', e)
+            reject(e)
         }
         c.onerror = function (e) {
-            reject('NETWORK_ERROR', e)
+            reject(e)
         }
         c.open("POST", o.url)
         if (o.type === 'form') {
