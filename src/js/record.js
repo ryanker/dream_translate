@@ -22,6 +22,13 @@ httpGet(url, 'blob').then(blob => {
     console.warn('httpGet:' + err)
 })
 
+// 重新渲染
+window.addEventListener('resize', function (e) {
+    _setTimeout('resize', () => {
+        if (urlBlob) listen.loadBlob(urlBlob)
+    }, 1000)
+})
+
 function playerInit() {
     listen = playerListen('player_listen', {
         onReady: function (duration) {
@@ -62,13 +69,6 @@ function playerInit() {
 
     compare = playerCompare('player_compare')
 }
-
-// 重新渲染
-window.addEventListener('resize', function (e) {
-    _setTimeout('resize', () => {
-        if (urlBlob) listen.loadBlob(urlBlob)
-    }, 1000)
-})
 
 // 播放
 function playerListen(id, options) {
