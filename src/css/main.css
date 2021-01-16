@@ -326,3 +326,176 @@ select {
 .more_list .dmx_button .dmx-icon {
     margin-right: 5px;
 }
+
+/* ==================== record ==================== */
+.record_main {
+    margin: 0 auto;
+    padding: 10px;
+    min-width: 500px;
+    max-width: 920px;
+}
+
+/* ==================== player ==================== */
+.dmx_player {
+    margin-bottom: 10px;
+    position: relative;
+    width: 100%;
+    height: 120px;
+    max-width: 920px;
+    border-radius: 5px;
+    overflow: hidden;
+    background: #d7dde8;
+}
+
+.dmx_player .dmx_surfer {
+    width: 100%;
+    height: calc(100% - 26px);
+}
+
+.dmx_player .dmx_controls {
+    display: flex;
+    position: absolute;
+    top: 26px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 26px);
+    z-index: 999;
+}
+
+.dmx_player .dmx_p_top {
+    background: #757F9A;
+    color: #FFFFFF;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 10px;
+}
+
+.dmx_player .dmx_p_top .dmx_p_title {
+    float: left;
+    font-size: 16px;
+}
+
+.dmx_player .dmx_p_top .dmx_p_time {
+    float: right;
+    font-size: 14px;
+    font-family: Consolas, serif;
+}
+
+.dmx_player .dmx_controls button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    min-width: 100px;
+    height: 60px;
+    white-space: nowrap;
+    cursor: pointer;
+    border-radius: 10px;
+    outline: 0;
+    padding: 0 10px;
+    margin-top: -30px;
+    margin-left: -50px;
+    font-size: 32px;
+    background-color: #FF4B2B;
+    border-color: #FF4B2B;
+    color: #FFF;
+}
+
+.dmx_player .dmx_controls button:hover {
+    background: #f78989;
+    border-color: #f78989;
+    color: #FFF;
+}
+
+.dmx_player .dmx_controls button.disabled {
+    cursor: not-allowed;
+    background: #fab6b6;
+    border-color: #fab6b6;
+    color: #FFF;
+}
+
+.dmx_circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 64px;
+    width: 64px;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    background: linear-gradient(#e9eaeb, #D3CCE3);
+    border: 1px solid #bdc3c7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .19), inset 0 1px 0 rgba(255, 255, 255, .4);
+    transition: height 0.25s ease, width 0.25s ease;
+    transform: translate(-50%, -50%);
+}
+
+.dmx_circle:hover {
+    outline: none;
+}
+
+.dmx_circle:before, .dmx_circle:after {
+    display: block;
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 50%;
+}
+
+.dmx_circle .dmx-icon {
+    font-size: 46px;
+    color: #333;
+}
+
+.dmx_circle.dmx_on {
+    background: linear-gradient(#FF416C, #FF4B2B);
+    border: 1px solid #FF4B2B;
+}
+
+.dmx_circle.dmx_on .dmx-icon {
+    color: #fff;
+}
+
+.dmx_circle.dmx_on:before, .dmx_circle.dmx_on:after {
+    border: 0.015625rem solid #FF4B2B;
+}
+
+.dmx_circle.dmx_on:before {
+    animation: dmx_ripple 2s linear infinite;
+}
+
+.dmx_circle.dmx_on:after {
+    animation: dmx_ripple 2s linear 1s infinite;
+}
+
+.dmx_reverse.dmx_on:before, .dmx_reverse.dmx_on:after {
+    animation-direction: reverse;
+}
+
+.dmx_reverse.dmx_on {
+    cursor: pointer;
+}
+
+@keyframes dmx_ripple {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+    75% {
+        transform: scale(1.75);
+        opacity: 0.2;
+    }
+    100% {
+        transform: scale(1.95);
+        opacity: 0;
+    }
+}

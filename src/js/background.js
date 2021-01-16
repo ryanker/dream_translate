@@ -392,8 +392,9 @@ function playAudio(url) {
             return reject('Audio url error:', url)
         }
         a.onended = function () {
-            if (blobUrl) URL.revokeObjectURL(blobUrl) // 释放内存
+            // if (blobUrl) URL.revokeObjectURL(blobUrl) // 释放内存
             resolve()
+            window.audioSrc = a.src // 记录最后一次播放的链接
         }
         a.onerror = function (err) {
             reject(err)
