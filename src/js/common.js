@@ -163,8 +163,7 @@ function getActiveTabId() {
     return new Promise((resolve, reject) => {
         if (!isFirefox) {
             B.tabs.query({currentWindow: true, active: true}, tab => {
-                let tabId = tab[0] && tab[0].url && resolve(tab[0].id)
-                resolve(tabId)
+                resolve(getJSONValue(tab, '0.id')) // todo: 还有优化空间
             })
         } else {
             browser.tabs.query({currentWindow: true, active: true}).then(tab => {
