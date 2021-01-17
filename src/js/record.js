@@ -14,14 +14,16 @@ let listen = {}, record, compare
 playerInit()
 
 // 加载音频
-if (audioSrc.blob) {
-    listen.loadBlob(audioSrc.blob)
-} else {
-    bg.getAudioBlob(audioSrc.url).then(b => {
-        listen.loadBlob(b)
-        audioSrc.blob = b
-    })
-}
+setTimeout(() => {
+    if (audioSrc.blob) {
+        listen.loadBlob(audioSrc.blob)
+    } else {
+        bg.getAudioBlob(audioSrc.url).then(b => {
+            listen.loadBlob(b)
+            audioSrc.blob = b
+        })
+    }
+}, 200)
 
 // 重新渲染
 window.addEventListener('resize', function (e) {
