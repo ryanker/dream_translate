@@ -421,7 +421,7 @@ function httpGet(url, type, headers, notStrict) {
     return new Promise((resolve, reject) => {
         let c = new XMLHttpRequest()
         c.responseType = type || 'text'
-        c.timeout = 10000
+        c.timeout = 20000
         c.onload = function (e) {
             if (notStrict) {
                 resolve(this.response)
@@ -453,7 +453,7 @@ function httpPost(options) {
         responseType: 'json',
         type: 'form',
         body: null,
-        timeout: 20000,
+        timeout: 30000,
         headers: [],
     }, options)
     return new Promise((resolve, reject) => {

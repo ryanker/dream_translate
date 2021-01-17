@@ -394,7 +394,9 @@ function playAudio(url) {
         a.onended = function () {
             // if (blobUrl) URL.revokeObjectURL(blobUrl) // 释放内存
             resolve()
-            window.audioSrc = a.src // 记录最后一次播放的链接
+            let url = a.src // 记录最后一次播放的链接
+            window.audioSrc = {url}
+            getAudioBlob(url).then(b => window.audioSrc.blob = b)
         }
         a.onerror = function (err) {
             reject(err)
@@ -407,6 +409,22 @@ function playAudio(url) {
             })
         }
     })
+}
+
+// 缓存音频文件
+async function getAudioBlob(url, retry) {
+    let b
+    retry = retry || 3
+    for (let i = 0; i < retry; i++) {
+        await httpGet(url, 'blob').then(blob => {
+            // console.log(blob)
+            b = blob
+        }).catch(err => {
+            console.warn('httpGet:' + err)
+        })
+        if (b) return b
+    }
+    return null
 }
 
 function sdkInit(name) {

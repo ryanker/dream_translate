@@ -7,25 +7,26 @@
  * @license MIT License
  */
 
-let url = B.getBackgroundPage().audioSrc
-let urlBlob
+let bg = B.getBackgroundPage()
+let audioSrc = bg.audioSrc
 let maxDuration = 5000
-let listen, record, compare
+let listen = {}, record, compare
 playerInit()
 
-// 缓存加速
-httpGet(url, 'blob').then(blob => {
-    // console.log(blob)
-    urlBlob = blob
-    listen.loadBlob(blob)
-}).catch(err => {
-    console.warn('httpGet:' + err)
-})
+// 加载音频
+if (audioSrc.blob) {
+    listen.loadBlob(audioSrc.blob)
+} else {
+    bg.getAudioBlob(audioSrc.url).then(b => {
+        listen.loadBlob(b)
+        audioSrc.blob = b
+    })
+}
 
 // 重新渲染
 window.addEventListener('resize', function (e) {
     _setTimeout('resize', () => {
-        if (urlBlob) listen.loadBlob(urlBlob)
+        if (audioSrc.blob) listen.loadBlob(audioSrc.blob)
     }, 1000)
 })
 
@@ -45,7 +46,7 @@ function playerInit() {
     record = playerRecord('player_record', {
         maxDuration,
         onStop: () => {
-            compare.loadBlob(urlBlob)
+            compare.loadBlob(audioSrc.blob)
             compare.once('finish', () => {
                 // 恢复 显示开始录音按钮
                 let t = setTimeout(() => {
