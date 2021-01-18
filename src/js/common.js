@@ -416,8 +416,9 @@ function execPaste() {
     return v
 }
 
-function dmxAlert(message, type) {
+function dmxAlert(message, type, timeout) {
     type = type || 'info'
+    timeout = timeout || 2500
     let el = $('dmx_alert')
     if (!el) {
         el = document.createElement('div')
@@ -441,7 +442,7 @@ function dmxAlert(message, type) {
         setTimeout(() => {
             el.removeChild(m)
         }, 300)
-    }, 2500)
+    }, timeout)
 }
 
 function httpGet(url, type, headers, notStrict) {

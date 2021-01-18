@@ -78,10 +78,10 @@ document.addEventListener('DOMContentLoaded', async function () {
                 blob: audioSrc.blob,
                 createDate: new Date().toJSON(),
             }).then(() => {
+                dmxAlert('添加完成', 'success', 2000)
                 sentenceInp.value = ''
                 wordsTex.value = ''
                 back_but.click()
-                dmxAlert('添加完成', 'success')
             }).catch(e => {
                 // console.log(e)
                 let err = e.target.error.message
