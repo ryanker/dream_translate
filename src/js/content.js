@@ -508,7 +508,7 @@ function loadingTranslate() {
         copyEl.addEventListener('click', () => {
             let text = contentEl.innerText.replace(/\n{2}/g, '\n').trim()
             execCopy(text)
-            alert('复制成功', 'success')
+            dmxAlert('复制成功', 'success')
         })
         bilingualEl.addEventListener('click', () => {
             if (hasClass(bilingualEl, 'active')) {
@@ -670,7 +670,7 @@ function resultLink(m) {
 
 function resultSound(m) {
     let {nav, name, type, status, error} = m
-    if (error) alert(error, 'error')
+    if (error) dmxAlert(error, 'error')
     let el = $(`${name}_${nav}_case`)
     if (!el) return
     if (status === 'start') {
@@ -726,7 +726,7 @@ function initQuery(text, clientX, clientY) {
     // 自动复制功能
     if (setting.autoCopy === 'on') {
         sendBgMessage({action: 'copy', text})
-        alert('复制成功', 'success')
+        dmxAlert('复制成功', 'success')
     }
 
     if (setting.scribble === 'off') return
@@ -847,7 +847,7 @@ function setDialogConf(name, value) {
 }
 
 function allowUserSelect() {
-    alert('解除页面限制完成', 'success')
+    dmxAlert('解除页面限制完成', 'success')
     if (window.dmxAllowUserSelect) return
     let sty = document.createElement('style')
     sty.textContent = `* {-webkit-user-select:text!important;-moz-user-select:text!important;user-select:text!important}`
@@ -882,36 +882,8 @@ function sendPlaySound(nav, name, type, url) {
 function sendBgMessage(message) {
     message && sendMessage(message).catch(err => {
         debug('sendBgMessage error:', err)
-        alert('梦想翻译已更新，请刷新页面激活。', 'error')
+        dmxAlert('梦想翻译已更新，请刷新页面激活。', 'error')
     })
-}
-
-function alert(message, type) {
-    type = type || 'info'
-    let el = $('dmx_alert')
-    if (!el) {
-        el = document.createElement('div')
-        el.id = 'dmx_alert'
-        shadow.appendChild(el)
-    }
-    let icon = {
-        info: '<i class="dmx-icon dmx-icon-info"></i>',
-        error: '<i class="dmx-icon dmx-icon-close"></i>',
-        success: '<i class="dmx-icon dmx-icon-success"></i>',
-    }
-    let m = document.createElement('div')
-    m.className = `dxm_alert_${type}`
-    m.innerHTML = (icon[type] || '') + message
-    el.appendChild(m)
-    setTimeout(() => {
-        addClass(m, 'an_top')
-    }, 10)
-    setTimeout(() => {
-        addClass(m, 'an_delete')
-        setTimeout(() => {
-            el.removeChild(m)
-        }, 300)
-    }, 2500)
 }
 
 function dmxDialog(options) {

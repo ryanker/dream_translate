@@ -8,10 +8,16 @@
     <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<div class="record_main">
+<div class="record_main" id="record_box">
     <div id="player_listen"></div>
     <div id="player_record"></div>
     <div id="player_compare"></div>
+
+    <div class="divider"><b>练习 <span id="practice_num">0</span> 次</b></div>
+
+    <div class="dmx_center">
+        <div class="dmx_button dmx_button_danger big" id="favorite_but"><i class="dmx-icon dmx-icon-heart"></i>收藏</div>
+    </div>
 
     <div class="learn_points">
         <div class="title"><b>练习要点</b></div>
@@ -31,10 +37,33 @@
         </div>
     </div>
 </div>
+
+<div class="record_main" id="favorite_form">
+    <div id="player_listen2"></div>
+    <form class="mt_2" id="sentence_form">
+        <div class="dmx_form_item">
+            <div class="item_label">句子</div>
+            <div class="item_content"><input name="sentence" type="text" autocomplete="off" required class="item_input" placeholder="如：She has been extremely difficult every step of the way."></div>
+        </div>
+        <div class="dmx_form_item">
+            <div class="item_label">生词</div>
+            <div class="item_content"><textarea name="words" autocomplete="off" class="item_textarea" placeholder="一行一词。如：extremely"></textarea></div>
+        </div>
+        <div class="dmx_form_item">
+            <div class="item_label">音频</div>
+            <div class="item_content"><input name="url" type="url" autocomplete="off" required class="item_input"></div>
+        </div>
+        <div class="dmx_center">
+            <button class="dmx_button big" type="submit"><i class="dmx-icon dmx-icon-plus"></i>添加</button>
+            <div class="dmx_button dmx_button_default big" id="back_but"><i class="dmx-icon dmx-icon-reply"></i>返回</div>
+        </div>
+    </form>
+</div>
 </body>
 <script type="text/javascript" src="../js/lib/wavesurfer.min.js"></script>
 <script type="text/javascript" src="../js/lib/wavesurfer.microphone.min.js"></script>
 <script type="text/javascript" src="../js/lib/RecordRTC.min.js"></script>
 <script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/db.js"></script>
 <script type="text/javascript" src="../js/record.js"></script>
 </html>
