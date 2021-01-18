@@ -11,6 +11,10 @@
     clear: both;
 }
 
+.longman_dict .EXAMPLE .dmx-icon {
+    margin-right: 5px;
+}
+
 .longman_dict .infls,
 .longman_dict .description,
 .longman_dict .title,
