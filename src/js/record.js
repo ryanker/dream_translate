@@ -205,8 +205,8 @@ function playerListen(id, options) {
     ws.on('ready', function () {
         maxDuration = ws.getDuration()
         if (maxDuration > 0) {
-            p_duration.innerHTML = ' / ' + humanTime(maxDuration)
-            p_current.innerHTML = '00:00:000'
+            p_duration.innerText = ' / ' + humanTime(maxDuration)
+            p_current.innerText = '00:00:000'
         }
         typeof o.onReady === 'function' && o.onReady(maxDuration)
     })
@@ -214,14 +214,14 @@ function playerListen(id, options) {
         p_controls.style.display = percents === 100 ? 'flex' : 'none'
     })
     ws.on('audioprocess', function (duration) {
-        p_current.innerHTML = humanTime(duration)
+        p_current.innerText = humanTime(duration)
     })
     ws.on('play', function () {
         ws.hideControls()
         typeof o.onPlay === 'function' && o.onPlay.call(ws)
     })
     ws.on('finish', function () {
-        p_current.innerHTML = humanTime(maxDuration)
+        p_current.innerText = humanTime(maxDuration)
         typeof o.onFinish === 'function' ? o.onFinish.call(ws) : ws.showControls()
     })
     p_controls.addEventListener('click', ws.playPause.bind(ws)) // 绑定事件
@@ -325,11 +325,11 @@ function playerRecord(id, options) {
         t = setInterval(function () {
             let remain = tEnd - (new Date() * 1)
             if (remain > 0) {
-                p_current.innerHTML = humanTime((o.maxDuration - remain) / 1000)
+                p_current.innerText = humanTime((o.maxDuration - remain) / 1000)
             } else {
                 obj.stop()
                 clearInterval(t)
-                p_current.innerHTML = humanTime(o.maxDuration / 1000)
+                p_current.innerText = humanTime(o.maxDuration / 1000)
             }
         }, 30)
     }
@@ -337,7 +337,7 @@ function playerRecord(id, options) {
         if (tEnd < (new Date() * 1)) return
         let remain = tEnd - (new Date() * 1)
         if (remain > 0) {
-            p_current.innerHTML = humanTime((o.maxDuration - remain) / 1000)
+            p_current.innerText = humanTime((o.maxDuration - remain) / 1000)
             clearInterval(t)
         }
     }
@@ -394,8 +394,8 @@ function playerRecord(id, options) {
         typeof o.onStart === 'function' && o.onStart.call(obj)
 
         // 初始时间
-        p_duration.innerHTML = ' / ' + humanTime(o.maxDuration / 1000)
-        p_current.innerHTML = '00:00:000'
+        p_duration.innerText = ' / ' + humanTime(o.maxDuration / 1000)
+        p_current.innerText = '00:00:000'
 
         if (obj.recorder) obj.recorder.destroy()
         if (obj.ws === null) {
@@ -499,8 +499,8 @@ function playerCompare(id, options) {
     ws.on('ready', function () {
         maxDuration = ws.getDuration()
         if (maxDuration > 0) {
-            p_duration.innerHTML = ' / ' + humanTime(maxDuration)
-            p_current.innerHTML = '00:00:000'
+            p_duration.innerText = ' / ' + humanTime(maxDuration)
+            p_current.innerText = '00:00:000'
         }
         ws.setBackgroundColor('#66b1ff')
 
@@ -511,14 +511,14 @@ function playerCompare(id, options) {
         }
     })
     ws.on('audioprocess', function (duration) {
-        p_current.innerHTML = humanTime(duration)
+        p_current.innerText = humanTime(duration)
     })
     ws.on('play', function () {
         addClass(but, 'dmx_on')
     })
     ws.on('finish', function () {
         isClickPlay = false
-        p_current.innerHTML = humanTime(maxDuration)
+        p_current.innerText = humanTime(maxDuration)
         ws.setBackgroundColor('')
         ws.empty()
         rmClass(but, 'dmx_on')
