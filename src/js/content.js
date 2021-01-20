@@ -127,7 +127,7 @@ function initDialog() {
         addClass(dialog.el, 'dmx_popup')
         let isFullscreen = location.href === B.root + 'html/popup.html?fullscreen=1'
         isFullscreen ? addClass(dialog.el, 'fullscreen') : addClass(document.documentElement, 'dmx_popup')
-        D('#dmx_close,#dmx_pin,#dmx_fullscreen').forEach(e => e.remove())
+        A('#dmx_close,#dmx_pin,#dmx_fullscreen').forEach(e => e.remove())
         if (B.getBackgroundPage) textTmp = B.getBackgroundPage().textTmp // 读取后台缓存
     }
 
@@ -138,7 +138,7 @@ function initDialog() {
     })
 
     // 鼠标图标
-    iconBut = $('dmx_mouse_icon')
+    iconBut = I('dmx_mouse_icon')
     iconBut.onclick = function (e) {
         iconBut.style.display = 'none'
         sendQuery(iconText)  // 点击图标查询
@@ -149,7 +149,7 @@ function initDialog() {
     }
 
     // 绑定事件
-    let nav = $('dmx_navigate')
+    let nav = I('dmx_navigate')
     let uEl = nav.querySelectorAll('u')
     uEl.forEach(e => {
         e.addEventListener('click', function () {
@@ -179,26 +179,26 @@ function initDialog() {
     }
 
     // 设置按钮
-    $('dmx_setting').addEventListener('click', function () {
+    I('dmx_setting').addEventListener('click', function () {
         rmClassD(uEl, 'active')
         initSetting()
         dQuery.action = 'setting'
     })
 
     // 更多功能
-    $('dmx_more').addEventListener('click', function () {
+    I('dmx_more').addEventListener('click', function () {
         rmClassD(uEl, 'active')
         initMore()
         dQuery.action = 'more'
     })
 
     // 录音练习
-    $('dmx_voice').addEventListener('click', function () {
+    I('dmx_voice').addEventListener('click', function () {
         sendMessage({action: 'onRecord'})
     })
 
     // 历史记录
-    let hEl = $('dmx_history')
+    let hEl = I('dmx_history')
     let hlEl = hEl.querySelector('.dmx-icon-left')
     let hrEl = hEl.querySelector('.dmx-icon-right')
     let loadHistory = function (index) {
@@ -256,14 +256,14 @@ function initTranslate() {
 <div id="case_list" class="dmx_main fx"></div>`)
 
     // 绑定事件
-    let sourceEl = $('language_source')
-    let targetEl = $('language_target')
-    let exchangeEl = $('language_exchange')
-    let inputEl = $('translate_input')
-    let translateEl = $('translate_button')
-    let dropdownEl = $('language_dropdown')
+    let sourceEl = I('language_source')
+    let targetEl = I('language_target')
+    let exchangeEl = I('language_exchange')
+    let inputEl = I('translate_input')
+    let translateEl = I('translate_button')
+    let dropdownEl = I('language_dropdown')
     let dropdownU = dropdownEl.querySelectorAll('u')
-    let contentEl = $('dmx_dialog_content')
+    let contentEl = I('dmx_dialog_content')
     let tmpEl
     let onButton = function () {
         let el = this
@@ -383,9 +383,9 @@ function initDictionary() {
 </div>
 <div id="case_list" class="dmx_main dmx_content fx"></div>`)
 
-    let inpEl = $('dictionary_input')
-    let rmEl = $('search_remove')
-    let butEl = $('search_but')
+    let inpEl = I('dictionary_input')
+    let rmEl = I('search_remove')
+    let butEl = I('search_but')
     rmEl.onclick = function () {
         inpEl.value = ''
         inpEl.focus()
@@ -414,15 +414,15 @@ function initSearch() {
 </div>
 <div id="case_list" class="dmx_main dmx_content dmx_main_search fx"></div>`)
 
-    let inpEl = $('search_input')
-    let rmEl = $('search_remove')
-    let butEl = $('search_but')
+    let inpEl = I('search_input')
+    let rmEl = I('search_remove')
+    let butEl = I('search_but')
     rmEl.onclick = function () {
         inpEl.value = ''
         inpEl.focus()
     }
     butEl.onclick = function () {
-        let el = $('case_list').querySelector('[data-search]')
+        let el = I('case_list').querySelector('[data-search]')
         if (el) el.click()
     }
     inpEl.addEventListener('change', function () {
@@ -441,14 +441,14 @@ function initSearch() {
         let v = cList[name]
         if (v) s += `<div class="dmx_button" data-search="${name}"><i class="dmx-icon dmx-icon-${v.icon || name}"></i>${v.title}</div>`
     }
-    $('case_list').innerHTML = s
+    I('case_list').innerHTML = s
 
     // 绑定点击事件
-    onD(D('[data-search]'), 'click', function () {
+    onD(A('[data-search]'), 'click', function () {
         let name = this.dataset.search
         let lv = cList[name]
         if (!lv) return
-        let text = $('search_input').value.trim()
+        let text = I('search_input').value.trim()
         if (text) {
             open(lv.url.format(decodeURIComponent(text)) + '&tn=dream_translate')
         } else {
@@ -466,16 +466,16 @@ function initMore() {
 }
 
 function initDictionaryCSS() {
-    let styleEl = S('style')
+    let styleEl = E('style')
     conf.dictionaryCSS.forEach(name => {
-        if (!setting.dictionaryList.includes(name) || !dictionaryCSS[name] || S(`style[data-name="${name}"]`)) return
+        if (!setting.dictionaryList.includes(name) || !dictionaryCSS[name] || E(`style[data-name="${name}"]`)) return
         let s = `<style data-name="${name}">${dictionaryCSS[name]}</style>`
         styleEl.insertAdjacentHTML('afterend', s)
     })
 }
 
 function loadingTranslate() {
-    let el = $('case_list')
+    let el = I('case_list')
     let cList = conf.translateList
     let sList = setting.translateList
     if (sList.length < 1) {
@@ -501,7 +501,7 @@ function loadingTranslate() {
 
     // 绑定事件
     sList.forEach(name => {
-        let caseEl = $(`${name}_translate_case`)
+        let caseEl = I(`${name}_translate_case`)
         let copyEl = caseEl.querySelector('.case_copy')
         let bilingualEl = caseEl.querySelector('.case_bilingual')
         let contentEl = caseEl.querySelector('.case_content')
@@ -523,7 +523,7 @@ function loadingTranslate() {
 }
 
 function loadingDictionary() {
-    let el = $('case_list')
+    let el = I('case_list')
     let cList = conf.dictionaryList
     let sList = setting.dictionaryList
     if (sList.length < 1) {
@@ -547,7 +547,7 @@ function loadingDictionary() {
 }
 
 function resultTranslate(name, isBilingual) {
-    let el = $(`${name}_translate_case`)
+    let el = I(`${name}_translate_case`)
     if (!el) return
     let {srcLan, tarLan, lanTTS, data, extra} = msgList[name] || {}
 
@@ -592,7 +592,7 @@ function resultTranslate(name, isBilingual) {
 
 function resultDictionary(m) {
     let {name, result, error} = m
-    let el = $(`${name}_dictionary_case`)
+    let el = I(`${name}_dictionary_case`)
     if (!el) return
     let cEl = el.querySelector('.case_content')
     if (error) {
@@ -658,7 +658,7 @@ function resultBindEvent(el, nav, name) {
 }
 
 function resultLink(m) {
-    let el = $(`${m.name}_${m.type}_case`)
+    let el = I(`${m.name}_${m.type}_case`)
     if (!el) return
     let sEl = el.querySelector(`.case_link`)
     if (sEl) {
@@ -671,7 +671,7 @@ function resultLink(m) {
 function resultSound(m) {
     let {nav, name, type, status, error} = m
     if (error) dmxAlert(error, 'error')
-    let el = $(`${name}_${nav}_case`)
+    let el = I(`${name}_${nav}_case`)
     if (!el) return
     if (status === 'start') {
         let sEl = el.querySelector(`[data-type=${type}]`)
@@ -680,11 +680,11 @@ function resultSound(m) {
         let dEl = el.querySelectorAll(`[data-type=${type}]`)
         rmClassD(dEl, 'active')
     }
-    addClass($('dmx_voice'), 'dmx_show')
+    addClass(I('dmx_voice'), 'dmx_show')
 }
 
 function activeRipple(el) {
-    rmClassD(D('.dmx_ripple'), 'active')
+    rmClassD(A('.dmx_ripple'), 'active')
     addClass(el, 'active')
 }
 
@@ -748,7 +748,7 @@ function sendQuery(text) {
     if (!text && isPopup && setting.autoPaste === 'on') text = execPaste()
     if (!text) text = textTmp
     if (!text) return
-    let el = $('dmx_navigate')
+    let el = I('dmx_navigate')
     let action = el.querySelector('.active') && el.querySelector('.active').getAttribute('action')
     if (!action) {
         action = dialogConf.action
@@ -759,17 +759,17 @@ function sendQuery(text) {
 
     let message = null
     if (action === 'translate') {
-        let inputEl = $(`translate_input`)
+        let inputEl = I(`translate_input`)
         inputEl.innerText = text
         isPopup && focusLast(inputEl)
         loadingTranslate()
         message = {action: action, text: text, srcLan: dialogConf.source, tarLan: dialogConf.target}
     } else if (action === 'dictionary') {
-        $(`dictionary_input`).value = text
+        I(`dictionary_input`).value = text
         loadingDictionary()
         message = {action: action, text: text}
     } else if (action === 'search') {
-        $(`search_input`).value = text
+        I(`search_input`).value = text
     }
     sendBgMessage(message)
 }
@@ -811,7 +811,7 @@ function addHistory(dQuery) {
     historyIndex = history.length - 1
     debug('history:', history, historyIndex)
     if (history.length > 1) {
-        let hEl = $('dmx_history')
+        let hEl = I('dmx_history')
         rmClass(hEl.querySelector('.dmx-icon-left'), 'disabled')
         addClass(hEl.querySelector('.dmx-icon-right'), 'disabled')
     }
@@ -825,15 +825,15 @@ function focusLast(el) {
     range.collapseToEnd() // 光标移到结尾
 }
 
-function $(id) {
+function I(id) {
     return shadow.getElementById(id)
 }
 
-function S(s) {
+function E(s) {
     return shadow.querySelector(s)
 }
 
-function D(s) {
+function A(s) {
     return shadow.querySelectorAll(s)
 }
 
@@ -905,7 +905,7 @@ function dmxDialog(options) {
     let d = document.createElement('div')
     d.setAttribute('mx-name', 'dream-translation')
     document.documentElement.appendChild(d)
-    let shadow = d.attachShadow({mode: 'closed'})
+    shadow = d.attachShadow({mode: 'closed'})
     shadow.innerHTML = `<link rel="stylesheet" href="${root + 'css/content.css'}">
 <style>${o.cssText}</style>
 <div id="dmx_dialog">
@@ -943,10 +943,7 @@ function dmxDialog(options) {
 </div>
 <div id="dmx_mouse_icon"></div>`
 
-    let $ = function (id) {
-        return shadow.getElementById(id)
-    }
-    let el = $('dmx_dialog')
+    let el = I('dmx_dialog')
     let clientX, clientY, elX, elY, elW, elH, docW, docH, mid
     let _m = function (e) {
         let left = e.clientX - (clientX - elX)
@@ -1068,31 +1065,31 @@ function dmxDialog(options) {
         el.style.display = 'none'
     }
     D.enableMove = function () {
-        let e = $('dmx_dialog_title')
+        let e = I('dmx_dialog_title')
         e.style.cursor = 'move'
         e.addEventListener('mousedown', onMousedown)
     }
     D.disableMove = function () {
-        let e = $('dmx_dialog_title')
+        let e = I('dmx_dialog_title')
         e.style.cursor = 'auto'
         e.removeEventListener('mousedown', onMousedown)
     }
     D.enableResize = function () {
         elArr.forEach(v => {
-            let e = $(`dmx_dialog_resize_${v}`)
+            let e = I(`dmx_dialog_resize_${v}`)
             e.removeAttribute('style')
             e.addEventListener('mousedown', onMousedown)
         })
     }
     D.disableResize = function () {
         elArr.forEach(v => {
-            let e = $(`dmx_dialog_resize_${v}`)
+            let e = I(`dmx_dialog_resize_${v}`)
             e.style.display = 'none'
             e.removeEventListener('mousedown', onMousedown)
         })
     }
     D.fullScreen = function () {
-        addClass($('dmx_fullscreen'), 'active')
+        addClass(I('dmx_fullscreen'), 'active')
         addClass(document.body, 'dmx_overflow_hidden')
         fsTmp = {top: el.style.top, left: el.style.left, width: el.style.width, height: el.style.height}
         el.style.top = '0'
@@ -1101,7 +1098,7 @@ function dmxDialog(options) {
         el.style.height = document.documentElement.clientHeight + 'px'
     }
     D.fullScreenExit = function () {
-        rmClass($('dmx_fullscreen'), 'active')
+        rmClass(I('dmx_fullscreen'), 'active')
         rmClass(document.body, 'dmx_overflow_hidden')
         if (typeof fsTmp.top === 'string') el.style.top = fsTmp.top
         if (typeof fsTmp.left === 'string') el.style.left = fsTmp.left
@@ -1109,15 +1106,15 @@ function dmxDialog(options) {
         if (typeof fsTmp.height === 'string') el.style.height = fsTmp.height
     }
     D.pin = function () {
-        addClass($('dmx_pin'), 'active')
+        addClass(I('dmx_pin'), 'active')
         document.removeEventListener('mouseup', D.hide)
     }
     D.pinCancel = function () {
-        rmClass($('dmx_pin'), 'active')
+        rmClass(I('dmx_pin'), 'active')
         document.addEventListener('mouseup', D.hide) // 点击 body 隐藏 dialog
     }
     D.contentHTML = function (s) {
-        $('dmx_dialog_content').innerHTML = s
+        I('dmx_dialog_content').innerHTML = s
     }
     window._MxDialog = D
 
@@ -1130,14 +1127,14 @@ function dmxDialog(options) {
     o.isResize ? D.enableResize() : D.disableResize()
 
     // 顶部按钮事件
-    $('dmx_close').onclick = function () {
+    I('dmx_close').onclick = function () {
         D.hide()
         rmClass(document.body, 'dmx_overflow_hidden')
     }
-    $('dmx_pin').onclick = function () {
+    I('dmx_pin').onclick = function () {
         hasClass(this, 'active') ? D.pinCancel() : D.pin()
     }
-    $('dmx_fullscreen').onclick = function () {
+    I('dmx_fullscreen').onclick = function () {
         hasClass(this, 'active') ? D.fullScreenExit() : D.fullScreen()
     }
 
