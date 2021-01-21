@@ -36,6 +36,30 @@ div[mx-name="dream-translation"] {
     user-select: none;
 }
 
+.dmx-icon-folder:before {
+    content: "\e6c4";
+}
+
+.dmx-icon-folder-open:before {
+    content: "\e6c5";
+}
+
+.dmx-icon-delete:before {
+    content: "\e6c2";
+}
+
+.dmx-icon-edit:before {
+    content: "\e6c3";
+}
+
+.dmx-icon-export:before {
+    content: "\e6c0";
+}
+
+.dmx-icon-import:before {
+    content: "\e6c1";
+}
+
 .dmx-icon-history:before {
     content: "\e6bf";
 }
