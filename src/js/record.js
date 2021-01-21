@@ -78,16 +78,17 @@ document.addEventListener('DOMContentLoaded', async function () {
                 blob: audioSrc.blob,
                 createDate: new Date().toJSON(),
             }).then(() => {
-                dmxAlert('添加完成', 'success', 2000)
-                sentenceInp.value = ''
-                wordsTex.value = ''
-                back_but.click()
+                dal('添加完成', 'success', () => {
+                    sentenceInp.value = ''
+                    wordsTex.value = ''
+                    back_but.click()
+                })
             }).catch(e => {
                 // console.log(e)
                 let err = e.target.error.message
                 let msg = '添加失败'
                 if (err && err.includes('uniqueness requirements')) msg = '句子已存在，请勿重复添加'
-                dmxAlert(msg, 'error')
+                dal(msg, 'error')
             })
         })
     })

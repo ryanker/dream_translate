@@ -416,33 +416,31 @@ function execPaste() {
     return v
 }
 
-function dmxAlert(message, type, timeout) {
-    type = type || 'info'
-    timeout = timeout || 2500
-    let el = $('dmx_alert')
-    if (!el) {
-        el = document.createElement('div')
-        el.id = 'dmx_alert';
-        (window.shadow || document.body).appendChild(el)
-    }
+function dal(text, type, onSubmit) {
     let icon = {
         info: '<i class="dmx-icon dmx-icon-info"></i>',
         error: '<i class="dmx-icon dmx-icon-close"></i>',
         success: '<i class="dmx-icon dmx-icon-success"></i>',
     }
-    let m = document.createElement('div')
-    m.className = `dxm_alert_${type}`
-    m.innerHTML = (icon[type] || '') + message
-    el.appendChild(m)
-    setTimeout(() => {
-        addClass(m, 'an_top')
-    }, 10)
-    setTimeout(() => {
-        addClass(m, 'an_delete')
-        setTimeout(() => {
-            el.removeChild(m)
-        }, 300)
-    }, timeout)
+    let s = (icon[type] || icon.info) + text
+    let el = S('.dal .dal_text')
+    if (el) {
+        el.innerHTML = s
+    } else {
+        document.body.insertAdjacentHTML('beforeend', `<div class="dal_bg"></div>
+<div class="dal">
+    <div class="dal_modal">
+        <div class="dal_text">${s}</div>
+        <div class="dal_footer">
+            <button class="dmx_button" data-type="submit">OK</button>
+        </div>
+    </div>
+</div>`)
+        S('[data-type="submit"]').addEventListener('click', () => {
+            D('.dal_bg,.dal').forEach(e => e.remove())
+        })
+    }
+    if (typeof onSubmit === 'function') S('[data-type="submit"]').addEventListener('click', onSubmit)
 }
 
 function httpGet(url, type, headers, notStrict) {
