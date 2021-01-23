@@ -41,6 +41,7 @@ function idb(dbName, version, onupgradeneeded) {
                         let wStore = this.wStore(storeName)
                         let row = wStore.get(id)
                         row.onsuccess = () => {
+                            if (!row.result) return reject('result empty!')
                             let newData = Object.assign(row.result, data) // 覆盖
                             let r = wStore.put(newData)
                             r.onsuccess = (e) => resolve(e)
@@ -56,27 +57,51 @@ function idb(dbName, version, onupgradeneeded) {
                         r.onerror = (e) => reject(e)
                     })
                 },
-                count(storeName, cond) {
+                count(storeName, indexName, query) {
                     return new Promise((resolve, reject) => {
-                        let r = this.rStore(storeName).count(cond)
-                        r.onsuccess = (e) => resolve(e)
+                        let store = this.rStore(storeName)
+                        let r = indexName ? store.index(indexName).count(query) : store.count(query)
+                        r.onsuccess = () => resolve(r.result)
                         r.onerror = (e) => reject(e)
                     })
                 },
-                getAll(storeName) {
+                getAll(storeName, indexName, query, count) {
+                    return new Promise((resolve, reject) => {
+                        let store = this.rStore(storeName)
+                        let req = indexName ? store.index(indexName).getAll(query, count) : store.getAll(query, count)
+                        req.onsuccess = () => resolve(req.result)
+                        req.onerror = (e) => reject(e)
+                    })
+                },
+                find(storeName, option) {
+                    let {indexName, query, direction, offset, limit} = option || {}
                     return new Promise((resolve, reject) => {
                         let arr = []
-                        let cursor = this.rStore(storeName).openCursor()
-                        cursor.onsuccess = (e) => {
-                            let row = e.target.result
+                        let store = this.rStore(storeName)
+                        let req = indexName ? store.index(indexName).openCursor(query, direction) : store.openCursor(query, direction)
+                        let isAdvance = false
+                        req.onsuccess = (e) => {
+                            // let row = e.target.result
+                            let row = req.result
                             if (row) {
-                                arr.push(row)
-                                row.continue()
+                                // 偏移量
+                                if (offset && !isAdvance) {
+                                    row.advance(offset)
+                                    isAdvance = true
+                                    return
+                                }
+
+                                arr.push(row.value) // 返回值
+                                if (limit && arr.length >= limit) {
+                                    resolve(arr)
+                                } else {
+                                    row.continue()
+                                }
                             } else {
                                 resolve(arr)
                             }
                         }
-                        cursor.onerror = (e) => reject(e)
+                        req.onerror = (e) => reject(e)
                     })
                 },
             })

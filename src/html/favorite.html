@@ -6,7 +6,58 @@
     <link rel="stylesheet" href="../css/main.css">
     <title>我的收藏</title>
 </head>
-<body class="main">
-开发中...
+<body>
+<div class="head fx">
+    <div class="logo">梦想划词翻译</div>
+    <ul class="nav">
+        <li><a href="favorite.html" class="active">我的收藏</a></li>
+        <li><a href="history.html">历史记录</a></li>
+        <li><a href="speak.html">朗读助手</a></li>
+    </ul>
+    <ul class="tool">
+        <li><a id="export"><i class="dmx-icon dmx-icon-export"></i>导出</a></li>
+        <li><a id="import"><i class="dmx-icon dmx-icon-import"></i>导入</a></li>
+    </ul>
+</div>
+
+<div class="cate">
+    <div id="create_cate_but"><i class="dmx-icon dmx-icon-plus" title="新增分类"></i></div>
+    <ul id="cate_box"></ul>
+</div>
+
+<div class="card favorite_box">
+    <div class="card_head">
+        <div id="cate_name"></div>
+        <div class="item_num"><span id="sentences">0</span> 条</div>
+        <div id="cate_edit" class="dmx_vis dmx_hover" title="编辑分类"><i class="dmx-icon dmx-icon-edit"></i></div>
+        <div id="cate_delete" class="dmx_vis dmx_hover" title="删除分类"><i class="dmx-icon dmx-icon-delete"></i></div>
+        <div class="extra" id="extra_but">
+            <div class="dmx_button dmx_button_warning" id="sentence_move"><i class="dmx-icon dmx-icon-move"></i>移动</div>
+            <div class="dmx_button dmx_button_danger" id="sentence_delete"><i class="dmx-icon dmx-icon-delete"></i>删除</div>
+        </div>
+    </div>
+    <div class="card_body">
+        <table class="dmx_table" id="sentence_box">
+            <thead>
+            <tr>
+                <th class="tb_checkbox"><input type="checkbox" id="selectAll"></th>
+                <th class="tb_index">编号</th>
+                <th class="tb_sentence">句子</th>
+                <th class="tb_words">生词</th>
+                <th class="tb_records">练习次数</th>
+                <th class="tb_days">练习天数</th>
+                <th class="tb_date">添加时间</th>
+                <th class="tb_operate">操作</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/content.js"></script>
+<script type="text/javascript" src="../js/db.js"></script>
+<script type="text/javascript" src="../js/favorite.js"></script>
 </body>
 </html>

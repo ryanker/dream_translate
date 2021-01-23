@@ -36,6 +36,10 @@ div[mx-name="dream-translation"] {
     user-select: none;
 }
 
+.dmx-icon-move:before {
+    content: "\e6c6";
+}
+
 .dmx-icon-folder:before {
     content: "\e6c4";
 }

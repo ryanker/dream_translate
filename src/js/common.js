@@ -416,31 +416,74 @@ function execPaste() {
     return v
 }
 
+// dream alert
 function dal(text, type, onSubmit) {
     let icon = {
         info: '<i class="dmx-icon dmx-icon-info"></i>',
         error: '<i class="dmx-icon dmx-icon-close"></i>',
         success: '<i class="dmx-icon dmx-icon-success"></i>',
     }
-    let s = (icon[type] || icon.info) + text
-    let el = S('.dal .dal_text')
-    if (el) {
-        el.innerHTML = s
-    } else {
-        document.body.insertAdjacentHTML('beforeend', `<div class="dal_bg"></div>
+    D('.dal_bg,.dal').forEach(e => e.remove()) // 只允许存在一个
+    document.body.insertAdjacentHTML('beforeend', `<div class="dal_bg"></div>
 <div class="dal">
     <div class="dal_modal">
-        <div class="dal_text">${s}</div>
-        <div class="dal_footer">
-            <button class="dmx_button" data-type="submit">OK</button>
+        <div class="dal_text">${(icon[type] || icon.info) + text}</div>
+        <div class="dal_foot">
+            <button class="dmx_button" data-type="submit">确认</button>
         </div>
     </div>
 </div>`)
-        S('[data-type="submit"]').addEventListener('click', () => {
-            D('.dal_bg,.dal').forEach(e => e.remove())
-        })
-    }
+    let rmFn = () => D('.dal_bg,.dal').forEach(e => e.remove())
+    S('[data-type="submit"]').addEventListener('click', rmFn)
     if (typeof onSubmit === 'function') S('[data-type="submit"]').addEventListener('click', onSubmit)
+}
+
+// dream confirm
+function dco(text, onSubmit, onCancel) {
+    D('.dal_bg,.dal').forEach(e => e.remove()) // 只允许存在一个
+    document.body.insertAdjacentHTML('beforeend', `<div class="dal_bg"></div>
+<div class="dal">
+    <div class="dal_modal">
+        <div class="dal_text"><i class="dmx-icon dmx-icon-info"></i>${text}</div>
+        <div class="dal_foot">
+            <button class="dmx_button" data-type="submit">确认</button>
+            <button class="dmx_button dmx_button_default" data-type="cancel">取消</button>
+        </div>
+    </div>
+</div>`)
+    let submitEl = S('[data-type="submit"]')
+    let cancelEl = S('[data-type="cancel"]')
+    let rmFn = () => D('.dal_bg,.dal').forEach(e => e.remove())
+    submitEl.addEventListener('click', rmFn)
+    cancelEl.addEventListener('click', rmFn)
+    if (typeof onSubmit === 'function') submitEl.addEventListener('click', onSubmit)
+    if (typeof onCancel === 'function') cancelEl.addEventListener('click', onCancel)
+}
+
+// dream dialog
+function ddi(option) {
+    let o = Object.assign({
+        title: '',
+        body: '',
+    }, option)
+    let el = S('.ddi .ddi_body')
+    if (el) {
+        el.innerHTML = o.body
+    } else {
+        document.body.insertAdjacentHTML('beforeend', `<div class="ddi_bg"></div>
+<div class="ddi">
+    <div class="ddi_modal ddi_dialog">
+        <div class="ddi_head">${o.title}<i class="dmx-icon dmx-icon-close"></i></div>
+        <div class="ddi_body">${o.body}</div>
+    </div>
+</div>`)
+        S('.ddi_head .dmx-icon-close').addEventListener('click', removeDdi)
+    }
+}
+
+// remove dream dialog
+function removeDdi() {
+    D('.ddi_bg,.ddi').forEach(e => e.remove())
 }
 
 function httpGet(url, type, headers, notStrict) {

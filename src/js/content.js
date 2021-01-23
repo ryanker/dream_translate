@@ -837,35 +837,6 @@ function A(s) {
     return shadow.querySelectorAll(s)
 }
 
-function dmxAlert(message, type, timeout) {
-    type = type || 'info'
-    timeout = timeout || 2500
-    let el = I('dmx_alert')
-    if (!el) {
-        el = document.createElement('div')
-        el.id = 'dmx_alert'
-        shadow.appendChild(el)
-    }
-    let icon = {
-        info: '<i class="dmx-icon dmx-icon-info"></i>',
-        error: '<i class="dmx-icon dmx-icon-close"></i>',
-        success: '<i class="dmx-icon dmx-icon-success"></i>',
-    }
-    let m = document.createElement('div')
-    m.className = `dxm_alert_${type}`
-    m.innerHTML = (icon[type] || '') + message
-    el.appendChild(m)
-    setTimeout(() => {
-        addClass(m, 'an_top')
-    }, 10)
-    setTimeout(() => {
-        addClass(m, 'an_delete')
-        setTimeout(() => {
-            el.removeChild(m)
-        }, 300)
-    }, timeout)
-}
-
 function saveDialogConf() {
     storageSyncSet({'dialogConf': dialogConf})
 }
@@ -913,6 +884,35 @@ function sendBgMessage(message) {
         debug('sendBgMessage error:', err)
         dmxAlert('梦想翻译已更新，请刷新页面激活。', 'error')
     })
+}
+
+function dmxAlert(message, type, timeout) {
+    type = type || 'info'
+    timeout = timeout || 2500
+    let el = I('dmx_alert')
+    if (!el) {
+        el = document.createElement('div')
+        el.id = 'dmx_alert'
+        shadow.appendChild(el)
+    }
+    let icon = {
+        info: '<i class="dmx-icon dmx-icon-info"></i>',
+        error: '<i class="dmx-icon dmx-icon-close"></i>',
+        success: '<i class="dmx-icon dmx-icon-success"></i>',
+    }
+    let m = document.createElement('div')
+    m.className = `dxm_alert_${type}`
+    m.innerHTML = (icon[type] || '') + message
+    el.appendChild(m)
+    setTimeout(() => {
+        addClass(m, 'an_top')
+    }, 10)
+    setTimeout(() => {
+        addClass(m, 'an_delete')
+        setTimeout(() => {
+            el.removeChild(m)
+        }, 300)
+    }, timeout)
 }
 
 function dmxDialog(options) {
