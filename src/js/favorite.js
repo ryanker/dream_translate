@@ -298,6 +298,10 @@ function playerInit(key, type) {
     let nextEl = $('next_but')
     senEl.innerText = row.sentence || ''
 
+    let setPracticeNum = function (n) {
+        let el = $('practice_num')
+        if (el) el.innerText = n
+    }
     let onReady = function (duration) {
         let times = 2
         if (duration > 10) times *= 2.5 // 时间越长，模仿越难
@@ -321,7 +325,7 @@ function playerInit(key, type) {
                             clearTimeout(t)
                             record.showStartBut()
                             nextEl.disabled = false // 解除禁用
-                            $('practice_num').innerText = ++practiceNum
+                            setPracticeNum(++practiceNum) // 练习次数
                             if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
                         })
                     }, 100)
@@ -348,7 +352,7 @@ function playerInit(key, type) {
                             clearTimeout(t)
                             listen.showControls() // 显示播放按钮
                             nextEl.disabled = false // 解除禁用
-                            $('practice_num').innerText = ++practiceNum  // 练习次数
+                            setPracticeNum(++practiceNum) // 练习次数
                             if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
                         })
                     }, 100)
@@ -362,7 +366,7 @@ function playerInit(key, type) {
                 listen.play()
                 let nEl = $('player_num')
                 let n = nEl && nEl.value ? Number(nEl.value) : 2
-                $('practice_num').innerText = ++practiceNum  // 练习次数
+                setPracticeNum(++practiceNum) // 练习次数
                 if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
                 if (practiceNum >= n) {
                     $('next_but').click()
