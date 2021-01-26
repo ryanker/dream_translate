@@ -284,6 +284,17 @@ function sleep(delay) {
     return new Promise(r => setTimeout(r, delay))
 }
 
+// 补零
+function zero(value, digits) {
+    digits = digits || 2
+    let isNegative = Number(value) < 0
+    let s = value.toString()
+    if (isNegative) s = s.slice(1)
+    let size = digits - s.length + 1
+    s = new Array(size).join('0').concat(s)
+    return (isNegative ? '-' : '') + s
+}
+
 function $(id) {
     return document.getElementById(id)
 }
