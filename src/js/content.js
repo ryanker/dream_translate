@@ -1034,7 +1034,7 @@ function dmxDialog(options) {
         addClass(el, 'dmx_unselectable')
     }
     let onMouseup = function (e) {
-        e && e.stopPropagation()
+        // e && e.stopPropagation() // 和B站播放进度条冲突
         mid = null
         rmClass(document.body, 'dmx_unselectable')
         rmClass(el, 'dmx_unselectable')
