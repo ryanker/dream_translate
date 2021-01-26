@@ -226,6 +226,7 @@ function reviewSentence() {
                     </div>`,
                 onClose: () => {
                     listen.stop()
+                    initSentence(cateId)
                 }
             })
 
