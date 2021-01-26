@@ -427,7 +427,7 @@ select {
 }
 
 /* ==================== setting ==================== */
-.navigate u {
+.tab u {
     display: block;
     float: left;
     text-decoration: none;
@@ -439,20 +439,20 @@ select {
     cursor: pointer;
 }
 
-.navigate u:first-child {
+.tab u:first-child {
     border-radius: 5px 0 0 5px;
     border-left: 1px solid #D5D7DF;
 }
 
-.navigate u:last-child {
+.tab u:last-child {
     border-radius: 0 5px 5px 0;
 }
 
-.navigate u:hover {
+.tab u:hover {
     color: #1a73e8;
 }
 
-.navigate u.active {
+.tab u.active {
     color: #fff;
     background-color: #409eff;
     border-color: #409eff;
@@ -893,6 +893,17 @@ table.dmx_table .table_empty {
     font-weight: bold;
 }
 
+.player_box {
+    min-width: 500px;
+    max-width: 920px;
+    margin: 0 auto;
+}
+
+#player_sentence {
+    font-size: 20px;
+    margin-top: 15px;
+}
+
 /* ==================== dal ==================== */
 .dal, .dal_bg, .ddi, .ddi_bg {
     position: fixed;
@@ -967,6 +978,7 @@ table.dmx_table .table_empty {
     height: 100%;
     max-height: 100%;
     border-radius: 0;
+    background: #F1F4F6;
 }
 
 .ddi_head {
