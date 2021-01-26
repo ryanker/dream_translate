@@ -476,14 +476,15 @@ function ddi(option) {
     let o = Object.assign({
         title: '',
         body: '',
-    }, option)
+        fullscreen: false,
+    }, option || {})
     let el = S('.ddi .ddi_body')
     if (el) {
         el.innerHTML = o.body
     } else {
         document.body.insertAdjacentHTML('beforeend', `<div class="ddi_bg"></div>
 <div class="ddi">
-    <div class="ddi_modal ddi_dialog">
+    <div class="ddi_modal ddi_dialog${o.fullscreen ? ' fullscreen' : ''}">
         <div class="ddi_head">${o.title}<i class="dmx-icon dmx-icon-close"></i></div>
         <div class="ddi_body">${o.body}</div>
     </div>
