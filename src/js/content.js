@@ -450,9 +450,9 @@ function initSearch() {
         if (!lv) return
         let text = I('search_input').value.trim()
         if (text) {
-            open(lv.url.format(decodeURIComponent(text)) + '&tn=dream_translate')
+            open(lv.url.format(decodeURIComponent(text)))
         } else {
-            open((new URL(lv.url)).origin + '?tn=dream_translate')
+            open((new URL(lv.url)).origin)
         }
     })
 }
