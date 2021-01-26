@@ -128,7 +128,7 @@ function baiduTranslate() {
                         let {ph_en, ph_am, parts} = sym
                         if (ph_en || ph_am) {
                             s += `<div class="case_dd_ph">`
-                            s += `[${ph_en}${ph_en !== ph_am ? ' $ ' + ph_am : ''}]`
+                            s += `[${ph_en}${ph_am && ph_en !== ph_am ? ' $ ' + ph_am : ''}]`
                             s += getIconHTML('uk', text, '英音')
                             s += getIconHTML('us', text, '美音')
                             s += `</div>`
