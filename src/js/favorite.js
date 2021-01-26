@@ -293,14 +293,21 @@ function playerInit(key, type) {
     let maxDuration = 5000
     let practiceNum = 0
     let row = sentenceData[key] || {}
+    let records = row.records || 0
 
     let senEl = $('player_sentence')
     let nextEl = $('next_but')
     senEl.innerText = row.sentence || ''
 
-    let setPracticeNum = function (n) {
+    let setPracticeNum = function (n, isUpdate) {
         let el = $('practice_num')
         if (el) el.innerText = n
+
+        // 更新 DB
+        if (isUpdate) {
+            records++
+            db.update('sentence', row.id, {records})
+        }
     }
     let onReady = function (duration) {
         let times = 2
@@ -325,7 +332,7 @@ function playerInit(key, type) {
                             clearTimeout(t)
                             record.showStartBut()
                             nextEl.disabled = false // 解除禁用
-                            setPracticeNum(++practiceNum) // 练习次数
+                            setPracticeNum(++practiceNum, true) // 练习次数
                             if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
                         })
                     }, 100)
@@ -352,7 +359,7 @@ function playerInit(key, type) {
                             clearTimeout(t)
                             listen.showControls() // 显示播放按钮
                             nextEl.disabled = false // 解除禁用
-                            setPracticeNum(++practiceNum) // 练习次数
+                            setPracticeNum(++practiceNum, true) // 练习次数
                             if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
                         })
                     }, 100)
