@@ -119,25 +119,14 @@ function playerInit() {
         onStop: () => {
             compare.loadBlob(audioSrc.blob)
             compare.once('finish', () => {
-                // 恢复 显示开始录音按钮
-                let t = setTimeout(() => {
-                    listen.showControls() // 显示播放按钮
-                }, maxDuration)
-
+                let t = setTimeout(() => listen.showControls(), maxDuration + 1000)  // 显示播放按钮
                 setTimeout(() => {
                     // compare.load(URL.createObjectURL(record.blob))
                     compare.loadBlob(record.blob)
                     compare.once('finish', () => {
-                        // 练习次数
-                        practiceNum++
-                        $('practice_num').innerText = practiceNum
-
-                        // 显示播放按钮
-                        listen.showControls()
-                        if (t) {
-                            clearTimeout(t)
-                            t = null
-                        }
+                        clearTimeout(t)
+                        listen.showControls() // 显示播放按钮
+                        $('practice_num').innerText = ++practiceNum // 练习次数
                     })
                 }, 100)
             })
