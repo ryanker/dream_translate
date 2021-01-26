@@ -8,6 +8,8 @@
  */
 
 let db, cateId = 0
+let sentenceData = {}
+let listen = {}, record, compare
 document.addEventListener('DOMContentLoaded', async function () {
     await idb('favorite', 1, initFavorite).then(r => db = r)
 
@@ -182,7 +184,7 @@ function initSentence(cateId) {
 
         // console.log(JSON.stringify(arr))
         let s = ''
-        arr.forEach(v => {
+        arr.forEach((v, k) => {
             s += `<tr>
                 <td class="tb_checkbox"><input type="checkbox" value="${v.id}"></td>
                 <td class="tb_index">${v.id}</td>
@@ -191,14 +193,15 @@ function initSentence(cateId) {
                 <td class="tb_records">${v.records}</td>
                 <td class="tb_days">${v.days}</td>
                 <td class="tb_date">${v.createDate}</td>
-                <td class="tb_operate" data-id="${v.id}">
-                    <div class="dmx_button" data-action="review">复习</div>
+                <td class="tb_operate" data-id="${v.id}" data-key="${k}">
+                    <div class="dmx_button" data-action="skill">练习</div>
                     <div class="dmx_button dmx_button_warning" data-action="edit">修改</div>
                     <div class="dmx_button dmx_button_danger" data-action="delete">删除</div>
                 </td>
             </tr>`
         })
         tbodyEl.innerHTML = s
+        sentenceData = arr
         selectBind()
         reviewSentence()
         editSentence()
@@ -208,11 +211,167 @@ function initSentence(cateId) {
 
 // 复习句子
 function reviewSentence() {
-    D('.dmx_button[data-action="review"]').forEach(el => {
+    D('.dmx_button[data-action="skill"]').forEach(el => {
         el.addEventListener('click', () => {
+            ddi({
+                fullscreen: true,
+                title: '',
+                body: `<div class="player_box">
+                        <div class="tab fx">
+                            <u data-type="skill" class="active">朗读练习</u>
+                            <u data-type="record">发音练习</u>
+                            <u data-type="listen">听力练习</u>
+                        </div>
+                        <div id="skill_box"></div>
+                    </div>`,
+                onClose: () => {
+                    listen.stop()
+                }
+            })
 
+            // 绑定事件
+            let tabEl = D('.player_box u[data-type]')
+            let boxEl = $('skill_box')
+            tabEl.forEach(e => {
+                e.addEventListener('click', () => {
+                    let len = sentenceData.length
+                    let key = Number(el.parentNode.dataset.key)
+                    let type = e.dataset.type
+                    let s = '<div id="player_sentence"></div>'
+                    if (type === 'skill') {
+                        s += '<div id="player_listen" style="display:none"></div><div id="player_record"></div><div id="player_compare"></div>'
+                    } else if (type === 'record') {
+                        s += '<div id="player_listen"></div><div id="player_record"></div><div id="player_compare"></div>'
+                    } else if (type === 'listen') {
+                        s += '<div id="player_listen"></div>'
+                    }
+                    s += `<div class="divider"><b><span id="practice_num">0</span> 次</b></div></div>`
+                    s += `<div class="dmx_center${type === 'listen' ? ' dmx_hide' : ''}"><button class="dmx_button medium" id="next_but">下一句 (<span>${key + 1}</span>/${len})</button></div>`
+                    if (type === 'listen') {
+                        s += `<div class="dmx_form_item">
+                            <div class="item_label">播放次数</div>
+                            <div class="item_content number"><input id="player_num" type="number" value="2" class="item_input"></div>
+                            <div class="ml_1"><div class="dmx_button dmx_button_danger medium" id="stop_but">停止播放</div></div>
+                        </div>`
+                    }
+                    boxEl.innerHTML = s
+                    rmClassD(tabEl, 'active')
+                    addClass(e, 'active')
+                    playerInit(key, type)
+
+                    // 下一句
+                    $('next_but').addEventListener('click', function () {
+                        let nextKey = Number(el.parentNode.dataset.key) + 1
+                        let newKey = nextKey >= len ? 0 : nextKey
+                        el.parentNode.dataset.key = String(newKey)
+                        this.querySelector('span').innerText = String(newKey + 1)
+                        $('practice_num').innerText = 0
+                        rmClass($('player_sentence'), 'hide')
+                        playerInit(newKey, type)
+                    })
+
+                    // 停止播放
+                    if (type === 'listen') {
+                        $('stop_but').addEventListener('click', () => {
+                            listen.stop()
+                            listen.showControls()
+                        })
+                    }
+                })
+            })
+
+            // 初始
+            setTimeout(() => {
+                let el = S('.player_box u[data-type="skill"]')
+                if (el) el.click()
+            }, 100)
         })
     })
+}
+
+function playerInit(key, type) {
+    let maxDuration = 5000
+    let practiceNum = 0
+    let row = sentenceData[key] || {}
+
+    let senEl = $('player_sentence')
+    let nextEl = $('next_but')
+    senEl.innerText = row.sentence || ''
+
+    let onReady = function (duration) {
+        let times = 2
+        if (duration > 10) times *= 2.5 // 时间越长，模仿越难
+        maxDuration = Math.ceil(duration * times) * 1000
+        record.setMaxDuration(maxDuration)
+    }
+    if (type === 'skill') {
+        listen = playerListen('player_listen', {onReady})
+        listen.loadBlob(row.blob)
+        record = playerRecord('player_record', {
+            showStartBut: true,
+            maxDuration,
+            onStart: () => nextEl.disabled = true,
+            onStop: () => {
+                compare.loadBlob(row.blob)
+                compare.once('finish', () => {
+                    let t = setTimeout(() => record.showStartBut(), maxDuration)
+                    setTimeout(() => {
+                        compare.loadBlob(record.blob)
+                        compare.once('finish', () => {
+                            clearTimeout(t)
+                            record.showStartBut()
+                            nextEl.disabled = false // 解除禁用
+                            $('practice_num').innerText = ++practiceNum
+                            if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
+                        })
+                    }, 100)
+                })
+            },
+        })
+        compare = playerCompare('player_compare')
+    } else if (type === 'record') {
+        listen = playerListen('player_listen', {
+            onReady,
+            onPlay: () => nextEl.disabled = true,
+            onFinish: () => record.start(), // 开始录音
+        })
+        listen.loadBlob(row.blob)
+        record = playerRecord('player_record', {
+            maxDuration,
+            onStop: () => {
+                compare.loadBlob(row.blob)
+                compare.once('finish', () => {
+                    let t = setTimeout(() => listen.showControls(), maxDuration + 1000) // 显示开始录音按钮
+                    setTimeout(() => {
+                        compare.loadBlob(record.blob)
+                        compare.once('finish', () => {
+                            clearTimeout(t)
+                            listen.showControls() // 显示播放按钮
+                            nextEl.disabled = false // 解除禁用
+                            $('practice_num').innerText = ++practiceNum  // 练习次数
+                            if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
+                        })
+                    }, 100)
+                })
+            }
+        })
+        compare = playerCompare('player_compare')
+    } else if (type === 'listen') {
+        listen = playerListen('player_listen', {
+            onFinish: () => {
+                listen.play()
+                let nEl = $('player_num')
+                let n = nEl && nEl.value ? Number(nEl.value) : 2
+                $('practice_num').innerText = ++practiceNum  // 练习次数
+                if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
+                if (practiceNum >= n) {
+                    $('next_but').click()
+                    setTimeout(() => listen.play(), 100)
+                }
+            }
+        })
+        listen.loadBlob(row.blob)
+    }
 }
 
 // 修改句子

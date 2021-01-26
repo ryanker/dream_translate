@@ -71,6 +71,14 @@ a:hover {
     margin-top: 20px;
 }
 
+.ml_1 {
+    margin-left: 10px;
+}
+
+.ml_2 {
+    margin-left: 20px;
+}
+
 .main {
     margin: 0 auto;
     padding: 10px;
@@ -149,6 +157,11 @@ select {
     opacity: .7;
 }
 
+.dmx_button.medium {
+    font-size: 105%;
+    padding: 10px 13px;
+}
+
 .dmx_button.big {
     font-size: 125%;
     padding: 10px 16px;
@@ -180,6 +193,12 @@ select {
     background-color: #ef473a;
     border-color: #dd1419;
     color: #fff;
+}
+
+.dmx_button:disabled, .dmx_button:disabled:hover {
+    cursor: not-allowed;
+    opacity: .3;
+    box-shadow: none;
 }
 
 .divider {
@@ -257,6 +276,14 @@ select {
 
 .dmx_form_item .item_content {
     width: 100%;
+}
+
+.dmx_form_item .item_content.number {
+    width: 100px;
+}
+
+.dmx_form_item .item_content.number input[type="number"] {
+    padding-right: 2px;
 }
 
 /* ==================== player ==================== */
@@ -901,7 +928,16 @@ table.dmx_table .table_empty {
 
 #player_sentence {
     font-size: 20px;
-    margin-top: 15px;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+#player_sentence.hide {
+    color: #F1F4F6;
+}
+
+#player_sentence.hide:hover {
+    color: #333;
 }
 
 /* ==================== dal ==================== */

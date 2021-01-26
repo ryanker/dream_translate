@@ -477,6 +477,7 @@ function ddi(option) {
         title: '',
         body: '',
         fullscreen: false,
+        onClose: null,
     }, option || {})
     let el = S('.ddi .ddi_body')
     if (el) {
@@ -489,7 +490,10 @@ function ddi(option) {
         <div class="ddi_body">${o.body}</div>
     </div>
 </div>`)
-        S('.ddi_head .dmx-icon-close').addEventListener('click', removeDdi)
+        S('.ddi_head .dmx-icon-close').addEventListener('click', () => {
+            removeDdi()
+            if (typeof o.onClose === 'function') o.onClose()
+        })
     }
 }
 
