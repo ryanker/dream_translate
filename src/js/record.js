@@ -10,7 +10,7 @@
 let bg = B.getBackgroundPage()
 let audioSrc = bg.audioSrc || {}
 let maxDuration = 5000
-let practice_num = 0
+let practiceNum = 0
 let listen = {}, listen2 = {}, record, compare
 document.addEventListener('DOMContentLoaded', async function () {
     playerInit()
@@ -129,8 +129,8 @@ function playerInit() {
                     compare.loadBlob(record.blob)
                     compare.once('finish', () => {
                         // 练习次数
-                        practice_num++
-                        $('practice_num').innerText = practice_num
+                        practiceNum++
+                        $('practice_num').innerText = practiceNum
 
                         // 显示播放按钮
                         listen.showControls()
