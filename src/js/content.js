@@ -1034,7 +1034,7 @@ function dmxDialog(options) {
         addClass(el, 'dmx_unselectable')
     }
     let onMouseup = function (e) {
-        // e && e.stopPropagation() // 和B站播放进度条冲突
+        // e.stopPropagation() // 和B站播放进度条冲突
         mid = null
         rmClass(document.body, 'dmx_unselectable')
         rmClass(el, 'dmx_unselectable')
@@ -1067,7 +1067,10 @@ function dmxDialog(options) {
     document.addEventListener('mousemove', onMousemove)
     document.addEventListener('mouseup', onMouseup)
     document.addEventListener('mouseleave', onMouseup) // 鼠标离开浏览器
-    el.addEventListener('mouseup', onMouseup)
+    el.addEventListener('mouseup', function (e) {
+        e.stopPropagation() // 解决点击面板闪耀问题
+        onMouseup()
+    })
 
     let elArr = ['n', 'e', 's', 'w', 'nw', 'ne', 'sw', 'se']
     let fsTmp = {} // 全屏设置临时缓存
