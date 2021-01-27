@@ -255,6 +255,7 @@ function reviewSentence() {
                             <div class="ml_1"><div class="dmx_button dmx_button_danger medium" id="stop_but">停止播放</div></div>
                         </div>`
                     }
+                    s += window.playerTips
                     boxEl.innerHTML = s
                     rmClassD(tabEl, 'active')
                     addClass(e, 'active')

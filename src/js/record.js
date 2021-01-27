@@ -12,7 +12,7 @@ let audioSrc = bg.audioSrc || {}
 let maxDuration = 5000
 let practiceNum = 0
 let listen = {}, listen2 = {}, record, compare
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', function () {
     playerInit()
 
     // 加载音频
@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     let sentenceInp = S('input[name="sentence"]')
     let urlInp = S('input[name="url"]')
     let wordsTex = S('textarea[name="words"]')
+
+    // 练习提示
+    record_box.insertAdjacentHTML('beforeend', window.playerTips)
 
     // 添加收藏
     favorite_but.addEventListener('click', () => {
