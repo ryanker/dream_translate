@@ -503,7 +503,9 @@ function ddi(option) {
         <div class="ddi_body">${o.body}</div>
     </div>
 </div>`)
+        addClass(document.body, 'dmx_overflow_hidden')
         S('.ddi_head .dmx-icon-close').addEventListener('click', () => {
+            rmClass(document.body, 'dmx_overflow_hidden')
             removeDdi()
             if (typeof o.onClose === 'function') o.onClose()
         })
