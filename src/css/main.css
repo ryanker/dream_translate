@@ -701,6 +701,12 @@ select {
     margin: 0 15px;
 }
 
+.head .logo .dmx-icon {
+    font-size: x-large;
+    text-shadow: none;
+    margin-right: 5px;
+}
+
 .head .nav {
     float: left;
     display: flex;
