@@ -286,9 +286,8 @@ function sleep(delay) {
 
 function getDate(value, isDate) {
     let d = value ? new Date(value) : new Date()
-    let s = ''
     d.setMinutes(-d.getTimezoneOffset() + d.getMinutes(), d.getSeconds(), 0)
-    s = d.toISOString()
+    let s = d.toISOString()
     if (isDate) {
         s = s.substring(0, 10)
     } else {
