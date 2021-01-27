@@ -116,21 +116,23 @@ function initFavorite(e) {
     // sentence
     store = db.createObjectStore('sentence', {keyPath: 'id', autoIncrement: true})
     store.createIndex('id', 'id', {unique: true})
-    store.createIndex('cateId', 'cateId', {unique: false}) // 分类ID
+    store.createIndex('cateId', 'cateId') // 分类ID
     store.createIndex('sentence', 'sentence', {unique: true}) // 句子
-    store.createIndex('words', 'words', {unique: false}) // 生词，一行一个
+    store.createIndex('words', 'words') // 生词，一行一个
     store.createIndex('remark', 'remark') // 备注
-    store.createIndex('records', 'records', {unique: false}) // 练习次数
-    store.createIndex('days', 'days', {unique: false}) // 练习天数
+    store.createIndex('records', 'records') // 练习次数
+    store.createIndex('days', 'days') // 练习天数
     store.createIndex('url', 'url') // 音频 URL
     store.createIndex('blob', 'blob') // 音频二进制文件
-    store.createIndex('createDate', 'createDate', {unique: false}) // 创建时间
+    store.createIndex('practiceDate', 'practiceDate') // 最后练习时间
+    store.createIndex('createDate', 'createDate') // 创建时间
 
     // cate
     store = db.createObjectStore('cate', {keyPath: 'cateId', autoIncrement: true})
     store.createIndex('cateId', 'cateId', {unique: true}) // 分类ID
     store.createIndex('cateName', 'cateName', {unique: true}) // 分类名称
-    store.createIndex('createDate', 'createDate', {unique: false}) // 创建时间
+    store.createIndex('updateDate', 'updateDate') // 更新时间
+    store.createIndex('createDate', 'createDate') // 创建时间
 
     // cate 初始分类
     setTimeout(() => {

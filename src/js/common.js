@@ -284,6 +284,20 @@ function sleep(delay) {
     return new Promise(r => setTimeout(r, delay))
 }
 
+function getDate(value, isDate) {
+    let d = value ? new Date(value) : new Date()
+    let s = ''
+    d.setMinutes(-d.getTimezoneOffset() + d.getMinutes(), d.getSeconds(), 0)
+    s = d.toISOString()
+    if (isDate) {
+        s = s.substring(0, 10)
+    } else {
+        s = s.replace('T', ' ')
+        s = s.replace('.000Z', '')
+    }
+    return s
+}
+
 // 补零
 function zero(value, digits) {
     digits = digits || 2

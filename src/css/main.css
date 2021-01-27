@@ -907,7 +907,7 @@ table.dmx_table .tb_records, table.dmx_table .tb_days {
 }
 
 table.dmx_table .tb_date {
-    width: 220px;
+    width: 100px;
 }
 
 table.dmx_table .tb_operate {

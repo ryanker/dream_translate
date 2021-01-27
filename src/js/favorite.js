@@ -192,7 +192,7 @@ function initSentence(cateId) {
                 <td class="tb_words">${v.words.replace(/\n/g, '; ')}</td>
                 <td class="tb_records">${v.records}</td>
                 <td class="tb_days">${v.days}</td>
-                <td class="tb_date">${v.createDate}</td>
+                <td class="tb_date" title="${getDate(v.createDate)}">${getDate(v.createDate, true)}</td>
                 <td class="tb_operate" data-id="${v.id}" data-key="${k}">
                     <div class="dmx_button" data-action="skill">练习</div>
                     <div class="dmx_button dmx_button_warning" data-action="edit">修改</div>
@@ -295,6 +295,8 @@ function playerInit(key, type) {
     let practiceNum = 0
     let row = sentenceData[key] || {}
     let records = row.records || 0
+    let days = row.days || 0
+    let practiceDate = row.practiceDate || ''
 
     let senEl = $('player_sentence')
     let nextEl = $('next_but')
@@ -307,7 +309,15 @@ function playerInit(key, type) {
         // 更新 DB
         if (isUpdate) {
             records++
-            db.update('sentence', row.id, {records})
+            if (practiceDate) {
+                let oldDate = getDate(practiceDate, true).replace(/\D/g, '')
+                let nowDate = getDate(null, true).replace(/\D/g, '')
+                if (oldDate < nowDate) days++
+            } else {
+                days++
+            }
+            practiceDate = new Date().toJSON()
+            db.update('sentence', row.id, {records, days, practiceDate})
         }
     }
     let onReady = function (duration) {

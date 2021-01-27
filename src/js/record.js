@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 days: 0,
                 url,
                 blob: audioSrc.blob,
+                practiceDate: '',
                 createDate: new Date().toJSON(),
             }).then(() => {
                 dal('添加完成', 'success', () => {
