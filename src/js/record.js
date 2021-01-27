@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => {
         if (audioSrc.blob) {
             listen.loadBlob(audioSrc.blob)
-        } else {
+        } else if (audioSrc.url) {
             bg.getAudioBlob(audioSrc.url).then(b => {
                 listen.loadBlob(b)
                 audioSrc.blob = b
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 修改链接
     urlInp.addEventListener('blur', () => {
         let url = urlInp.value.trim()
-        if (url !== audioSrc.url) bg.getAudioBlob(url).then(blob => listen2.loadBlob(blob))
+        if (url && url !== audioSrc.url) bg.getAudioBlob(url).then(blob => listen2.loadBlob(blob))
     })
 
     // 返回
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
         idb('favorite', 1, initFavorite).then(async db => {
             // 如果链接修改过，重新获取二进制文件
             let url = urlInp.value.trim()
-            if (url !== audioSrc.url) await bg.getAudioBlob(audioSrc.url).then(b => audioSrc.blob = b)
+            if (url && url !== audioSrc.url) await bg.getAudioBlob(url).then(b => audioSrc.blob = b)
 
             await db.create('sentence', {
                 cateId: 0,
