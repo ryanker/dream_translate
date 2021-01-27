@@ -891,7 +891,7 @@ table.dmx_table thead th {
 }
 
 table.dmx_table .tb_checkbox {
-    width: 50px;
+    width: 44px;
 }
 
 table.dmx_table .tb_index {
@@ -938,6 +938,18 @@ table.dmx_table .table_empty {
 
 #player_sentence.hide:hover {
     color: #333;
+}
+
+#player_sentence .point, .tb_sentence .point {
+    color: red;
+}
+
+#player_sentence.hide .point {
+    color: inherit;
+}
+
+#player_sentence.hide:hover .point {
+    color: red;
 }
 
 /* ==================== dal ==================== */

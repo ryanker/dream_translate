@@ -187,9 +187,7 @@ function initSentence(cateId) {
         arr.forEach((v, k) => {
             s += `<tr>
                 <td class="tb_checkbox"><input type="checkbox" value="${v.id}"></td>
-                <td class="tb_index">${v.id}</td>
-                <td class="tb_sentence">${v.sentence}</td>
-                <td class="tb_words">${v.words.replace(/\n/g, '; ')}</td>
+                <td class="tb_sentence">${pointSentence(v.sentence, v.words)}</td>
                 <td class="tb_records">${v.records}</td>
                 <td class="tb_days">${v.days}</td>
                 <td class="tb_date" title="${getDate(v.createDate)}">${getDate(v.createDate, true)}</td>
@@ -291,18 +289,24 @@ function reviewSentence() {
     })
 }
 
+// 加载播放器
 function playerInit(key, type) {
     let maxDuration = 5000
     let practiceNum = 0
     let row = sentenceData[key] || {}
+    let sentence = row.sentence || ''
+    let words = row.words || ''
     let records = row.records || 0
     let days = row.days || 0
     let practiceDate = row.practiceDate || ''
 
     let senEl = $('player_sentence')
     let nextEl = $('next_but')
-    senEl.innerText = row.sentence || ''
 
+    // 显示句子
+    senEl.innerHTML = pointSentence(sentence, words, type === 'record')
+
+    // 练习次数
     let setPracticeNum = function (n, isUpdate) {
         let el = $('practice_num')
         if (el) el.innerText = n
@@ -321,6 +325,8 @@ function playerInit(key, type) {
             db.update('sentence', row.id, {records, days, practiceDate})
         }
     }
+
+    // 加载完成
     let onReady = function (duration) {
         let times = 2
         if (duration > 10) times *= 2.5 // 时间越长，模仿越难
@@ -372,6 +378,7 @@ function playerInit(key, type) {
                             listen.showControls() // 显示播放按钮
                             nextEl.disabled = false // 解除禁用
                             setPracticeNum(++practiceNum, true) // 练习次数
+                            if (practiceNum === 5) senEl.innerHTML = pointSentence(sentence, words) // 降低难度，显示文字
                             if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
                         })
                     }, 100)
@@ -395,6 +402,29 @@ function playerInit(key, type) {
         })
         listen.loadBlob(row.blob)
     }
+}
+
+// 解析重点词汇
+function pointSentence(sentence, words, isUnderscore) {
+    let arr = words.split('\n')
+
+    // 过滤 HTML，防止XSS
+    let d = document.createElement('div')
+    d.innerText = sentence
+
+    let s = d.innerText
+    for (let v of arr) {
+        v = v.trim()
+        if (!v) continue
+        s = s.replace(new RegExp(`(^${v}\\s|\\s${v}\\s|\\s${v}$)`, 'g'), (word) => {
+            if (isUnderscore) {
+                return word.replace(/\S+/g, '___')
+            } else {
+                return word.replace(/(\S+)/g, `<span class="point">$1</span>`)
+            }
+        })
+    }
+    return s
 }
 
 // 修改句子
