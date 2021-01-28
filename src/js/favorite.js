@@ -250,7 +250,7 @@ function reviewSentence() {
                         s += `<div class="dmx_form_item">
                             <div class="item_label">播放次数</div>
                             <div class="item_content number"><input id="player_num" type="number" value="2" class="item_input"></div>
-                            <div class="ml_1"><div class="dmx_button dmx_button_danger medium" id="stop_but">停止播放</div></div>
+                            <div class="dmx_left ml_1"><div class="dmx_button dmx_button_danger medium" id="stop_but">停止播放</div></div>
                         </div>`
                     }
                     s += window.playerTips

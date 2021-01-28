@@ -633,6 +633,11 @@ select {
     text-align: center;
 }
 
+.dmx_left {
+    margin: 20px 0;
+    text-align: left;
+}
+
 .dmx_right {
     margin: 20px 0;
     text-align: right;
