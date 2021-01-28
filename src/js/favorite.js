@@ -247,10 +247,10 @@ function reviewSentence() {
                     s += `<div class="divider"><b><span id="practice_num">0</span> 次</b></div></div>`
                     s += `<div class="dmx_center${type === 'listen' ? ' dmx_hide' : ''}"><button class="dmx_button medium" id="next_but">下一句 (<span>${key + 1}</span>/${len})</button></div>`
                     if (type === 'listen') {
-                        s += `<div class="dmx_form_item">
+                        s += `<div class="dmx_left dmx_form_item">
                             <div class="item_label">播放次数</div>
                             <div class="item_content number"><input id="player_num" type="number" value="2" class="item_input"></div>
-                            <div class="dmx_left ml_1"><div class="dmx_button dmx_button_danger medium" id="stop_but">停止播放</div></div>
+                            <div class="ml_1"><div class="dmx_button dmx_button_danger medium" id="stop_but">停止播放</div></div>
                         </div>`
                     }
                     s += window.playerTips
