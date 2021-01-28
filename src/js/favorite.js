@@ -9,7 +9,7 @@
 
 let db, cateId = 0
 let sentenceData = {}
-let listen = {}, record, compare
+let listen, record, record2, compare
 document.addEventListener('DOMContentLoaded', async function () {
     await idb('favorite', 1, initFavorite).then(r => db = r)
 
@@ -240,7 +240,7 @@ function reviewSentence() {
                     if (type === 'skill') {
                         s += '<div id="player_listen" style="display:none"></div><div id="player_record"></div><div id="player_compare"></div>'
                     } else if (type === 'record') {
-                        s += '<div id="player_listen"></div><div id="player_record"></div><div id="player_compare"></div>'
+                        s += '<div id="player_listen"></div><div id="player_record2"></div><div id="player_compare"></div>'
                     } else if (type === 'listen') {
                         s += '<div id="player_listen"></div>'
                     }
@@ -362,17 +362,17 @@ function playerInit(key, type) {
         listen = playerListen('player_listen', {
             onReady,
             onPlay: () => nextEl.disabled = true,
-            onFinish: () => record.start(), // 开始录音
+            onFinish: () => record2.start(), // 开始录音
         })
         listen.loadBlob(row.blob)
-        record = playerRecord('player_record', {
+        record2 = playerRecord('player_record2', {
             maxDuration,
             onStop: () => {
                 compare.loadBlob(row.blob)
                 compare.once('finish', () => {
                     let t = setTimeout(() => listen.showControls(), maxDuration + 1000) // 显示开始录音按钮
                     setTimeout(() => {
-                        compare.loadBlob(record.blob)
+                        compare.loadBlob(record2.blob)
                         compare.once('finish', () => {
                             clearTimeout(t)
                             listen.showControls() // 显示播放按钮
