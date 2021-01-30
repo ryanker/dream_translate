@@ -678,10 +678,6 @@ select {
     display: none;
 }
 
-#back_but {
-    margin-left: 10px;
-}
-
 /* ==================== favorite ==================== */
 .head {
     z-index: 2;
