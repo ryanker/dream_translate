@@ -86,7 +86,7 @@ DeepL翻译 https://www.deepl.com/translator (维基百科：专家认为它比 
 
 牛津词典 https://www.oxfordlearnersdictionaries.com
 
-免费词典 https://www.thefreedictionary.com
+自由词典 https://www.thefreedictionary.com
 
 词曲词典 https://www.lexico.com
 
