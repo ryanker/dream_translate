@@ -416,7 +416,7 @@ function pointSentence(sentence, words, isUnderscore) {
     for (let v of arr) {
         v = v.trim()
         if (!v) continue
-        s = s.replace(new RegExp(`(^${v}\\s|\\s${v}\\s|\\s${v}$|^${v}$)`, 'g'), (word) => {
+        s = s.replace(new RegExp(`(^${v}\\W|\\W${v}\\W|\\W${v}$|^${v}$)`, 'g'), (word) => {
             if (isUnderscore) {
                 return word.replace(/\S+/g, '___')
             } else {
