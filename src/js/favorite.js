@@ -327,14 +327,15 @@ function playerInit(key, type) {
     }
 
     // 加载完成
-    let onReady = function (duration) {
-        let times = 2
-        if (duration > 10) times *= 2.5 // 时间越长，模仿越难
-        maxDuration = Math.ceil(duration * times) * 1000
-        record.setMaxDuration(maxDuration)
-    }
     if (type === 'skill') {
-        listen = playerListen('player_listen', {onReady})
+        listen = playerListen('player_listen', {
+            onReady: function (duration) {
+                let times = 2
+                if (duration > 10) times *= 2.5 // 时间越长，模仿越难
+                maxDuration = Math.ceil(duration * times) * 1000
+                record.setMaxDuration(maxDuration)
+            }
+        })
         listen.loadBlob(row.blob)
         record = playerRecord('player_record', {
             showStartBut: true,
@@ -360,7 +361,12 @@ function playerInit(key, type) {
         compare = playerCompare('player_compare')
     } else if (type === 'record') {
         listen = playerListen('player_listen', {
-            onReady,
+            onReady: function (duration) {
+                let times = 2
+                if (duration > 10) times *= 2.5 // 时间越长，模仿越难
+                maxDuration = Math.ceil(duration * times) * 1000
+                record2.setMaxDuration(maxDuration)
+            },
             onPlay: () => nextEl.disabled = true,
             onFinish: () => record2.start(), // 开始录音
         })
