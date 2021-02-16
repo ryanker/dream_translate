@@ -616,8 +616,12 @@ select {
 
 /* ==================== history ==================== */
 .history_box {
-    margin: 62px auto 10px;
-    min-width: 800px;
+    padding: 60px 10px 10px;
+}
+
+.history_box > .card {
+    margin: 0 auto;
+    min-width: 860px;
     max-width: 1200px;
 }
 
