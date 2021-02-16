@@ -10,7 +10,7 @@
 let db
 let bg = B.getBackgroundPage()
 document.addEventListener('DOMContentLoaded', async function () {
-    await idb('history', 1, initFavorite).then(r => db = r)
+    await idb('history', 1, initHistory).then(r => db = r)
 
     historyList() // 展示列表
     selectAll() // 全选/取消全选
