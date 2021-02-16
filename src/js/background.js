@@ -274,18 +274,20 @@ function sendAllowSelect() {
 // 保存历史记录
 function createHistory(m) {
     let text = m.text || m.text.trim()
-    if (text && textTmp !== text) {
-        idb('history', 1, initHistory).then(async db => {
-            await db.create('history', {
-                content: text,
-                formTitle: m.formTitle,
-                formUrl: m.formUrl,
-                createDate: new Date().toJSON(),
-            }).catch(e => {
-                debug('history create error:', e)
-            })
+    if (!text) return
+    if (window.lastHistory === text) return
+    if (m.formUrl.indexOf(B.root) === 0) return // 排除扩展内查询
+    idb('history', 1, initHistory).then(db => {
+        db.create('history', {
+            content: text,
+            formTitle: m.formTitle,
+            formUrl: m.formUrl,
+            createDate: new Date().toJSON(),
+        }).catch(e => {
+            debug('history create error:', e)
         })
-    }
+    })
+    window.lastHistory = text
 }
 
 function minCss(s) {

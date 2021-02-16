@@ -614,6 +614,13 @@ select {
     float: right;
 }
 
+/* ==================== history ==================== */
+.history_box {
+    margin: 62px auto 10px;
+    min-width: 800px;
+    max-width: 1200px;
+}
+
 /* ==================== more ==================== */
 .more_list .dmx_button {
     float: left;
@@ -919,6 +926,10 @@ table.dmx_table .tb_date {
 
 table.dmx_table .tb_operate {
     width: 200px;
+}
+
+table.dmx_table .tb_operate2 {
+    width: 140px;
 }
 
 table.dmx_table .table_empty {

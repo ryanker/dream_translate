@@ -508,7 +508,7 @@ function selectBind() {
     })
 }
 
-// 全选/不全选
+// 全选/取消全选
 function selectAll() {
     $('selectAll').addEventListener('click', function () {
         let eList = D('td.tb_checkbox input[type="checkbox"]')
