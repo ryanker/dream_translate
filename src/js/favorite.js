@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     deleteBatchSentence()
     initCate()
     selectAll()
+    openSetting() // 设置
 })
 
 // 添加分类
@@ -175,12 +176,17 @@ function initCate(id) {
 function initSentence(cateId) {
     db.read('cate', cateId).then(cate => $('cate_name').innerText = cate.cateName)
     db.count('sentence', 'cateId', cateId).then(n => $('sentences').innerText = n)
-    db.find('sentence', {indexName: 'cateId', query: cateId}).then(arr => {
+
+    let orderBy = localStorage['orderBy']
+    let direction = orderBy === 'reverse' ? 'prev' : 'next'
+    db.find('sentence', {indexName: 'cateId', query: cateId, direction}).then(arr => {
         let tbodyEl = S('#sentence_box tbody')
         if (arr.length < 1) {
             tbodyEl.innerHTML = `<tr><td class="table_empty" colspan="${D('#sentence_box thead th').length}">暂无内容</td></tr>`
             return
         }
+
+        if (orderBy === 'random') shuffle(arr) // 随机
 
         // console.log(JSON.stringify(arr))
         let s = ''
@@ -508,6 +514,33 @@ function selectBind() {
     })
 }
 
+// 设置
+function openSetting() {
+    $('setting').addEventListener('click', function () {
+        ddi({
+            title: '设置', body: `<div class="dmx_form_item">
+            <div class="item_label">展示顺序</div>
+                <div class="item_content number">
+                    <select id="order_by">
+                        <option value="obverse">正序</option>
+                        <option value="reverse">倒序</option>
+                        <option value="random">随机</option>
+                    </select>
+                </div>
+            </div>
+            <div class="dmx_right">
+                <button class="dmx_button" id="save_but">保存</button>
+            </div>`
+        })
+        $('order_by').value = localStorage['orderBy'] || 'obverse'
+        $('save_but').addEventListener('click', () => {
+            localStorage.setItem('orderBy', $('order_by').value)
+            removeDdi()
+            initSentence(cateId)
+        })
+    })
+}
+
 // 全选/取消全选
 function selectAll() {
     $('selectAll').addEventListener('click', function () {
@@ -521,4 +554,13 @@ function selectAll() {
 function selectCancel() {
     $('selectAll').checked = false
     rmClass($('extra_but'), 'dmx_show')
+}
+
+// 随机数组
+function shuffle(arr) {
+    for (let k = 0; k < arr.length; k++) {
+        let i = Math.floor(Math.random() * arr.length);
+        [arr[k], arr[i]] = [arr[i], arr[k]]
+    }
+    return arr
 }
