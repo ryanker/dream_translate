@@ -85,6 +85,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     } else if (m.action === 'onAllowSelect') {
         sendAllowSelect()
     } else if (m.action === 'textTmp') {
+        createHistory(m) // 保存历史记录
         textTmp = m.text // 划词文字缓存
     }
 })
@@ -268,6 +269,23 @@ function sendAllowSelect() {
     getActiveTabId().then(tabId => {
         tabId && sendTabMessage(tabId, {action: 'allowSelect'})
     })
+}
+
+// 保存历史记录
+function createHistory(m) {
+    let text = m.text || m.text.trim()
+    if (text && textTmp !== text) {
+        idb('history', 1, initHistory).then(async db => {
+            await db.create('history', {
+                content: text,
+                formTitle: m.formTitle,
+                formUrl: m.formUrl,
+                createDate: new Date().toJSON(),
+            }).catch(e => {
+                debug('history create error:', e)
+            })
+        })
+    }
 }
 
 function minCss(s) {

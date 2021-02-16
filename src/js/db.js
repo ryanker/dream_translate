@@ -109,7 +109,7 @@ function idb(dbName, version, onupgradeneeded) {
     })
 }
 
-// 创建存储对象
+// 创建存储对象: 收藏
 function initFavorite(e) {
     let store, db = e.target.result
 
@@ -139,4 +139,17 @@ function initFavorite(e) {
         let row = {cateId: 0, cateName: '最新收藏', createDate: new Date().toJSON()}
         db.transaction(['cate'], 'readwrite').objectStore('cate').add(row)
     }, 500)
+}
+
+// 创建存储对象: 历史
+function initHistory(e) {
+    let store, db = e.target.result
+
+    // history
+    store = db.createObjectStore('history', {keyPath: 'id', autoIncrement: true})
+    store.createIndex('id', 'id', {unique: true})
+    store.createIndex('content', 'content')
+    store.createIndex('formTitle', 'formTitle')
+    store.createIndex('formUrl', 'formUrl')
+    store.createIndex('createDate', 'createDate') // 创建时间
 }

@@ -716,7 +716,7 @@ function soundIconHTML(lan, lanArr, type) {
 }
 
 function initQuery(text, clientX, clientY) {
-    sendBgMessage({action: 'textTmp', text}) // 发送到后台缓存起来
+    sendBgMessage({action: 'textTmp', text, formTitle: document.title, formUrl: location.href}) // 发送到后台缓存起来
     if (!text) {
         iconBut.style.display = 'none'
         return
