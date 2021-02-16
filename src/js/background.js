@@ -9,6 +9,7 @@
 
 let conf, setting, sdk = {}
 var textTmp = ''
+var historyMax = 3000
 document.addEventListener('DOMContentLoaded', async function () {
     let languageList = '', dialogCSS = '', dictionaryCSS = {}
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
@@ -30,6 +31,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     await storageSyncGet(['setting']).then(function (r) {
         saveSettingAll(r.setting, true) // 初始设置参数
     })
+
+    // 最大保存历史记录数
+    if (localStorage['historyMax']) historyMax = Number(localStorage['historyMax'])
 
     // 加载 js
     loadJs(uniqueArray(Object.keys(conf.translateList).concat(Object.keys(conf.translateTTSList))), 'translate')
@@ -273,6 +277,7 @@ function sendAllowSelect() {
 
 // 保存历史记录
 function createHistory(m) {
+    if (historyMax < 1) return // 如果为 0，则不再保存历史记录
     let text = m.text || m.text.trim()
     if (!text) return
     if (window.lastHistory === text) return
@@ -283,11 +288,25 @@ function createHistory(m) {
             formTitle: m.formTitle,
             formUrl: m.formUrl,
             createDate: new Date().toJSON(),
+        }).then(() => {
+            // 清理早期数据
+            db.count('history').then(n => {
+                if (n <= historyMax) return
+                db.find('history', {direction: 'prev', offset: historyMax}).then(arr => {
+                    for (let v of arr) db.delete('history', v.id)
+                })
+            })
         }).catch(e => {
             debug('history create error:', e)
         })
     })
     window.lastHistory = text
+}
+
+// 历史记录设置
+function settingHistory(n) {
+    historyMax = Number(n)
+    localStorage.setItem('historyMax', n)
 }
 
 function minCss(s) {

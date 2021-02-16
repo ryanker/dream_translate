@@ -1060,11 +1060,11 @@ table.dmx_table .table_empty {
     width: 20px;
     height: 20px;
     line-height: 20px;
-    font-size: 18px;
     position: absolute;
     top: 10px;
     right: 10px;
-    color: #FC4949;
+    color: #FC4A4A;
+    font-size: 18px;
 }
 
 .ddi_head .dmx-icon:hover {

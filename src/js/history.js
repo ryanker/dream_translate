@@ -8,12 +8,14 @@
  */
 
 let db
+let bg = B.getBackgroundPage()
 document.addEventListener('DOMContentLoaded', async function () {
     await idb('history', 1, initFavorite).then(r => db = r)
 
     historyList() // 展示列表
     selectAll() // 全选/取消全选
     deleteMultiple() // 批量删除
+    openSetting() // 设置
 })
 
 function historyList() {
@@ -85,6 +87,26 @@ function selectAll() {
         let eList = D('#history_body input[type="checkbox"]')
         eList.forEach(el => el.checked = this.checked)
         ;(this.checked && eList.length > 0 ? addClass : rmClass)($('extra_but'), 'dmx_show') // 是否显示批量删除按钮
+    })
+}
+
+// 设置
+function openSetting() {
+    $('setting').addEventListener('click', function () {
+        ddi({
+            title: '设置', body: `<div class="dmx_form_item">
+            <div class="item_label">最大记录数</div>
+                <div class="item_content number"><input id="history_max" type="number" value="${bg.historyMax}" min="0" class="item_input"></div>
+            </div>
+            <div class="dmx_right">
+                <button class="dmx_button" id="save_but">保存</button>
+            </div>`
+        })
+        $('save_but').addEventListener('click', () => {
+            let maxNum = $('history_max').value
+            bg.settingHistory(maxNum)
+            removeDdi()
+        })
     })
 }
 
