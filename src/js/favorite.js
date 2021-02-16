@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     initCate()
     selectAll()
     openSetting() // 设置
+    exportZip() // 导出
 })
 
 // 添加分类
@@ -512,6 +513,42 @@ function selectBind() {
             ;(len > 0 ? addClass : rmClass)($('extra_but'), 'dmx_show')
         })
     })
+}
+
+// 导出
+function exportZip() {
+    $('export').addEventListener('click', async function () {
+        let zip = new JSZip()
+
+        // cate
+        await db.find('cate').then(arr => {
+            zip.file(`cate.json`, JSON.stringify(arr))
+        })
+
+        // sentence
+        let sentence = {}
+        await db.find('sentence').then(arr => {
+            for (let v of arr) {
+                // zip.file(`${v.id}.json`, JSON.stringify(v))
+                zip.file(`mp3/${v.id}.mp3`, v.blob)
+                delete v.blob
+            }
+            sentence = arr
+        })
+        zip.file(`sentence.json`, JSON.stringify(sentence))
+
+        await zip.generateAsync({type: "blob"}).then(function (blob) {
+            downloadZip(blob)
+        }).catch(err => console.warn('zip generateAsync error:', err))
+    })
+}
+
+// 下载 ZIP
+function downloadZip(blob) {
+    let el = document.createElement('a')
+    el.href = URL.createObjectURL(blob)
+    el.download = `梦想划词翻译-${getDate().replace(/\D/g, '')}.zip`
+    el.click()
 }
 
 // 设置
