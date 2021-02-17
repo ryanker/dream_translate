@@ -518,6 +518,16 @@ function removeDdi() {
     D('.ddi_bg,.ddi').forEach(e => e.remove())
 }
 
+function loading(text) {
+    document.body.insertAdjacentHTML('beforeend', `<div class="dal_bg"></div>
+<div class="dal">
+    <div class="ddi_loading">
+        <div class="ddi_loading_inner"></div>
+        <div class="mt_2">${text || 'loading...'}</div>
+    </div>
+</div>`)
+}
+
 function httpGet(url, type, headers, notStrict) {
     return new Promise((resolve, reject) => {
         let c = new XMLHttpRequest()

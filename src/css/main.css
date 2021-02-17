@@ -1079,3 +1079,30 @@ table.dmx_table .table_empty {
 .ddi_body {
     margin: 0 15px 10px;
 }
+
+.ddi_loading {
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+}
+
+.ddi_loading_inner {
+    border: 5px solid #bdc3c7;
+    border-top: 5px solid #2c3e50;
+    border-bottom: 3px solid #2c3e50;
+    border-radius: 50%;
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

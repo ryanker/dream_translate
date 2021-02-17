@@ -520,6 +520,7 @@ function selectBind() {
 // 导出
 function exportZip() {
     $('export').addEventListener('click', async function () {
+        loading('打包下载...')
         let zip = new JSZip()
 
         // cate
@@ -542,8 +543,10 @@ function exportZip() {
         zip.file(`sentence.json`, JSON.stringify(sentence))
         zip.file(`mp3Type.json`, JSON.stringify(typeArr))
 
+        debug('zip generateAsync ...')
         await zip.generateAsync({type: 'blob'}).then(function (blob) {
             downloadZip(blob)
+            removeDdi()
         }).catch(err => console.warn('zip generateAsync error:', err))
     })
 }
