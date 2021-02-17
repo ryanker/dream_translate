@@ -592,44 +592,51 @@ function importZip() {
                 JSZip.loadAsync(f).then(async function (zip) {
                     // zip.forEach((filename, file) => console.log(filename, file)) // zip 详情
 
-                    // 清空数据
                     let errStr = ''
                     let errNum = 0
                     let errAppend = (e) => {
                         errNum++
-                        errStr += e + '\n'
+                        errStr += e + JSON.stringify(e) + '\n'
                     }
+
+                    // mp3Type
+                    let mp3TypeObj = {}
+                    try {
+                        let mp3Type = await zip.file('mp3Type.json').async('text')
+                        mp3TypeObj = JSON.parse(mp3Type)
+                    } catch (e) {
+                        errAppend(e)
+                    }
+
+                    // cate
+                    let cateArr = []
+                    try {
+                        let cate = await zip.file('cate.json').async('text')
+                        cateArr = JSON.parse(cate)
+                    } catch (e) {
+                        errAppend(e)
+                    }
+
+                    // sentence
+                    let sentenceNum = 0
+                    let sentenceRepeat = 0 // 重复的句子
+                    let sentenceArr = []
+                    try {
+                        let sentence = await zip.file('sentence.json').async('text')
+                        sentenceArr = JSON.parse(sentence)
+                    } catch (e) {
+                        errAppend(e)
+                    }
+
                     if (isClear) {
+                        // 清空数据
                         db.clear('sentence').then(_ => debug('sentence clear finish.')).catch(e => errAppend(e))
                         db.clear('cate').then(_ => debug('cate clear ok.')).catch(e => errAppend(e))
 
                         // cate
-                        let cate = await zip.file('cate.json').async('text')
-                        try {
-                            let cateArr = JSON.parse(cate)
-                            for (let v of cateArr) db.create('cate', v).catch(e => errAppend(e))
-                        } catch (e) {
-                            errAppend(e)
-                        }
-
-                        // mp3Type
-                        let mp3TypeObj = {}
-                        try {
-                            let mp3Type = await zip.file('mp3Type.json').async('text')
-                            mp3TypeObj = JSON.parse(mp3Type)
-                        } catch (e) {
-                            errAppend(e)
-                        }
+                        for (let v of cateArr) db.create('cate', v).catch(e => errAppend(e))
 
                         // sentence
-                        let sentence = await zip.file('sentence.json').async('text')
-                        let sentenceArr = []
-                        try {
-                            sentenceArr = JSON.parse(sentence)
-                        } catch (e) {
-                            errAppend(e)
-                        }
-                        let sentenceNum = 0
                         for (let v of sentenceArr) {
                             await zip.file(`mp3/${v.id}.mp3`).async('blob').then(b => {
                                 v.blob = b.slice(0, b.size, mp3TypeObj[v.id] || 'audio/mpeg') // 设置 blob 类型
@@ -643,18 +650,68 @@ function importZip() {
                                 debug('sentence create:', v.id, r)
                             }).catch(e => errAppend(e))
                         }
-
-                        let okMsg = `导入完成，耗时：${new Date() - tStart} ms，导入：${sentenceNum} 条`
-                        if (errNum > 0) {
-                            okMsg += `，错误：${errNum} 次`
-                            console.warn('errStr:', errStr)
+                    } else {
+                        // cate 对应表
+                        let cateMap = {}
+                        for (let v of cateArr) {
+                            let row = null
+                            await db.readByIndex('cate', 'cateName', v.cateName.trim()).then(r => row = r).catch(e => errAppend(e))
+                            if (!row) {
+                                // 不存在就创建
+                                let oldId = v.cateId
+                                delete v.cateId
+                                await db.create('cate', v).then(r => {
+                                    cateMap[oldId] = r.target.result // 对应新创建的ID
+                                }).catch(e => errAppend(e))
+                            } else {
+                                cateMap[v.cateId] = row.cateId // 存在就记录对应的ID
+                            }
                         }
-                        dal(okMsg, 'success', () => {
-                            // location.reload()
-                            removeDdi()
-                            initSentence(cateId)
-                        })
+
+                        // sentence
+                        for (let v of sentenceArr) {
+                            // 判断句子是否存在
+                            let sentence = null
+                            await db.readByIndex('sentence', 'sentence', v.sentence.trim()).then(r => sentence = r).catch(e => errAppend(e))
+                            if (sentence) {
+                                sentenceRepeat++
+                                continue // 如果存在，就跳过
+                            }
+
+                            // 初始统计
+                            if (isInitial) {
+                                v.records = 0
+                                v.days = 0
+                            }
+
+                            // 获取音频
+                            await zip.file(`mp3/${v.id}.mp3`).async('blob').then(b => {
+                                v.blob = b.slice(0, b.size, mp3TypeObj[v.id] || 'audio/mpeg') // 设置 blob 类型
+                            })
+
+                            // 写入数据库
+                            v.cateId = cateMap[v.cateId] || 0
+                            delete v.id
+                            await db.create('sentence', v).then(r => {
+                                sentenceNum++
+                                debug('create sentenceId:', r.target.result)
+                            }).catch(e => errAppend(e))
+                        }
                     }
+
+                    let okMsg = `导入完成<br> 导入：${sentenceNum} 条`
+                    if (sentenceRepeat > 0) okMsg += `，重复：${sentenceRepeat} 条`
+                    if (errNum > 0) {
+                        okMsg += `，错误：${errNum} 次`
+                        console.warn('errStr:', errStr)
+                    }
+                    okMsg += `<br>耗时：${new Date() - tStart} ms`
+                    dal(okMsg, 'success', () => {
+                        // location.reload()
+                        removeDdi()
+                        initCate(cateId)
+                        initSentence(cateId)
+                    })
                 }).catch(e => {
                     dal('读取压缩包失败', 'error', () => removeDdi())
                     debug('loadAsync error:', e)

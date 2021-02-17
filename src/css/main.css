@@ -939,7 +939,7 @@ table.dmx_table .tb_operate2 {
 table.dmx_table .table_empty {
     padding: 15px 10px;
     text-align: center;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .player_box {

@@ -29,6 +29,13 @@ function idb(dbName, version, onupgradeneeded) {
                         row.onerror = (e) => reject(e)
                     })
                 },
+                readByIndex(storeName, indexName, key) {
+                    return new Promise((resolve, reject) => {
+                        let row = this.rStore(storeName).index(indexName).get(key)
+                        row.onsuccess = () => resolve(row.result)
+                        row.onerror = (e) => reject(e)
+                    })
+                },
                 create(storeName, data) {
                     return new Promise((resolve, reject) => {
                         let row = this.wStore(storeName).add(data)
@@ -113,6 +120,15 @@ function idb(dbName, version, onupgradeneeded) {
                 },
             })
         }
+    })
+}
+
+function rmIdb(dbName) {
+    return new Promise((resolve, reject) => {
+        let db = window.indexedDB.deleteDatabase(dbName)
+        db.onsuccess = (e) => resolve(e)
+        db.onerror = (e) => reject(e)
+        setTimeout(_ => reject('time out'), 2000)
     })
 }
 
