@@ -40,7 +40,8 @@ function createCate() {
         $('create_cate').addEventListener('click', () => {
             let cateName = $('create_cateName').value.trim()
             if (!cateName) return dal('请填写分类名称', 'error')
-            db.create('cate', {cateName, createDate: new Date().toJSON()}).then(_ => {
+            let d = new Date().toJSON()
+            db.create('cate', {cateName, updateDate: d, createDate: d}).then(_ => {
                 removeDdi()
                 initCate()
             }).catch(e => {
@@ -655,7 +656,7 @@ function importZip() {
                         })
                     }
                 }).catch(e => {
-                    dal('读取压缩包失败', 'error')
+                    dal('读取压缩包失败', 'error', () => removeDdi())
                     debug('loadAsync error:', e)
                 })
             }

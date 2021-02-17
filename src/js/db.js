@@ -143,7 +143,8 @@ function initFavorite(e) {
 
     // cate 初始分类
     setTimeout(() => {
-        let row = {cateId: 0, cateName: '最新收藏', createDate: new Date().toJSON()}
+        let d = new Date().toJSON()
+        let row = {cateId: 0, cateName: '最新收藏', updateDate: d, createDate: d}
         db.transaction(['cate'], 'readwrite').objectStore('cate').add(row)
     }, 500)
 }
