@@ -519,8 +519,8 @@ function removeDdi() {
 }
 
 function loading(text) {
-    document.body.insertAdjacentHTML('beforeend', `<div class="dal_bg"></div>
-<div class="dal">
+    document.body.insertAdjacentHTML('beforeend', `<div class="ddi_bg"></div>
+<div class="ddi">
     <div class="ddi_loading">
         <div class="ddi_loading_inner"></div>
         <div class="mt_2">${text || 'loading...'}</div>
