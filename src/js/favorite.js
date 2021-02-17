@@ -20,8 +20,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     deleteBatchSentence()
     initCate()
     selectAll()
-    openSetting() // 设置
     exportZip() // 导出
+    importZip() // 导入
+    openSetting() // 设置
 })
 
 // 添加分类
@@ -527,17 +528,20 @@ function exportZip() {
 
         // sentence
         let sentence = {}
+        let typeArr = {}
         await db.find('sentence').then(arr => {
             for (let v of arr) {
                 // zip.file(`${v.id}.json`, JSON.stringify(v))
                 zip.file(`mp3/${v.id}.mp3`, v.blob)
+                typeArr[v.id] = v.blob.type
                 delete v.blob
             }
             sentence = arr
         })
         zip.file(`sentence.json`, JSON.stringify(sentence))
+        zip.file(`mp3Type.json`, JSON.stringify(typeArr))
 
-        await zip.generateAsync({type: "blob"}).then(function (blob) {
+        await zip.generateAsync({type: 'blob'}).then(function (blob) {
             downloadZip(blob)
         }).catch(err => console.warn('zip generateAsync error:', err))
     })
@@ -549,6 +553,107 @@ function downloadZip(blob) {
     el.href = URL.createObjectURL(blob)
     el.download = `梦想划词翻译-${getDate().replace(/\D/g, '')}.zip`
     el.click()
+}
+
+// 导入
+function importZip() {
+    $('import').addEventListener('click', function () {
+        ddi({
+            title: '导入', body: `<div class="dmx_form_item">
+                <div class="item_label">清空数据</div>
+                <div class="item_content"><input type="checkbox" id="import_clear"></div>
+            </div>
+            <div class="dmx_form_item">
+                <div class="item_label">初始统计</div>
+                <div class="item_content"><input type="checkbox" id="import_initial"></div>
+            </div>
+            <div class="dmx_form_item" style="padding:5px 0 15px">
+                <button class="dmx_button" id="upload_but">选择文件...</button>
+            </div>`
+        })
+        $('upload_but').addEventListener('click', () => {
+            let inp = document.createElement('input')
+            inp.type = 'file'
+            inp.accept = 'application/zip'
+            inp.onchange = function () {
+                let files = this.files
+                if (files.length < 1) return
+                let f = files[0]
+                if (f.type !== 'application/zip') return
+
+                let tStart = new Date()
+                let isClear = $('import_clear').checked
+                let isInitial = $('import_initial').checked
+                JSZip.loadAsync(f).then(async function (zip) {
+                    // zip.forEach((filename, file) => console.log(filename, file)) // zip 详情
+
+                    // 清空数据
+                    let errStr = ''
+                    let errNum = 0
+                    let errAppend = (e) => {
+                        errNum++
+                        errStr += e + '\n'
+                    }
+                    if (isClear) {
+                        db.clear('sentence').then(_ => debug('sentence clear finish.')).catch(e => errAppend(e))
+                        db.clear('cate').then(_ => debug('cate clear ok.')).catch(e => errAppend(e))
+
+                        // cate
+                        let cate = await zip.file('cate.json').async('text')
+                        try {
+                            let cateArr = JSON.parse(cate)
+                            for (let v of cateArr) db.create('cate', v).catch(e => errAppend(e))
+                        } catch (e) {
+                            errAppend(e)
+                        }
+
+                        // mp3Type
+                        let mp3TypeObj = {}
+                        try {
+                            let mp3Type = await zip.file('mp3Type.json').async('text')
+                            mp3TypeObj = JSON.parse(mp3Type)
+                        } catch (e) {
+                            errAppend(e)
+                        }
+
+                        // sentence
+                        let sentence = await zip.file('sentence.json').async('text')
+                        let sentenceArr = []
+                        try {
+                            sentenceArr = JSON.parse(sentence)
+                        } catch (e) {
+                            errAppend(e)
+                        }
+                        let sentenceNum = 0
+                        for (let v of sentenceArr) {
+                            await zip.file(`mp3/${v.id}.mp3`).async('blob').then(b => {
+                                v.blob = b.slice(0, b.size, mp3TypeObj[v.id] || 'audio/mpeg') // 设置 blob 类型
+                            })
+                            if (isInitial) {
+                                v.records = 0
+                                v.days = 0
+                            }
+                            await db.create('sentence', v).then(r => {
+                                sentenceNum++
+                                debug('sentence create:', v.id, r)
+                            }).catch(e => errAppend(e))
+                        }
+
+                        let okMsg = `导入完成，耗时：${new Date() - tStart} ms，导入：${sentenceNum} 条`
+                        if (errNum > 0) {
+                            okMsg += `，错误：${errNum} 次`
+                        }
+                        dal(okMsg, 'success', () => {
+                            // location.reload()
+                            removeDdi()
+                            initSentence(cateId)
+                        })
+                    }
+                }).catch(e => debug('loadAsync error:', e))
+            }
+            inp.click()
+        })
+    })
 }
 
 // 设置

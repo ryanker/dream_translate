@@ -514,6 +514,7 @@ function ddi(option) {
 
 // remove dream dialog
 function removeDdi() {
+    rmClass(document.body, 'dmx_overflow_hidden')
     D('.ddi_bg,.ddi').forEach(e => e.remove())
 }
 

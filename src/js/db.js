@@ -57,6 +57,13 @@ function idb(dbName, version, onupgradeneeded) {
                         r.onerror = (e) => reject(e)
                     })
                 },
+                clear(storeName) {
+                    return new Promise((resolve, reject) => {
+                        let r = this.wStore(storeName).clear()
+                        r.onsuccess = (e) => resolve(e)
+                        r.onerror = (e) => reject(e)
+                    })
+                },
                 count(storeName, indexName, query) {
                     return new Promise((resolve, reject) => {
                         let store = this.rStore(storeName)
