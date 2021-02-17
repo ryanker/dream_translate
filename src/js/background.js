@@ -489,10 +489,6 @@ function loadJs(arr, type) {
     })
 }
 
-function uniqueArray(arr) {
-    return [...new Set(arr)]
-}
-
 function invertObject(obj) {
     let r = {}
     for (const [key, value] of Object.entries(obj)) {

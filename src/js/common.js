@@ -528,6 +528,17 @@ function loading(text) {
 </div>`)
 }
 
+// 过滤 HTML，防止XSS
+function HTMLEncode(s) {
+    let d = document.createElement('div')
+    d.textContent = s
+    return d.innerHTML || ''
+}
+
+function uniqueArray(arr) {
+    return [...new Set(arr)]
+}
+
 function httpGet(url, type, headers, notStrict) {
     return new Promise((resolve, reject) => {
         let c = new XMLHttpRequest()

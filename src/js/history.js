@@ -109,9 +109,3 @@ function openSetting() {
         })
     })
 }
-
-function HTMLEncode(s) {
-    let d = document.createElement('div')
-    d.textContent = s
-    return d.innerHTML || ''
-}

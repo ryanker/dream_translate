@@ -421,24 +421,25 @@ function playerInit(key, type) {
 
 // 解析重点词汇
 function pointSentence(sentence, words, isUnderscore) {
+    let regArr = []
     let arr = words.split('\n')
-
-    // 过滤 HTML，防止XSS
-    let d = document.createElement('div')
-    d.innerText = sentence
-
-    let s = d.innerText
+    arr = uniqueArray(arr)
     for (let v of arr) {
-        v = v.trim()
+        v = HTMLEncode(v.trim())
         if (!v) continue
-        s = s.replace(new RegExp(`(^${v}\\W|\\W${v}\\W|\\W${v}$|^${v}$)`, 'g'), (word) => {
-            if (isUnderscore) {
-                return word.replace(/\S+/g, '___')
-            } else {
-                return word.replace(/(\S+)/g, `<span class="point">$1</span>`)
-            }
-        })
+        regArr.push(`^(${v})\\W|\\W(${v})\\W|\\W(${v})$|^(${v})$`)
     }
+
+    let reg = new RegExp(regArr.join('|'), 'g')
+    // console.log(reg)
+    let s = HTMLEncode(sentence)
+    s = s.replace(reg, (word) => {
+        if (isUnderscore) {
+            return word.replace(/\S+/g, '___')
+        } else {
+            return `<span class="point">${word}</span>`
+        }
+    })
     return s
 }
 
