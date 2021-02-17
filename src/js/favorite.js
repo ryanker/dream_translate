@@ -654,7 +654,10 @@ function importZip() {
                             initSentence(cateId)
                         })
                     }
-                }).catch(e => debug('loadAsync error:', e))
+                }).catch(e => {
+                    dal('读取压缩包失败', 'error')
+                    debug('loadAsync error:', e)
+                })
             }
             inp.click()
         })
