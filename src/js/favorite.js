@@ -571,7 +571,8 @@ function importZip() {
                 <button class="dmx_button" id="upload_but">选择文件...</button>
             </div>`
         })
-        $('upload_but').addEventListener('click', () => {
+        let butEl = $('upload_but')
+        butEl.addEventListener('click', () => {
             let inp = document.createElement('input')
             inp.type = 'file'
             inp.accept = 'application/zip'
@@ -580,6 +581,9 @@ function importZip() {
                 if (files.length < 1) return
                 let f = files[0]
                 if (f.type !== 'application/zip') return
+
+                butEl.disabled = true
+                butEl.innerText = '正在导入...'
 
                 let tStart = new Date()
                 let isClear = $('import_clear').checked
@@ -642,6 +646,7 @@ function importZip() {
                         let okMsg = `导入完成，耗时：${new Date() - tStart} ms，导入：${sentenceNum} 条`
                         if (errNum > 0) {
                             okMsg += `，错误：${errNum} 次`
+                            console.warn('errStr:', errStr)
                         }
                         dal(okMsg, 'success', () => {
                             // location.reload()
