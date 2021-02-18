@@ -9,7 +9,7 @@
 
 let db, cateId = 0
 let sentenceData = {}
-let listen, record, record2, compare
+let listen, record, compare
 document.addEventListener('DOMContentLoaded', async function () {
     await idb('favorite', 1, initFavorite).then(r => db = r)
 
@@ -210,14 +210,14 @@ function initSentence(cateId) {
         tbodyEl.innerHTML = s
         sentenceData = arr
         selectBind()
-        reviewSentence()
+        exerciseSentence() // 练习句子
         editSentence()
         deleteSentence()
     })
 }
 
-// 复习句子
-function reviewSentence() {
+// 练习句子
+function exerciseSentence() {
     D('.dmx_button[data-action="skill"]').forEach(el => {
         el.addEventListener('click', () => {
             ddi({
@@ -242,6 +242,11 @@ function reviewSentence() {
             let boxEl = $('skill_box')
             tabEl.forEach(e => {
                 e.addEventListener('click', () => {
+                    // 练习状态时，不允许切换菜单，防止冲突
+                    if (window.isExercising) {
+                        dal('练习状态时，不允许切换菜单', 'error')
+                        return
+                    }
                     let len = sentenceData.length
                     let key = Number(el.parentNode.dataset.key)
                     let type = e.dataset.type
@@ -249,7 +254,7 @@ function reviewSentence() {
                     if (type === 'skill') {
                         s += '<div id="player_listen" style="display:none"></div><div id="player_record"></div><div id="player_compare"></div>'
                     } else if (type === 'record') {
-                        s += '<div id="player_listen"></div><div id="player_record2"></div><div id="player_compare"></div>'
+                        s += '<div id="player_listen"></div><div id="player_record"></div><div id="player_compare"></div>'
                     } else if (type === 'listen') {
                         s += '<div id="player_listen"></div>'
                     }
@@ -349,16 +354,20 @@ function playerInit(key, type) {
         record = playerRecord('player_record', {
             showStartBut: true,
             maxDuration,
-            onStart: () => nextEl.disabled = true,
+            onStart: () => {
+                window.isExercising = true // 用来限制练习状态时，不允许切换菜单
+                nextEl.disabled = true
+            },
             onStop: () => {
                 compare.loadBlob(row.blob)
                 compare.once('finish', () => {
-                    let t = setTimeout(() => record.showStartBut(), maxDuration)
+                    let t = setTimeout(() => record.showStartBut(), maxDuration + 1000)
                     setTimeout(() => {
                         compare.loadBlob(record.blob)
                         compare.once('finish', () => {
                             clearTimeout(t)
                             record.showStartBut()
+                            window.isExercising = false // 解除限制
                             nextEl.disabled = false // 解除禁用
                             setPracticeNum(++practiceNum, true) // 练习次数
                             if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
@@ -374,23 +383,27 @@ function playerInit(key, type) {
                 let times = 2
                 if (duration > 10) times *= 2.5 // 时间越长，模仿越难
                 maxDuration = Math.ceil(duration * times) * 1000
-                record2.setMaxDuration(maxDuration)
+                record.setMaxDuration(maxDuration)
             },
-            onPlay: () => nextEl.disabled = true,
-            onFinish: () => record2.start(), // 开始录音
+            onPlay: () => {
+                window.isExercising = true // 用来限制练习状态时，不允许切换菜单
+                nextEl.disabled = true
+            },
+            onFinish: () => record.start(), // 开始录音
         })
         listen.loadBlob(row.blob)
-        record2 = playerRecord('player_record2', {
+        record = playerRecord('player_record', {
             maxDuration,
             onStop: () => {
                 compare.loadBlob(row.blob)
                 compare.once('finish', () => {
                     let t = setTimeout(() => listen.showControls(), maxDuration + 1000) // 显示开始录音按钮
                     setTimeout(() => {
-                        compare.loadBlob(record2.blob)
+                        compare.loadBlob(record.blob)
                         compare.once('finish', () => {
                             clearTimeout(t)
                             listen.showControls() // 显示播放按钮
+                            window.isExercising = false // 解除限制
                             nextEl.disabled = false // 解除禁用
                             setPracticeNum(++practiceNum, true) // 练习次数
                             if (practiceNum === 5) senEl.innerHTML = pointSentence(sentence, words) // 降低难度，显示文字
