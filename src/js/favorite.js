@@ -370,7 +370,7 @@ function playerInit(key, type) {
                             window.isExercising = false // 解除限制
                             nextEl.disabled = false // 解除禁用
                             setPracticeNum(++practiceNum, true) // 练习次数
-                            if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
+                            if (practiceNum === 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
                         })
                     }, 100)
                 })
@@ -407,7 +407,7 @@ function playerInit(key, type) {
                             nextEl.disabled = false // 解除禁用
                             setPracticeNum(++practiceNum, true) // 练习次数
                             if (practiceNum === 5) senEl.innerHTML = pointSentence(sentence, words) // 降低难度，显示文字
-                            if (practiceNum > 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
+                            if (practiceNum === 10) addClass(senEl, 'hide') // 提升难度，隐藏文字
                         })
                     }, 100)
                 })
