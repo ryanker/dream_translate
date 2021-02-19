@@ -667,7 +667,7 @@ function importZip() {
                             }
                             await db.create('sentence', v).then(r => {
                                 sentenceNum++
-                                butEl.innerText = `正在导入... [${sentenceNum}/${sentenceArr.length}]`
+                                butEl.innerText = `正在导入... ${sentenceNum}/${sentenceArr.length}`
                                 debug('sentence create:', v.id, r)
                             }).catch(e => errAppend(e))
                         }
@@ -715,7 +715,7 @@ function importZip() {
                             delete v.id
                             await db.create('sentence', v).then(r => {
                                 sentenceNum++
-                                butEl.innerText = `正在导入... [${sentenceNum}/${sentenceArr.length}]`
+                                butEl.innerText = `正在导入... ${sentenceNum}/${sentenceArr.length}`
                                 debug('create sentenceId:', r.target.result)
                             }).catch(e => errAppend(e))
                         }
