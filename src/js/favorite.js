@@ -440,6 +440,7 @@ function pointSentence(sentence, words, isUnderscore) {
     for (let v of arr) {
         v = HTMLEncode(v.trim())
         if (!v) continue
+        v = v.replace(/([.?+*])/g, '\\$1')
 
         let reg = new RegExp(`^(${v})\\W|\\W(${v})\\W|\\W(${v})$|^(${v})$`, 'g')
         // console.log(reg)
@@ -449,7 +450,8 @@ function pointSentence(sentence, words, isUnderscore) {
             if (isUnderscore) {
                 return str.replace(word, '___')
             } else {
-                return str.replace(word, `<span class="point">${word}</span>`)
+                if (word === 'u') return str
+                return str.replace(word, `<u>${word}</u>`)
             }
         })
     }

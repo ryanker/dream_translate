@@ -962,15 +962,16 @@ table.dmx_table .table_empty {
     color: #333;
 }
 
-#player_sentence .point, .tb_sentence .point {
+#player_sentence u, .tb_sentence u {
+    text-decoration: none;
     color: red;
 }
 
-#player_sentence.hide .point {
+#player_sentence.hide u {
     color: inherit;
 }
 
-#player_sentence.hide:hover .point {
+#player_sentence.hide:hover u {
     color: red;
 }
 
