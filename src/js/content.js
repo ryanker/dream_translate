@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     initDictionaryCSS()
 
     // 是否开启自动解除选中现在
-    if (setting.allowSelect === 'on') allowUserSelect()
+    if (setting.allowSelect === 'on' && location.href.indexOf(B.root) !== 0) allowUserSelect()
 
     // 查看全部数据
     storageShowAll()
