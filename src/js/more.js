@@ -9,7 +9,11 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     $('trans_window').addEventListener('click', () => sendMessage({action: 'transWindow'}))
-    $('allow_select').addEventListener('click', () => sendMessage({action: 'onAllowSelect'}))
+    $('allow_select').addEventListener('click', () => {
+        sendMessage({action: 'onAllowSelect'}).then(_ => {
+            if (new URL(location.href).searchParams.get('isSome') === 'true') parent.window.close()
+        })
+    })
     D('[data-href]').forEach(e => e.addEventListener('click', () => {
         sendMessage({action: 'openUrl', url: B.root + 'html/' + e.dataset.href})
     }))
