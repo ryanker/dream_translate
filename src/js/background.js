@@ -88,6 +88,10 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         openTab(m.url)
     } else if (m.action === 'onAllowSelect') {
         sendAllowSelect()
+    } else if (m.action === 'onCrop') {
+        getActiveTabId().then(tabId => tabId && sendTabMessage(tabId, {action: 'onCrop'}))
+    } else if (m.action === 'onCapture') {
+        setTimeout(_ => capturePic(sender.tab, m), 300)
     } else if (m.action === 'textTmp') {
         createHistory(m) // 保存历史记录
         textTmp = m.text // 划词文字缓存
@@ -176,6 +180,37 @@ function runPlaySound(tabId, m) {
         debug(`${name} sound error:`, err)
         let title = conf.dictionaryList[name] || conf.translateList[name] || ''
         sandFgMessage(tabId, {action, nav, name, type, error: `${title}发音出错`})
+    })
+}
+
+function capturePic(tab, m) {
+    B.tabs.captureVisibleTab(tab.windowId, {}, function (data) {
+        let im = document.createElement("img")
+        im.onload = function () {
+            let ca = document.createElement("canvas")
+            ca.width = m.width
+            ca.height = m.height
+            let ca2d = ca.getContext("2d")
+            let t = im.height / m.innerHeight
+            ca2d.drawImage(im, m.startX * t, m.startY * t, m.width * t, m.height * t, 0, 0, m.width, m.height)
+            let b = ca.toDataURL("image/jpeg")
+            let url = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=24.6d2fd17fdb5c235ab85a85ce657617b3.2592000.1615441650.282335-18843612'
+            let p = new URLSearchParams(`image=${encodeURIComponent(b.substr(b.indexOf(",") + 1))}&detect_language=true&language_type=CHN_ENG`)
+            httpPost({url, body: p.toString()}).then(r => {
+                let wordsRes = getJSONValue(r, 'words_result')
+                if (wordsRes && wordsRes.length > 0) {
+                    let text = ''
+                    for (let v of wordsRes) text += v.words + '\n'
+                    sendTabMessage(tab.id, {action: 'contextMenus', text: text.trim()})
+                } else {
+                    sendTabMessage(tab.id, {action: 'onAlert', message: '百度图片识别失败', type: 'error'})
+                }
+            }).catch(e => {
+                sendTabMessage(tab.id, {action: 'onAlert', message: '百度图片识别 API 出错', type: 'error'})
+                debug('baidu ocr error:', e)
+            })
+        }
+        im.src = data
     })
 }
 

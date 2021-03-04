@@ -8,7 +8,7 @@
  */
 
 let isPopup = window.isPopup
-let dialog, shadow,
+let dialog, shadow, isSome,
     setting, conf, dialogConf,
     languageList, dialogCSS = '', dictionaryCSS = {},
     iconBut, iconText,
@@ -18,6 +18,7 @@ let dQuery = {action: '', text: '', source: '', target: ''}
 let textTmp = ''
 let history = [], historyIndex = 0, disHistory = false
 document.addEventListener('DOMContentLoaded', async function () {
+    isSome = location.href.indexOf(root) === 0
     await storageLocalGet(['conf', 'languageList', 'dialogCSS', 'dictionaryCSS']).then(function (r) {
         conf = r.conf
         languageList = JSON.parse(r.languageList)
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     initDictionaryCSS()
 
     // 是否开启自动解除选中现在
-    if (setting.allowSelect === 'on' && location.href.indexOf(B.root) !== 0) allowUserSelect()
+    if (setting.allowSelect === 'on' && !isSome) allowUserSelect()
 
     // 查看全部数据
     storageShowAll()
@@ -59,6 +60,10 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         resultLink(m)
     } else if (m.action === 'allowSelect') {
         allowUserSelect()
+    } else if (m.action === 'onCrop') {
+        initCrop()
+    } else if (m.action === 'onAlert') {
+        dmxAlert(m.message, m.type)
     } else if (m.action === 'contextMenus') {
         sendQuery(m.text) // 右键查询
         showDialog()
@@ -250,6 +255,7 @@ function initTranslate() {
         <div id="language_exchange"><i class="dmx-icon dmx-icon-exchange"></i></div>
         <div id="language_target" class="language_button dmx-icon"></div>
         <div id="translate_button">翻 译</div>
+        <div id="translate_crop"><i class="dmx-icon dmx-icon-crop"></i></div>
         <div id="language_dropdown" class="fx">${langList}</div>
     </div>
 </div>
@@ -261,6 +267,7 @@ function initTranslate() {
     let exchangeEl = I('language_exchange')
     let inputEl = I('translate_input')
     let translateEl = I('translate_button')
+    let cropEl = I('translate_crop')
     let dropdownEl = I('language_dropdown')
     let dropdownU = dropdownEl.querySelectorAll('u')
     let contentEl = I('dmx_dialog_content')
@@ -328,6 +335,11 @@ function initTranslate() {
         dropdownEl.style.display = 'none'
         let text = inputEl.innerText.trim()
         sendQuery(text) // 翻译按钮查询
+    })
+    cropEl.addEventListener('click', function () {
+        sendBgMessage({action: 'onCrop'}).then(_ => {
+            isSome && window.close()
+        })
     })
     dropdownU.forEach(e => {
         e.addEventListener('click', function () {
@@ -462,7 +474,7 @@ function initSetting() {
 }
 
 function initMore() {
-    dialog.contentHTML(`<iframe id="dmx_iframe" src="${root + 'html/more.html'}" importance="high"></iframe>`)
+    dialog.contentHTML(`<iframe id="dmx_iframe" src="${root + 'html/more.html?isSome=' + isSome}" importance="high"></iframe>`)
 }
 
 function initDictionaryCSS() {
@@ -472,6 +484,45 @@ function initDictionaryCSS() {
         let s = `<style data-name="${name}">${dictionaryCSS[name]}</style>`
         styleEl.insertAdjacentHTML('afterend', s)
     })
+}
+
+function initCrop() {
+    let startX = 0, startY = 0
+    let bgEl = I('dmx_crop_bg')
+    let fgEl = I('dmx_crop_fg')
+    bgEl.style.display = 'block'
+    let funDown = (e) => {
+        startX = e.clientX
+        startY = e.clientY
+        fgEl.style.display = 'block'
+        fgEl.style.left = startX + 'px'
+        fgEl.style.top = startY + 'px'
+        document.addEventListener('mousemove', funMove)
+        document.addEventListener('mouseup', funUp)
+    }
+    let funMove = (e) => {
+        let w = e.clientX - startX
+        let h = e.clientY - startY
+        if (w > 1) fgEl.style.width = w + 'px'
+        if (h > 1) fgEl.style.height = h + 'px'
+    }
+    let funUp = (e) => {
+        bgEl.removeAttribute('style')
+        fgEl.removeAttribute('style')
+        bgEl.removeEventListener('mousedown', funDown)
+        document.removeEventListener('mousemove', funMove)
+        document.removeEventListener('mouseup', funUp)
+        let width = e.clientX - startX
+        let height = e.clientY - startY
+        let innerHeight = window.innerHeight || document.documentElement.offsetHeight
+        if (width > 15 && height > 15) {
+            sendBgMessage({action: 'onCapture', startX, startY, width, height, innerHeight})
+            dmxAlert('截图文字识别中...', 'success')
+        } else {
+            dmxAlert('截图太小，无法识别', 'error')
+        }
+    }
+    bgEl.addEventListener('mousedown', funDown)
 }
 
 function loadingTranslate() {
@@ -849,6 +900,7 @@ function setDialogConf(name, value) {
 function allowUserSelect() {
     dmxAlert('解除页面限制完成', 'success')
     if (window.dmxAllowUserSelect) return
+    window.dmxAllowUserSelect = true
     let sty = document.createElement('style')
     sty.textContent = `* {-webkit-user-select:text!important;-moz-user-select:text!important;user-select:text!important}`
     document.head.appendChild(sty)
@@ -868,7 +920,6 @@ function allowUserSelect() {
     onAllow(document, 'onselectstart')
     document.addEventListener('contextmenu', onClean, true)
     document.addEventListener('selectstart', onClean, true)
-    window.dmxAllowUserSelect = true
 }
 
 function sendPlayTTS(name, type, lang, text) {
@@ -880,9 +931,14 @@ function sendPlaySound(nav, name, type, url) {
 }
 
 function sendBgMessage(message) {
-    message && sendMessage(message).catch(err => {
-        debug('sendBgMessage error:', err)
-        dmxAlert('梦想翻译已更新，请刷新页面激活。', 'error')
+    return new Promise((resolve, reject) => {
+        sendMessage(message).then(_ => {
+            resolve()
+        }).catch(err => {
+            debug('sendBgMessage error:', err)
+            dmxAlert('梦想翻译已更新，请刷新页面激活。', 'error')
+            reject(err)
+        })
     })
 }
 
@@ -970,7 +1026,9 @@ function dmxDialog(options) {
     <div id="dmx_dialog_resize_sw"></div>
     <div id="dmx_dialog_resize_se"></div>
 </div>
-<div id="dmx_mouse_icon"></div>`
+<div id="dmx_mouse_icon"></div>
+<div id="dmx_crop_bg"></div>
+<div id="dmx_crop_fg"></div>`
 
     let el = I('dmx_dialog')
     let clientX, clientY, elX, elY, elW, elH, docW, docH, mid
