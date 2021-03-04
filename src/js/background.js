@@ -89,7 +89,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     } else if (m.action === 'onAllowSelect') {
         sendAllowSelect()
     } else if (m.action === 'onCrop') {
-        getActiveTabId().then(tabId => tabId && sendTabMessage(tabId, {action: 'onCrop'}))
+        cropImageSendMsg()
     } else if (m.action === 'onCapture') {
         setTimeout(_ => capturePic(sender.tab, m), 300)
     } else if (m.action === 'textTmp') {
@@ -103,6 +103,8 @@ B.commands.onCommand.addListener(function (command) {
     command = command + ''
     if (command === 'openWindow') {
         openTransWindow()
+    } else if (command === 'cropImage') {
+        cropImageSendMsg()
     } else if (command === 'toggleScribble') {
         if (!window.scribbleTmp) window.scribbleTmp = setting.scribble === 'off' ? 'direct' : 'off';
         [setting.scribble, window.scribbleTmp] = [window.scribbleTmp, setting.scribble] // 交换
@@ -181,6 +183,10 @@ function runPlaySound(tabId, m) {
         let title = conf.dictionaryList[name] || conf.translateList[name] || ''
         sandFgMessage(tabId, {action, nav, name, type, error: `${title}发音出错`})
     })
+}
+
+function cropImageSendMsg() {
+    getActiveTabId().then(tabId => tabId && sendTabMessage(tabId, {action: 'onCrop'}))
 }
 
 function capturePic(tab, m) {

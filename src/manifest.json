@@ -78,6 +78,12 @@
       "suggested_key": {
         "default": "Ctrl+Shift+X"
       }
+    },
+    "cropImage": {
+      "description": "截图识别翻译",
+      "suggested_key": {
+        "default": "Ctrl+Shift+A"
+      }
     }
   }
 }
