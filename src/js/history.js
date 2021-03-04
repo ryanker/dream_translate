@@ -19,11 +19,13 @@ document.addEventListener('DOMContentLoaded', async function () {
 })
 
 function historyList() {
+    let thLen = D('#history_box thead th').length
+    let tbodyEl = S('#history_box tbody')
+    tbodyEl.innerHTML = `<tr><td class="table_empty" colspan="${thLen}"><div class="dmx-icon dmx-icon-loading"></div></td></tr>`
     db.count('history').then(n => $('historyNum').innerText = n)
     db.find('history', {direction: 'prev'}).then(arr => {
-        let tbodyEl = S('#history_box tbody')
         if (arr.length < 1) {
-            tbodyEl.innerHTML = `<tr><td class="table_empty" colspan="${D('#history_box thead th').length}">暂无内容</td></tr>`
+            tbodyEl.innerHTML = `<tr><td class="table_empty" colspan="${thLen}">暂无内容</td></tr>`
             return
         }
 
