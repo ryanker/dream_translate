@@ -503,8 +503,18 @@ function initCrop() {
     let funMove = (e) => {
         let w = e.clientX - startX
         let h = e.clientY - startY
-        if (w > 1) fgEl.style.width = w + 'px'
-        if (h > 1) fgEl.style.height = h + 'px'
+        if (w > 0) {
+            fgEl.style.width = w + 'px'
+        } else {
+            fgEl.style.left = e.clientX + 'px'
+            fgEl.style.width = -w + 'px'
+        }
+        if (h > 0) {
+            fgEl.style.height = h + 'px'
+        } else {
+            fgEl.style.top = e.clientY + 'px'
+            fgEl.style.height = -h + 'px'
+        }
     }
     let funUp = (e) => {
         bgEl.removeAttribute('style')
@@ -514,12 +524,20 @@ function initCrop() {
         document.removeEventListener('mouseup', funUp)
         let width = e.clientX - startX
         let height = e.clientY - startY
+        if (width < 0) {
+            width = -width
+            startX = e.clientX
+        }
+        if (height < 0) {
+            height = -height
+            startY = e.clientY
+        }
         let innerHeight = window.innerHeight || document.documentElement.offsetHeight
         if (width > 15 && height > 15) {
             sendBgMessage({action: 'onCapture', startX, startY, width, height, innerHeight})
             dmxAlert('截图文字识别中...', 'success')
         } else {
-            dmxAlert('截图太小，无法识别', 'error')
+            dmxAlert('截图太小，取消识别', 'error')
         }
     }
     bgEl.addEventListener('mousedown', funDown)
