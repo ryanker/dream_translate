@@ -196,7 +196,10 @@ function requestHeadersFormat(s) {
 }
 
 function onBeforeRequestAddListener(callback, filter, extraInfoSpec) {
-    if (!extraInfoSpec) extraInfoSpec = Object.values(B.webRequest.OnBeforeRequestOptions)
+    if (!extraInfoSpec) {
+        extraInfoSpec = ["blocking", "extraHeaders", "requestBody"] // 解决 chrome 审核机制太垃圾，提示没有使用到 webRequestBlocking
+        extraInfoSpec = Object.values(B.webRequest.OnBeforeRequestOptions)
+    }
     B.webRequest.onBeforeRequest.addListener(callback, filter, extraInfoSpec)
 }
 
