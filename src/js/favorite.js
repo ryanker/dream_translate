@@ -177,15 +177,18 @@ function initCate(id) {
 
 // 加载句子
 function initSentence(cateId) {
+    let thLen = D('#sentence_box thead th').length
+    let tbodyEl = S('#sentence_box tbody')
+    if (!tbodyEl.innerHTML) tbodyEl.innerHTML = `<tr><td class="table_empty" colspan="${thLen}"><div class="dmx-icon dmx-icon-loading"></div></td></tr>`
+
     db.read('cate', cateId).then(cate => $('cate_name').innerText = cate.cateName)
     db.count('sentence', 'cateId', cateId).then(n => $('sentences').innerText = n)
 
     let orderBy = localStorage['orderBy']
     let direction = orderBy === 'reverse' ? 'prev' : 'next'
     db.find('sentence', {indexName: 'cateId', query: cateId, direction}).then(arr => {
-        let tbodyEl = S('#sentence_box tbody')
         if (arr.length < 1) {
-            tbodyEl.innerHTML = `<tr><td class="table_empty" colspan="${D('#sentence_box thead th').length}">暂无内容</td></tr>`
+            tbodyEl.innerHTML = `<tr><td class="table_empty" colspan="${thLen}">暂无内容</td></tr>`
             return
         }
 
