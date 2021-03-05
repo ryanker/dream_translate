@@ -91,7 +91,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     } else if (m.action === 'onCrop') {
         cropImageSendMsg()
     } else if (m.action === 'onCapture') {
-        setTimeout(_ => capturePic(sender.tab, m), 300)
+        setTimeout(_ => capturePic(sender.tab, m), 100)
     } else if (m.action === 'textTmp') {
         createHistory(m) // 保存历史记录
         textTmp = m.text // 划词文字缓存
@@ -201,7 +201,7 @@ function capturePic(tab, m) {
             ca2d.drawImage(im, m.startX * t, m.startY * t, m.width * t, m.height * t, 0, 0, m.width, m.height)
             let b = ca.toDataURL("image/jpeg")
             let url = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=24.6d2fd17fdb5c235ab85a85ce657617b3.2592000.1615441650.282335-18843612'
-            let p = new URLSearchParams(`image=${encodeURIComponent(b.substr(b.indexOf(",") + 1))}&detect_language=true&language_type=CHN_ENG`)
+            let p = new URLSearchParams(`image=${encodeURIComponent(b.substr(b.indexOf(",") + 1))}&detect_language=true&language_type=${setting.translateOCR || 'CHN_ENG'}`)
             httpPost({url, body: p.toString()}).then(r => {
                 let wordsRes = getJSONValue(r, 'words_result')
                 if (wordsRes && wordsRes.length > 0) {
