@@ -48,6 +48,7 @@ function init() {
     setValue('autoPaste', setting.autoPaste)
     setValue('translateList', setting.translateList)
     setValue('translateTTSList', setting.translateTTSList)
+    setValue('translateOCR', setting.translateOCR)
     setValue('translateThin', setting.translateThin)
     setValue('dictionaryList', setting.dictionaryList)
     setValue('dictionarySoundList', setting.dictionarySoundList)
@@ -63,6 +64,7 @@ function init() {
     bindValue('autoPaste', setting.autoPaste)
     bindValue('translateList', setting.translateList)
     bindValue('translateTTSList', setting.translateTTSList)
+    bindValue('translateOCR', setting.translateOCR)
     bindValue('translateThin', setting.translateThin)
     bindValue('dictionaryList', setting.dictionaryList)
     bindValue('dictionarySoundList', setting.dictionarySoundList)
@@ -116,19 +118,24 @@ function navigate(navId, contentSel) {
 
 function setValue(name, value) {
     let el = N(name)
-    let t = typeof value
     el && el.forEach(v => {
-        if (t === 'object') {
-            let checked = false
-            for (let k in value) {
-                if (value.hasOwnProperty(k) && v.value === value[k]) {
-                    checked = true
-                    break
+        let nodeName = v.nodeName
+        if (nodeName === 'SELECT') {
+            v.value = value
+        } else if (nodeName === 'INPUT') {
+            let inpType = v.getAttribute('type').toLocaleLowerCase()
+            if (inpType === 'checkbox') {
+                let checked = false
+                for (let k in value) {
+                    if (value.hasOwnProperty(k) && v.value === value[k]) {
+                        checked = true
+                        break
+                    }
                 }
+                v.checked = checked
+            } else if (inpType === 'radio') {
+                if (v.value === value) v.checked = true
             }
-            v.checked = checked
-        } else {
-            if (v.value === value) v.checked = true
         }
     })
 }
@@ -138,19 +145,25 @@ function bindValue(name, value) {
     el && el.forEach(v => {
         v.addEventListener('change', function () {
             let val = this.value
-            if (typeof value === 'object') {
-                if (this.checked) {
-                    value.push(val)
-                } else {
-                    for (let k in value) {
-                        if (value.hasOwnProperty(k) && val === value[k]) {
-                            value.splice(k, 1)
-                            break
+            let nodeName = this.nodeName
+            if (nodeName === 'SELECT') {
+                value = val
+            } else if (nodeName === 'INPUT') {
+                let inpType = v.getAttribute('type').toLocaleLowerCase()
+                if (inpType === 'checkbox') {
+                    if (this.checked) {
+                        value.push(val)
+                    } else {
+                        for (let k in value) {
+                            if (value.hasOwnProperty(k) && val === value[k]) {
+                                value.splice(k, 1)
+                                break
+                            }
                         }
                     }
+                } else if (inpType === 'radio') {
+                    value = this.checked ? val : ''
                 }
-            } else {
-                value = this.checked ? val : ''
             }
 
             // 保存设置
