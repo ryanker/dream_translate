@@ -337,8 +337,8 @@ function initTranslate() {
         sendQuery(text) // 翻译按钮查询
     })
     cropEl.addEventListener('click', function () {
-        sendBgMessage({action: 'onCrop'}).then(_ => {
-            isSome && window.close()
+        sendBgMessage({action: 'onCropImg'}).then(_ => {
+            location.href.indexOf(root + 'html/popup.html') === 0 && window.close()
         })
     })
     dropdownU.forEach(e => {

@@ -94,7 +94,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         openTab(m.url)
     } else if (m.action === 'onAllowSelect') {
         sendAllowSelect()
-    } else if (m.action === 'onCrop') {
+    } else if (m.action === 'onCropImg') {
         cropImageSendMsg()
     } else if (m.action === 'onCapture') {
         setTimeout(_ => capturePic(sender.tab, m), 100)
