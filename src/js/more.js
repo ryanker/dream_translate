@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     })
     D('[data-href]').forEach(e => e.addEventListener('click', () => {
-        sendMessage({action: 'openUrl', url: B.root + 'html/' + e.dataset.href})
+        let url = e.dataset.href
+        if (url.substr(0, 4) !== 'http') url = B.root + 'html/' + url
+        sendMessage({action: 'openUrl', url})
     }))
     if (isFirefox) S('[data-href="speak.html"]').remove() // Firefox 不支持这个功能
 })
