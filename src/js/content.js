@@ -785,7 +785,10 @@ function soundIconHTML(lan, lanArr, type) {
 }
 
 function initQuery(text, clientX, clientY) {
-    sendBgMessage({action: 'textTmp', text, formTitle: document.title, formUrl: location.href}) // 发送到后台缓存起来
+    if (window.textRepeat !== text) {
+        window.textRepeat = text
+        sendBgMessage({action: 'textTmp', text, formTitle: document.title, formUrl: location.href}) // 发送到后台缓存起来
+    }
     if (!text) {
         iconBut.style.display = 'none'
         return
