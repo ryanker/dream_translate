@@ -54,7 +54,13 @@ B.contextMenus.create({
     title: "梦想翻译“%s”",
     contexts: ["selection"],
     onclick: function (info, tab) {
-        tab && sendTabMessage(tab.id, {action: 'contextMenus', text: info.selectionText})
+        if (!info.selectionText) return
+        let msg = {action: 'contextMenus', text: info.selectionText}
+        if (tab && tab.id > 0) {
+            sendTabMessage(tab.id, msg)
+        } else {
+            getActiveTabId().then(tabId => sendTabMessage(tabId, msg))
+        }
     }
 })
 
@@ -200,6 +206,7 @@ function capturePic(tab, m) {
             let t = im.height / m.innerHeight
             ca2d.drawImage(im, m.startX * t, m.startY * t, m.width * t, m.height * t, 0, 0, m.width, m.height)
             let b = ca.toDataURL("image/jpeg")
+            // see https://cloud.baidu.com/doc/OCR/s/zk3h7xz52
             let url = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=24.6d2fd17fdb5c235ab85a85ce657617b3.2592000.1615441650.282335-18843612'
             let p = new URLSearchParams(`image=${encodeURIComponent(b.substr(b.indexOf(",") + 1))}&detect_language=true&language_type=${setting.translateOCR || 'CHN_ENG'}`)
             httpPost({url, body: p.toString()}).then(r => {
