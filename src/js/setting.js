@@ -235,6 +235,7 @@ function localTtsSetting() {
     // 关闭设置
     dialogEl.querySelector('.dialog_back').onclick = function () {
         dialogEl.style.display = 'none'
+        rmClass(document.body, 'dmx_overflow_hidden')
     }
 
     // 打开设置
@@ -244,6 +245,7 @@ function localTtsSetting() {
     i.onclick = function (e) {
         e.preventDefault()
         dialogEl.style.display = 'block'
+        addClass(document.body, 'dmx_overflow_hidden')
     }
     butEl.parentNode.appendChild(i)
 
