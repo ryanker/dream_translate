@@ -843,7 +843,7 @@ function sendQuery(text) {
     } else if (action === 'search') {
         I(`search_input`).value = text
     }
-    sendBgMessage(message)
+    message && sendBgMessage(message)
 }
 
 function showDialog(left, top) {
