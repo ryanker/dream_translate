@@ -25,18 +25,19 @@
     ],
     "dictionaryReader": "us",
     "searchList": [
-      "baidu",
-      "google",
-      "bing",
-      "so",
-      "sogou",
-      "googleImage",
-      "bingImage",
-      "baiduImage",
-      "wikipedia",
-      "baiduBaike"
+      "百度搜索",
+      "谷歌搜索",
+      "必应搜索",
+      "360搜索",
+      "搜狗搜索",
+      "谷歌图片",
+      "必应图片",
+      "百度图片",
+      "维基百科",
+      "百度百科"
     ],
     "searchMenus": [],
+    "searchSide": [],
     "ttsConf": {}
   },
   "translateList": {
@@ -90,52 +91,6 @@
     "etymonline",
     "urban"
   ],
-  "searchList": {
-    "baidu": {
-      "title": "百度搜索",
-      "url": "https://www.baidu.com/s?wd={0}"
-    },
-    "google": {
-      "title": "谷歌搜索",
-      "url": "https://www.google.com/search?q={0}"
-    },
-    "bing": {
-      "title": "必应搜索",
-      "url": "https://cn.bing.com/search?q={0}"
-    },
-    "so": {
-      "title": "360搜索",
-      "url": "https://www.so.com/s?q={0}"
-    },
-    "sogou": {
-      "title": "搜狗搜索",
-      "url": "https://www.sogou.com/web?query={0}"
-    },
-    "googleImage": {
-      "title": "谷歌图片",
-      "url": "https://www.google.com/search?q={0}&tbm=isch",
-      "icon": "google"
-    },
-    "bingImage": {
-      "title": "必应图片",
-      "url": "https://cn.bing.com/images/search?q={0}&form=BESBTB&first=1&tsc=ImageBasicHover&ensearch=1",
-      "icon": "bing"
-    },
-    "baiduImage": {
-      "title": "百度图片",
-      "url": "https://image.baidu.com/search/index?tn=baiduimage&fm=result&ie=utf-8&word={0}",
-      "icon": "baidu"
-    },
-    "wikipedia": {
-      "title": "维基百科",
-      "url": "https://zh.wikipedia.org/w/index.php?search={0}"
-    },
-    "baiduBaike": {
-      "title": "百度百科",
-      "url": "https://baike.baidu.com/search/word?word={0}",
-      "icon": "baidu"
-    }
-  },
   "ttsList": {
     "ara": "ar-SA",
     "cs": "cs-CZ",

@@ -7,13 +7,16 @@
  * @license MIT License
  */
 
-let conf, setting, sdk = {}
+let conf, setting, searchList, sdk = {}
 var textTmp = ''
 var historyMax = 3000
 document.addEventListener('DOMContentLoaded', async function () {
     let languageList = '', dialogCSS = '', dictionaryCSS = {}
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
         conf = r
+    })
+    await fetch('../conf/searchList.txt').then(r => r.text()).then(str => {
+        searchList = getSearchList(str)
     })
     await fetch('../conf/language.json').then(r => r.text()).then(s => {
         languageList += s
@@ -41,8 +44,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // 添加菜单
     setting.searchMenus.forEach(name => {
-        let v = conf.searchList[name]
-        v && addMenu(name, v.title, v.url)
+        let url = searchList[name]
+        url && addMenu(name, name, url)
     })
 
     // 查看全部数据
@@ -245,8 +248,8 @@ function setBrowserAction(text) {
 }
 
 function changeMenu(name, isAdd) {
-    let v = conf.searchList[name]
-    if (v) isAdd ? addMenu(name, v.title, v.url) : removeMenu(name)
+    let url = searchList[name]
+    if (url) isAdd ? addMenu(name, name, url) : removeMenu(name)
 }
 
 function addMenu(name, title, url) {

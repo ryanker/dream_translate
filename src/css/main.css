@@ -528,7 +528,7 @@ select {
     cursor: pointer;
 }
 
-#local_tts_dialog {
+.setting_dialog {
     display: none;
     z-index: 99;
     position: fixed;
@@ -548,7 +548,7 @@ select {
 }
 
 #local_tts_reset_setting {
-    margin-left: 230px;
+    margin-left: 220px;
 }
 
 .local_list_name {
@@ -561,6 +561,10 @@ select {
 
 .local_list_box {
     display: inline-block;
+}
+
+.search_list_text {
+    margin-top: 30px;
 }
 
 .lang_list {
@@ -587,7 +591,7 @@ select {
     margin: 62px 10px 10px;
 }
 
-#speak_input {
+#speak_input, textarea {
     display: block;
     border-radius: 4px;
     border: 1px solid #cfd0d2;
@@ -599,6 +603,12 @@ select {
     font-size: 16px;
     outline: none;
     overflow: auto;
+    resize: vertical;
+}
+
+#search_list_dialog textarea {
+    width: 100%;
+    min-height: 280px;
 }
 
 #speak_input:focus {
@@ -1109,5 +1119,11 @@ table.dmx_table .table_empty {
     }
     100% {
         transform: rotate(360deg);
+    }
+}
+
+@media only screen and (max-width: 789px) {
+    .dal_modal {
+        width: 430px;
     }
 }

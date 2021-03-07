@@ -114,6 +114,12 @@
             <div id="setting_search_menus" class="option_box"></div>
             <div id="setting_search_menus_sort" class="second_box"></div>
         </div>
+        <div class="setting_option">
+            <div class="option_title"><b>左侧漂浮</b></div>
+            <div id="setting_search_side" class="option_box"></div>
+            <div id="setting_search_side_sort" class="second_box"></div>
+        </div>
+        <div id="search_setting_but" class="dmx_button dmx_button_default mt_2">搜索管理</div>
     </div>
 
     <div id="help_box" class="setting_box">
@@ -136,7 +142,8 @@
             </div>
         </div>
     </div>
-    <div id="local_tts_dialog" style="display:none">
+
+    <div id="local_tts_dialog" class="setting_dialog">
         <div class="dialog_back"><i class="dmx-icon dmx-icon-arrow-left"></i></div>
         <div class="fx">
             <div class="local_list_name">朗读速度</div>
@@ -168,6 +175,17 @@
         </div>
         <div id="local_tts_list"></div>
         <div id="local_tts_reset_setting" class="dmx_button dmx_button_default mt_1">恢复默认设置</div>
+    </div>
+
+    <div id="search_list_dialog" class="setting_dialog">
+        <div class="dialog_back"><i class="dmx-icon dmx-icon-arrow-left"></i></div>
+        <div class="search_list_text"><textarea name="search_text"></textarea></div>
+        <div id="search_list_save" class="dmx_button mt_1">保存</div>
+
+        <div class="learn_points">
+            <div class="title"><b>设置说明</b></div>
+            <div class="case">每行一条，“|”分隔，前面为名称，后面为搜索链接，{0} 代表搜索关键。</div>
+        </div>
     </div>
 </div>
 </body>

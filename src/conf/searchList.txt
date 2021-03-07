@@ -1,0 +1,10 @@
+百度搜索|https://www.baidu.com/s?wd={0}
+谷歌搜索|https://www.google.com/search?q={0}
+必应搜索|https://cn.bing.com/search?q={0}
+360搜索|https://www.so.com/s?q={0}
+搜狗搜索|https://www.sogou.com/web?query={0}
+谷歌图片|https://www.google.com/search?q={0}&tbm=isch
+必应图片|https://cn.bing.com/images/search?q={0}&form=BESBTB&first=1&tsc=ImageBasicHover&ensearch=1
+百度图片|https://image.baidu.com/search/index?tn=baiduimage&fm=result&ie=utf-8&word={0}
+维基百科|https://zh.wikipedia.org/w/index.php?search={0}
+百度百科|https://baike.baidu.com/search/word?word={0}

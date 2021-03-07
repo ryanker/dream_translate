@@ -8,10 +8,15 @@
  */
 
 let conf, setting, bg = {}
+let searchText, searchList
 document.addEventListener('DOMContentLoaded', async function () {
     if (!isFirefox) bg = B.getBackgroundPage()
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
         conf = r
+    })
+    await fetch('../conf/searchList.txt').then(r => r.text()).then(r => {
+        searchText = localStorage.getItem('searchText') || r.trim()
+        searchList = getSearchKey(searchText)
     })
     await storageSyncGet(['setting']).then(function (r) {
         setting = r.setting
@@ -29,68 +34,71 @@ function init() {
         dictionarySoundList[k] = v
     }
 
-    // 初始展示
+    // 绑定导航
+    navigate('navigate', '.setting_box')
+
+    // 初始参数
     settingBoxHTML('setting_translate_list', 'translateList', conf.translateList)
     settingBoxHTML('setting_translate_tts_list', 'translateTTSList', conf.translateTTSList)
     settingBoxHTML('setting_dictionary_list', 'dictionaryList', conf.dictionaryList)
     settingBoxHTML('setting_dictionary_sound_list', 'dictionarySoundList', dictionarySoundList)
-    settingBoxHTML('setting_search_list', 'searchList', conf.searchList)
-    settingBoxHTML('setting_search_menus', 'searchMenus', conf.searchList)
 
-    // 绑定导航
-    navigate('navigate', '.setting_box')
+    // 设置值 & 绑定事件
+    setBindValue('scribble', setting.scribble)
+    setBindValue('position', setting.position)
+    setBindValue('allowSelect', setting.allowSelect)
+    setBindValue('autoCopy', setting.autoCopy)
+    setBindValue('autoPaste', setting.autoPaste)
+    setBindValue('translateList', setting.translateList)
+    setBindValue('translateTTSList', setting.translateTTSList)
+    setBindValue('translateOCR', setting.translateOCR || 'CHN_ENG')
+    setBindValue('translateThin', setting.translateThin)
+    setBindValue('dictionaryList', setting.dictionaryList)
+    setBindValue('dictionarySoundList', setting.dictionarySoundList)
+    setBindValue('dictionaryReader', setting.dictionaryReader)
 
-    // 初始值
-    setValue('scribble', setting.scribble)
-    setValue('position', setting.position)
-    setValue('allowSelect', setting.allowSelect)
-    setValue('autoCopy', setting.autoCopy)
-    setValue('autoPaste', setting.autoPaste)
-    setValue('translateList', setting.translateList)
-    setValue('translateTTSList', setting.translateTTSList)
-    setValue('translateOCR', setting.translateOCR)
-    setValue('translateThin', setting.translateThin)
-    setValue('dictionaryList', setting.dictionaryList)
-    setValue('dictionarySoundList', setting.dictionarySoundList)
-    setValue('dictionaryReader', setting.dictionaryReader)
-    setValue('searchList', setting.searchList)
-    setValue('searchMenus', setting.searchMenus)
-
-    // 绑定值
-    bindValue('scribble', setting.scribble)
-    bindValue('position', setting.position)
-    bindValue('allowSelect', setting.allowSelect)
-    bindValue('autoCopy', setting.autoCopy)
-    bindValue('autoPaste', setting.autoPaste)
-    bindValue('translateList', setting.translateList)
-    bindValue('translateTTSList', setting.translateTTSList)
-    bindValue('translateOCR', setting.translateOCR)
-    bindValue('translateThin', setting.translateThin)
-    bindValue('dictionaryList', setting.dictionaryList)
-    bindValue('dictionarySoundList', setting.dictionarySoundList)
-    bindValue('dictionaryReader', setting.dictionaryReader)
-    bindValue('searchList', setting.searchList)
-    bindValue('searchMenus', setting.searchMenus)
-
-    // 绑定右键菜单设置
-    bindSearchMenus()
 
     // 绑定顺序展示
     bindSortHTML('展示顺序：', 'setting_translate_sort', 'translateList', setting.translateList, conf.translateList)
     bindSortHTML('朗读顺序：', 'setting_translate_tts_sort', 'translateTTSList', setting.translateTTSList, conf.translateTTSList)
     bindSortHTML('展示顺序：', 'setting_dictionary_sort', 'dictionaryList', setting.dictionaryList, conf.dictionaryList)
     bindSortHTML('朗读顺序：', 'setting_dictionary_sound_sort', 'dictionarySoundList', setting.dictionarySoundList, dictionarySoundList)
-    bindSortHTML('展示顺序：', 'setting_search_sort', 'searchList', setting.searchList, conf.searchList)
-    bindSortHTML('展示顺序：', 'setting_search_menus_sort', 'searchMenus', setting.searchMenus, conf.searchList)
+
+    // 搜索设置功能
+    initSearch()
 
     // 绑定是否显示"朗读"参数
     bindShow('setting_dictionary_reader', 'dictionarySoundList', setting.dictionarySoundList)
 
     // 本地 TTS 设置
     localTtsSetting()
+    searchListSetting()
 
     // 重置设置
     $('clearSetting').addEventListener('click', clearSetting)
+}
+
+function initSearch() {
+    settingBoxHTML('setting_search_list', 'searchList', searchList)
+    settingBoxHTML('setting_search_menus', 'searchMenus', searchList)
+    settingBoxHTML('setting_search_side', 'searchSide', searchList)
+
+    setBindValue('searchList', setting.searchList)
+    setBindValue('searchMenus', setting.searchMenus)
+    setBindValue('searchSide', setting.searchSide)
+
+    bindSortHTML('展示顺序：', 'setting_search_sort', 'searchList', setting.searchList, searchList)
+    bindSortHTML('展示顺序：', 'setting_search_menus_sort', 'searchMenus', setting.searchMenus, searchList)
+    bindSortHTML('展示顺序：', 'setting_search_side_sort', 'searchSide', setting.searchSide, searchList)
+
+    // 绑定右键菜单设置
+    bindSearchMenus()
+}
+
+function getSearchKey(s) {
+    let r = {}
+    Object.keys(getSearchList(s)).forEach(k => r[k] = k)
+    return r
 }
 
 function navigate(navId, contentSel) {
@@ -116,24 +124,29 @@ function navigate(navId, contentSel) {
     nav.querySelector('u.active').click() // 激活初始值
 }
 
+function setBindValue(name, value) {
+    setValue(name, value)
+    bindValue(name, value)
+}
+
 function setValue(name, value) {
+    let isArr = isArray(value)
     let el = N(name)
     el && el.forEach(v => {
         let nodeName = v.nodeName
         if (nodeName === 'SELECT') {
             v.value = value
         } else if (nodeName === 'INPUT') {
-            let inpType = v.getAttribute('type').toLocaleLowerCase()
-            if (inpType === 'checkbox') {
+            if (isArr) {
                 let checked = false
-                for (let k in value) {
-                    if (value.hasOwnProperty(k) && v.value === value[k]) {
+                for (let val of value) {
+                    if (v.value === val) {
                         checked = true
                         break
                     }
                 }
                 v.checked = checked
-            } else if (inpType === 'radio') {
+            } else {
                 if (v.value === value) v.checked = true
             }
         }
@@ -141,6 +154,7 @@ function setValue(name, value) {
 }
 
 function bindValue(name, value) {
+    let isArr = isArray(value)
     let el = N(name)
     el && el.forEach(v => {
         v.addEventListener('change', function () {
@@ -149,8 +163,7 @@ function bindValue(name, value) {
             if (nodeName === 'SELECT') {
                 value = val
             } else if (nodeName === 'INPUT') {
-                let inpType = v.getAttribute('type').toLocaleLowerCase()
-                if (inpType === 'checkbox') {
+                if (isArr) {
                     if (this.checked) {
                         value.push(val)
                     } else {
@@ -161,7 +174,7 @@ function bindValue(name, value) {
                             }
                         }
                     }
-                } else if (inpType === 'radio') {
+                } else {
                     value = this.checked ? val : ''
                 }
             }
@@ -181,23 +194,22 @@ function bindSearchMenus() {
     })
 }
 
-function bindSortHTML(preName, id, name, value, list) {
-    sortShow(preName, id, value, list)
+function bindSortHTML(textName, id, name, value, list) {
+    sortShow(textName, id, value, list) // 初始值
     let el = N(name)
     el && el.forEach(v => {
         v.addEventListener('change', function () {
-            sortShow(preName, id, value, list)
+            sortShow(textName, id, value, list)
         })
     })
 }
 
-function sortShow(preName, id, value, list) {
+function sortShow(textName, id, value, list) {
     let s = ''
-    if (value.length > 0) {
-        s = preName
+    if (isArray(value) && value.length > 0) {
+        s = textName
         value.forEach((v, k) => {
-            let o = list[v]
-            s += (k > 0 ? ' > ' : '') + (o.title || o)
+            s += (k > 0 ? ' > ' : '') + list[v]
         })
     }
     $(id).innerHTML = s
@@ -216,17 +228,65 @@ function bindShow(id, name, value) {
 function settingBoxHTML(id, name, list) {
     let s = ''
     Object.keys(list).forEach(v => {
-        let o = list[v]
-        s += `<label><input type="checkbox" name="${name}" value="${v}">${o.title || o}</label>`
+        s += `<label><input type="checkbox" name="${name}" value="${v}">${list[v]}</label>`
     })
     let el = $(id)
     el.innerHTML = s
 }
 
+function searchListSetting() {
+    let dialogEl = $('search_list_dialog')
+    let butEl = $('search_setting_but')
+    let saveEl = $('search_list_save')
+    let textEl = S('textarea[name="search_text"]')
+    butEl.onclick = () => {
+        dialogEl.style.display = 'block'
+        addClass(document.body, 'dmx_overflow_hidden')
+        textEl.value = searchText
+    }
+    saveEl.onclick = () => {
+        searchText = textEl.value.trim()
+        searchList = getSearchKey(searchText)
+        localStorage.setItem('searchText', searchText)
+
+        // 清理不存在的设置
+        let keyArr = Object.keys(searchList)
+        let funNewArr = function (arr, isMenu) {
+            let newArr = []
+            arr.forEach(v => {
+                if (keyArr.includes(v)) {
+                    newArr.push(v)
+                } else if (isMenu) {
+                    // 移除右键设置
+                    sendMessage({action: 'menu', name: v, isAdd: false})
+                }
+            })
+            return newArr
+        }
+        setting.searchList = funNewArr(setting.searchList)
+        setting.searchMenus = funNewArr(setting.searchMenus)
+        setting.searchSide = funNewArr(setting.searchSide)
+        setSetting('searchList', setting.searchList)
+        setSetting('searchMenus', setting.searchMenus)
+        setSetting('searchSide', setting.searchSide)
+
+        // 重新初始化
+        initSearch()
+
+        dal('保存成功')
+    }
+
+    // 关闭设置
+    dialogEl.querySelector('.dialog_back').onclick = function () {
+        dialogEl.style.display = 'none'
+        rmClass(document.body, 'dmx_overflow_hidden')
+    }
+}
+
 function localTtsSetting() {
     let listEl = $('local_tts_list')
     let dialogEl = $('local_tts_dialog')
-    let butEl = document.querySelector('[name="translateTTSList"][value="local"]')
+    let butEl = S('[name="translateTTSList"][value="local"]')
     if (isFirefox) {
         butEl.parentElement.style.display = 'none'
         return
@@ -348,6 +408,7 @@ function clearSetting() {
 }
 
 function sendSetting(setting, updateIcon, resetDialog) {
+    if (resetDialog) localStorage.removeItem('searchText')
     if (isFirefox) {
         // firefox 在 iframe 下功能缺失，所以通过 message 处理
         sendMessage({action: 'saveSetting', setting, updateIcon, resetDialog})
