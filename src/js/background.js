@@ -236,11 +236,9 @@ function capturePic(tab, m) {
 }
 
 function saveSearchText(s) {
-    if (!s) {
-        searchList = getSearchList(searchText)
-        s = searchText
-    }
+    if (!s) s = searchText
     storageSyncSet({searchText: s})
+    searchList = getSearchList(s)
 }
 
 function saveSettingAll(data, updateIcon, resetDialog) {
