@@ -272,7 +272,7 @@ function addMenu(name, title, url) {
         title: title + '首页',
         contexts: ["page"],
         onclick: function () {
-            B.tabs.create({url: (new URL(url)).origin + '?tn=dream_translate'})
+            B.tabs.create({url: (new URL(url)).origin})
         }
     })
     B.contextMenus.create({
@@ -280,7 +280,7 @@ function addMenu(name, title, url) {
         title: title + "“%s”",
         contexts: ["selection"],
         onclick: function (info) {
-            B.tabs.create({url: url.format(decodeURIComponent(info.selectionText)) + '&tn=dream_translate'})
+            B.tabs.create({url: url.format(decodeURIComponent(info.selectionText))})
         }
     })
 }
