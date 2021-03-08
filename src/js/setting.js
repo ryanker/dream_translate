@@ -14,12 +14,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
         conf = r
     })
-    await fetch('../conf/searchList.txt').then(r => r.text()).then(r => {
-        searchText = localStorage.getItem('searchText') || r.trim()
-        searchList = getSearchKey(searchText)
-    })
-    await storageSyncGet(['setting']).then(function (r) {
+    await storageSyncGet(['setting', 'searchText']).then(function (r) {
         setting = r.setting
+        searchText = r.searchText || ''
+    })
+    await fetch('../conf/searchText.txt').then(r => r.text()).then(r => {
+        searchText = searchText || r.trim()
+        searchList = getSearchKey(searchText)
     })
     init()
     // debug('conf:', conf)
@@ -247,7 +248,6 @@ function searchListSetting() {
     saveEl.onclick = () => {
         searchText = textEl.value.trim()
         searchList = getSearchKey(searchText)
-        localStorage.setItem('searchText', searchText)
 
         // 清理不存在的设置
         let keyArr = Object.keys(searchList)
@@ -273,6 +273,7 @@ function searchListSetting() {
         // 重新初始化
         initSearch()
 
+        sendMessage({action: 'onSaveSearchText', searchText})
         dal('保存成功')
     }
 
@@ -408,7 +409,6 @@ function clearSetting() {
 }
 
 function sendSetting(setting, updateIcon, resetDialog) {
-    if (resetDialog) localStorage.removeItem('searchText')
     if (isFirefox) {
         // firefox 在 iframe 下功能缺失，所以通过 message 处理
         sendMessage({action: 'saveSetting', setting, updateIcon, resetDialog})

@@ -17,6 +17,7 @@ let dialog, shadow, isSome,
 let dQuery = {action: '', text: '', source: '', target: ''}
 let textTmp = ''
 let history = [], historyIndex = 0, disHistory = false
+let searchText
 document.addEventListener('DOMContentLoaded', async function () {
     isSome = location.href.indexOf(root) === 0
     await storageLocalGet(['conf', 'languageList', 'dialogCSS', 'dictionaryCSS']).then(function (r) {
@@ -26,9 +27,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         dictionaryCSS = r.dictionaryCSS
     })
 
-    await storageSyncGet(['setting', 'dialogConf']).then(function (r) {
+    await storageSyncGet(['setting', 'dialogConf', 'searchText']).then(function (r) {
         setting = r.setting
         dialogConf = Object.assign({}, conf.dialogConf, r.dialogConf)
+        searchText = r.searchText
     })
 
     // 初始对话框
@@ -80,12 +82,16 @@ window.addEventListener("message", function (m) {
 B.storage.onChanged.addListener(function (data) {
     let keys = Object.keys(data)
     keys.forEach(k => {
+        let v = data[k].newValue
         if (k === 'setting') {
-            setting = data[k].newValue
-            debug('new setting:', setting)
+            setting = v
+            debug('new setting:', v)
 
             // 初始对话框CSS
             initDictionaryCSS()
+        } else if (k === 'searchText') {
+            searchText = v
+            debug('new searchText:', v)
         }
     })
 })
@@ -448,23 +454,22 @@ function initSearch() {
     // 创建按钮
     let s = ''
     let sList = setting.searchList
-    let cList = conf.searchList
+    let cList = getSearchList(searchText)
     for (let name of sList) {
-        let v = cList[name]
-        if (v) s += `<div class="dmx_button" data-search="${name}"><i class="dmx-icon dmx-icon-${v.icon || name}"></i>${v.title}</div>`
+        if (cList[name]) s += `<div class="dmx_button" data-search="${name}">${name}</div>`
     }
     I('case_list').innerHTML = s
 
     // 绑定点击事件
     onD(A('[data-search]'), 'click', function () {
         let name = this.dataset.search
-        let lv = cList[name]
-        if (!lv) return
+        let url = cList[name]
+        if (!url) return
         let text = I('search_input').value.trim()
         if (text) {
-            open(lv.url.format(decodeURIComponent(text)))
+            open(url.format(decodeURIComponent(text)))
         } else {
-            open((new URL(lv.url)).origin)
+            open((new URL(url)).origin)
         }
     })
 }

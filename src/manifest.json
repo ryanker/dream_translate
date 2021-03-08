@@ -8,6 +8,7 @@
   },
   "background": {
     "scripts": [
+      "js/lib/md5.min.js",
       "js/common.js",
       "js/db.js",
       "js/background.js"

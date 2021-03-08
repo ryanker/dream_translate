@@ -7,7 +7,8 @@
  * @license MIT License
  */
 
-let conf, setting, searchList, sdk = {}
+let conf, setting, sdk = {}
+let searchText, searchList
 var textTmp = ''
 var historyMax = 3000
 document.addEventListener('DOMContentLoaded', async function () {
@@ -15,8 +16,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
         conf = r
     })
-    await fetch('../conf/searchList.txt').then(r => r.text()).then(str => {
-        searchList = getSearchList(str)
+    await fetch('../conf/searchText.txt').then(r => r.text()).then(str => {
+        searchText = str
     })
     await fetch('../conf/language.json').then(r => r.text()).then(s => {
         languageList += s
@@ -31,8 +32,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
     storageLocalSet({conf, languageList, dialogCSS, dictionaryCSS}).catch(err => debug(`save error: ${err}`))
 
-    await storageSyncGet(['setting']).then(function (r) {
+    await storageSyncGet(['setting', 'searchText']).then(function (r) {
         saveSettingAll(r.setting, true) // 初始设置参数
+        searchList = getSearchList(r.searchText || searchText)
+        if (!r.searchText) saveSearchText('') // 如果为空，设置默认值
     })
 
     // 最大保存历史记录数
@@ -99,6 +102,8 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         sendAllowSelect()
     } else if (m.action === 'onCropImg') {
         cropImageSendMsg()
+    } else if (m.action === 'onSaveSearchText') {
+        saveSearchText(m.searchText)
     } else if (m.action === 'onCapture') {
         setTimeout(_ => capturePic(sender.tab, m), 100)
     } else if (m.action === 'textTmp') {
@@ -230,10 +235,19 @@ function capturePic(tab, m) {
     })
 }
 
+function saveSearchText(s) {
+    if (!s) {
+        searchList = getSearchList(searchText)
+        s = searchText
+    }
+    storageSyncSet({searchText: s})
+}
+
 function saveSettingAll(data, updateIcon, resetDialog) {
     setting = Object.assign({}, conf.setting, data)
     updateIcon && changeBrowserIcon(setting.scribble) // 是否显示关闭划词图标
     let options = resetDialog ? {setting, dialogConf: {}} : {setting}
+    if (resetDialog) saveSearchText('')
     storageSyncSet(options)
 }
 
@@ -254,8 +268,9 @@ function changeMenu(name, isAdd) {
 
 function addMenu(name, title, url) {
     // {type: "separator"}
+    let mid = md5(name)
     B.contextMenus.create({
-        id: name + '_page',
+        id: 'page_' + mid,
         title: title + '首页',
         contexts: ["page"],
         onclick: function () {
@@ -263,7 +278,7 @@ function addMenu(name, title, url) {
         }
     })
     B.contextMenus.create({
-        id: name + '_selection',
+        id: 'selection_' + mid,
         title: title + "“%s”",
         contexts: ["selection"],
         onclick: function (info) {
@@ -273,8 +288,9 @@ function addMenu(name, title, url) {
 }
 
 function removeMenu(name) {
-    B.contextMenus.remove(name + '_page')
-    B.contextMenus.remove(name + '_selection')
+    let mid = md5(name)
+    B.contextMenus.remove('page_' + mid)
+    B.contextMenus.remove('selection_' + mid)
 }
 
 function openTransWindow() {
