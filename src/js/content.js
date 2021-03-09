@@ -848,7 +848,21 @@ function sendQuery(text) {
     } else if (action === 'search') {
         I(`search_input`).value = text
     }
+    showSearchSide(text)
     message && sendBgMessage(message)
+}
+
+function showSearchSide(text) {
+    let arr = setting.searchSide
+    let s = ''
+    if (text && isArray(arr) && arr.length > 0) {
+        let sList = getSearchList(searchText)
+        for (let name of arr) {
+            let url = sList[name]
+            if (url) s += `<a href="${url.format(decodeURIComponent(text))}" title="${name}" target="_blank">${name[0]}</a>`
+        }
+    }
+    I('dmx_dialog_left').innerHTML = s
 }
 
 function showDialog(left, top) {
@@ -1051,6 +1065,7 @@ function dmxDialog(options) {
     <div id="dmx_dialog_resize_ne"></div>
     <div id="dmx_dialog_resize_sw"></div>
     <div id="dmx_dialog_resize_se"></div>
+    <div id="dmx_dialog_left"></div>
 </div>
 <div id="dmx_mouse_icon"></div>
 <div id="dmx_crop_bg"></div>

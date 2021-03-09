@@ -96,7 +96,7 @@ blockquote {
     z-index: 999999999998;
     width: 500px;
     height: 500px;
-    overflow: hidden;
+    /*overflow: hidden;*/
     background: #f5f8fa;
     border: 1px solid #cfd0d2;
     border-radius: 6px;
@@ -398,6 +398,29 @@ blockquote {
 
 .dmx_main_search {
     padding: 10px 0 0 10px;
+}
+
+#dmx_dialog_left {
+    position: absolute;
+    bottom: 0;
+    left: -37px;
+    width: 37px;
+}
+
+#dmx_dialog_left a {
+    display: block;
+    width: 32px;
+    height: 32px;
+    line-height: 30px;
+    font-size: 16px;
+    background: #4395ff;
+    border: 1px solid #3589ff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .19), inset 0 1px 0 rgba(255, 255, 255, .4);
+    border-radius: 50%;
+    color: #fff;
+    box-sizing: border-box;
+    text-align: center;
+    margin-top: 5px;
 }
 
 .dmx_loading {
