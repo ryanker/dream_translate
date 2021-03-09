@@ -8,3 +8,14 @@
 百度图片|https://image.baidu.com/search/index?tn=baiduimage&fm=result&ie=utf-8&word={0}
 维基百科|https://zh.wikipedia.org/w/index.php?search={0}
 百度百科|https://baike.baidu.com/search/word?word={0}
+必应词典|https://cn.bing.com/dict/search?q={0}
+有道词典|https://www.youdao.com/w/eng/{0}
+金山词典|https://www.iciba.com/word?w={0}
+牛津词典|https://www.oxfordlearnersdictionaries.com/search/english/?q={0}
+剑桥词典|https://dictionary.cambridge.org/dictionary/english-chinese-simplified/{0}
+格林斯词典|https://www.collinsdictionary.com/search/?dictCode=english&q={0}
+豆瓣读书|https://search.douban.com/book/subject_search?search_text={0}
+京东搜索|https://search.jd.com/Search?keyword={0}
+淘宝搜索|https://s.taobao.com/search?q={0}
+MDN搜索|https://developer.mozilla.org/zh-CN/search?q={0}
+StackOverflow|https://stackoverflow.com/search?q={0}
