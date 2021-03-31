@@ -9,6 +9,7 @@
 
 let conf, setting, sdk = {}
 let searchText, searchList
+let ocrToken = '', ocrExpires = 0
 var textTmp = ''
 var historyMax = 3000
 document.addEventListener('DOMContentLoaded', async function () {
@@ -206,7 +207,7 @@ function cropImageSendMsg() {
 function capturePic(tab, m) {
     B.tabs.captureVisibleTab(tab.windowId, {}, function (data) {
         let im = document.createElement("img")
-        im.onload = function () {
+        im.onload = async function () {
             let ca = document.createElement("canvas")
             ca.width = m.width
             ca.height = m.height
@@ -214,8 +215,18 @@ function capturePic(tab, m) {
             let t = im.height / m.innerHeight
             ca2d.drawImage(im, m.startX * t, m.startY * t, m.width * t, m.height * t, 0, 0, m.width, m.height)
             let b = ca.toDataURL("image/jpeg")
+
+            // 获取 token
+            let access_token = ''
+            await getOcrToken().then(token => {
+                access_token = token
+            }).catch(err => {
+                sendTabMessage(tab.id, {action: 'onAlert', message: err, type: 'error'})
+            })
+            if (!access_token) return
+
             // see https://cloud.baidu.com/doc/OCR/s/zk3h7xz52
-            let url = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=24.6d2fd17fdb5c235ab85a85ce657617b3.2592000.1615441650.282335-18843612'
+            let url = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=' + access_token
             let p = new URLSearchParams(`image=${encodeURIComponent(b.substr(b.indexOf(",") + 1))}&detect_language=true&language_type=${setting.translateOCR || 'CHN_ENG'}`)
             httpPost({url, body: p.toString()}).then(r => {
                 let wordsRes = getJSONValue(r, 'words_result')
@@ -233,6 +244,44 @@ function capturePic(tab, m) {
         }
         im.src = data
     })
+}
+
+function getOcrToken() {
+    return new Promise((resolve, reject) => {
+        if (ocrExpires - 10 > getTimestamp()) return resolve(ocrToken)
+        if (setting.ocrType === 'baidu') {
+            let url = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${setting.baidu_orc_ak}&client_secret=${setting.baidu_orc_sk}`
+            httpGet(url, 'json').then(r => {
+                if (r.expires_in > 0 && r.access_token) {
+                    ocrToken = r.access_token
+                    ocrExpires = getTimestamp() + r.expires_in
+                    resolve(r.access_token)
+                } else if (r.error_description) {
+                    reject(r.error_description)
+                } else {
+                    reject('请求接口网路错误')
+                }
+            }).catch(e => {
+                reject(e)
+            })
+        } else {
+            httpGet('http://mengxiang.net/api/getBaiduOcrToken.json', 'json').then(r => {
+                if (r.expires > 0 && r.token) {
+                    ocrToken = r.token
+                    ocrExpires = r.expires
+                    resolve(r.token)
+                } else {
+                    reject('请求接口网路错误')
+                }
+            }).catch(e => {
+                reject(e)
+            })
+        }
+    })
+}
+
+function getTimestamp() {
+    return Date.parse(new Date()) / 1000
 }
 
 function saveSearchText(s) {

@@ -14,7 +14,7 @@
       "google"
     ],
     "translateOCR": "",
-    "croType": "auto",
+    "ocrType": "auto",
     "translateThin": "",
     "dictionaryList": [
       "youdao",

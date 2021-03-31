@@ -53,7 +53,7 @@ function init() {
     setBindValue('translateList', setting.translateList)
     setBindValue('translateTTSList', setting.translateTTSList)
     setBindValue('translateOCR', setting.translateOCR || 'CHN_ENG')
-    setBindValue('croType', setting.croType)
+    setBindValue('ocrType', setting.ocrType)
     setBindValue('translateThin', setting.translateThin)
     setBindValue('dictionaryList', setting.dictionaryList)
     setBindValue('dictionarySoundList', setting.dictionarySoundList)
@@ -242,13 +242,13 @@ function settingOcr() {
     let boxEl = $('baidu_ocr_box')
     let akEl = S('input[name="baidu_orc_ak"]')
     let skEl = S('input[name="baidu_orc_sk"]')
-    let el = N('croType')
+    let el = N('ocrType')
     el && el.forEach(v => {
         v.addEventListener('change', function () {
             (this.value === 'baidu' ? addClass : rmClass)(boxEl, 'dmx_show')
         })
     })
-    if (setting.croType === 'baidu') addClass(boxEl, 'dmx_show')
+    if (setting.ocrType === 'baidu') addClass(boxEl, 'dmx_show')
     akEl.value = setting.baidu_orc_ak || ''
     skEl.value = setting.baidu_orc_sk || ''
     akEl.onblur = () => setSetting('baidu_orc_ak', akEl.value)
