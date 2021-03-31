@@ -15,6 +15,7 @@ ul, li {
 body {
     font-family: Helvetica Neue, PingFang SC, Microsoft YaHei, sans-serif;
     background: #f5f8fa;
+    color: #333;
     line-height: 1.8;
 }
 
@@ -284,6 +285,18 @@ select {
 
 .dmx_form_item .item_content.number input[type="number"] {
     padding-right: 2px;
+}
+
+.dmx_form_item.small .item_label {
+    color: #333;
+    font-size: 14px;
+}
+
+.dmx_form_item.small .item_input {
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    padding: 0 8px;
 }
 
 /* ==================== player ==================== */
@@ -693,10 +706,6 @@ select {
 
 .learn_points .case {
     padding: 5px;
-}
-
-#favorite_form {
-    display: none;
 }
 
 /* ==================== favorite ==================== */
