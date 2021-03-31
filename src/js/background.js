@@ -253,9 +253,9 @@ function getOcrToken() {
             let url = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${setting.baidu_orc_ak}&client_secret=${setting.baidu_orc_sk}`
             httpGet(url, 'json').then(r => {
                 if (r.expires_in > 0 && r.access_token) {
-                    ocrToken = r.access_token
                     ocrExpires = getTimestamp() + r.expires_in
-                    resolve(r.access_token)
+                    ocrToken = r.access_token
+                    resolve(ocrToken)
                 } else if (r.error_description) {
                     reject(r.error_description)
                 } else {
@@ -265,11 +265,11 @@ function getOcrToken() {
                 reject(e)
             })
         } else {
-            httpGet('http://mengxiang.net/api/getBaiduOcrToken.json', 'json').then(r => {
+            httpGet('https://mengxiang.net/api/getBaiduOcrToken.json', 'json').then(r => {
                 if (r.expires > 0 && r.token) {
-                    ocrToken = r.token
                     ocrExpires = r.expires
-                    resolve(r.token)
+                    ocrToken = r.token
+                    resolve(ocrToken)
                 } else {
                     reject('请求接口网路错误')
                 }
