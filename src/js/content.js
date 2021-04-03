@@ -800,7 +800,7 @@ function initQuery(text, clientX, clientY) {
     // https://tc39.es/ecma262/#table-nonbinary-unicode-properties
     // https://keqingrong.github.io/blog/2020-01-29-regexp-unicode-property-escapes
     if (setting.excludeChinese && /\p{Script=Han}/u.test(text)) return // 排除中文
-    if (setting.excludeSymbol && /^[\p{S}\p{P}^$.*+\-?=!:|\\/！？。；－＿～﹏，：、·;-…,"“”﹃﹄「」﹁﹂『』﹃﹄（）［］〔〕【】《》〈〉()\[\]{}\s]+$/u.test(text)) return // 排除纯符合
+    if (setting.excludeSymbol && /^[\p{S}\p{P}^$.*+\-?=!:|\\/！？。；－＿～﹏，：、·;…,"“”﹃﹄「」﹁﹂『』﹃﹄（）［］〔〕【】《》〈〉()\[\]{}<>\s]+$/u.test(text)) return // 排除纯符合
 
     if (window.textRepeat !== text) {
         window.textRepeat = text
