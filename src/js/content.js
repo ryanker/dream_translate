@@ -8,7 +8,8 @@
  */
 
 let isPopup = window.isPopup
-let dialog, shadow, isSome,
+let isFullscreen, isClipboardRead, isSome
+let dialog, shadow,
     setting, conf, dialogConf,
     languageList, dialogCSS = '', dictionaryCSS = {},
     iconBut, iconText,
@@ -19,7 +20,11 @@ let textTmp = ''
 let history = [], historyIndex = 0, disHistory = false
 let searchText
 document.addEventListener('DOMContentLoaded', async function () {
+    let u = new URL(location.href)
+    isFullscreen = u.searchParams.get('fullscreen') === '1'
+    isClipboardRead = u.searchParams.get('clipboardRead') === '1'
     isSome = location.href.indexOf(root) === 0
+
     await storageLocalGet(['conf', 'languageList', 'dialogCSS', 'dictionaryCSS']).then(function (r) {
         conf = r.conf
         languageList = JSON.parse(r.languageList)
@@ -136,7 +141,6 @@ function initDialog() {
     // 小屏窗口
     if (isPopup) {
         addClass(dialog.el, 'dmx_popup')
-        let isFullscreen = location.href === B.root + 'html/popup.html?fullscreen=1'
         isFullscreen ? addClass(dialog.el, 'fullscreen') : addClass(document.documentElement, 'dmx_popup')
         A('#dmx_close,#dmx_pin,#dmx_fullscreen').forEach(e => e.remove())
         if (B.getBackgroundPage) textTmp = B.getBackgroundPage().textTmp // 读取后台缓存
@@ -822,6 +826,7 @@ function initQuery(text, clientX, clientY) {
 }
 
 function sendQuery(text) {
+    if (isClipboardRead) text = execPaste() // 自动读取粘贴板内容
     if (!text && isPopup && setting.autoPaste === 'on') text = execPaste()
     if (!text) text = textTmp
     if (!text) return

@@ -85,6 +85,9 @@
       "suggested_key": {
         "default": "Ctrl+Shift+A"
       }
+    },
+    "clipboardTrans": {
+      "description": "剪切板内容翻译"
     }
   }
 }

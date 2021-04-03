@@ -120,6 +120,8 @@ B.commands.onCommand.addListener(function (command) {
         openTransWindow()
     } else if (command === 'cropImage') {
         cropImageSendMsg()
+    } else if (command === 'clipboardTrans') {
+        clipboardTrans()
     } else if (command === 'toggleScribble') {
         if (!window.scribbleTmp) window.scribbleTmp = setting.scribble === 'off' ? 'direct' : 'off';
         [setting.scribble, window.scribbleTmp] = [window.scribbleTmp, setting.scribble] // 交换
@@ -344,19 +346,23 @@ function openTransWindow() {
     openWindow('trans', 600, 520, B.root + 'html/popup.html?fullscreen=1')
 }
 
+function clipboardTrans() {
+    openWindow('trans', 600, 520, B.root + 'html/popup.html?fullscreen=1&clipboardRead=1', true)
+}
+
 function openRecord() {
     openWindow('record', 600, 520, B.root + 'html/record.html', true)
 }
 
 function openWindow(wid, width, height, url, reopen) {
     let name = `_window_${wid}`
-    let openFn = function () {
+    let openFn = function (width, height, left, top) {
         let o = {type: 'popup', width, height, url}
 
         // 居中
         let screen = window.screen
-        if (screen.width) o.left = (screen.width - o.width) / 2
-        if (screen.height) o.top = (screen.height - o.height) / 2
+        o.left = left ? left : (screen.width - o.width) / 2
+        o.top = top ? top : (screen.height - o.height) / 2
 
         B.windows.create(o, w => window[name] = w.id)
     }
@@ -366,16 +372,16 @@ function openWindow(wid, width, height, url, reopen) {
             if (!B.runtime.lastError && w.id) {
                 if (reopen) {
                     B.windows.remove(w.id)
-                    setTimeout(openFn, 100)
+                    setTimeout(() => openFn(w.width, w.height, w.left, w.top), 100)
                 } else {
                     B.windows.update(w.id, {focused: true})
                 }
             } else {
-                openFn()
+                openFn(width, height)
             }
         })
     } else {
-        openFn()
+        openFn(width, height)
     }
 }
 
