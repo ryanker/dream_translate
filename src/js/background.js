@@ -254,6 +254,10 @@ function capturePic(tab, m) {
 
 function getOcrToken() {
     return new Promise((resolve, reject) => {
+        if (localStorage['clearOcrExpires'] !== 'true') {
+            localStorage['clearOcrExpires'] = 'false'
+            ocrExpires = 0
+        }
         if (ocrExpires - 10 > getTimestamp()) return resolve(ocrToken)
         if (setting.ocrType === 'baidu') {
             let url = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${setting.baidu_orc_ak}&client_secret=${setting.baidu_orc_sk}`
@@ -265,10 +269,11 @@ function getOcrToken() {
                 } else if (r.error_description) {
                     reject(r.error_description)
                 } else {
-                    reject('请求接口网路错误')
+                    reject('请求百度接口网路错误')
                 }
             }).catch(e => {
-                reject(e)
+                debug('aip.baidubce.com api error!', e)
+                reject('百度获取 TOKEN 接口错误')
             })
         } else {
             httpGet('https://mengxiang.net/api/getBaiduOcrToken.json', 'json').then(r => {
@@ -277,10 +282,11 @@ function getOcrToken() {
                     ocrToken = r.token
                     resolve(ocrToken)
                 } else {
-                    reject('请求接口网路错误')
+                    reject('请求官方接口网路错误')
                 }
             }).catch(e => {
-                reject(e)
+                debug('mengxiang.net api error!', e)
+                reject('获取免费 TOKEN 接口错误')
             })
         }
     })

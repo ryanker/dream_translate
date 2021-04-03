@@ -242,17 +242,25 @@ function settingOcr() {
     let boxEl = $('baidu_ocr_box')
     let akEl = S('input[name="baidu_orc_ak"]')
     let skEl = S('input[name="baidu_orc_sk"]')
+    let clearFn = () => localStorage['clearOcrExpires'] = 'true'
     let el = N('ocrType')
     el && el.forEach(v => {
         v.addEventListener('change', function () {
             (this.value === 'baidu' ? addClass : rmClass)(boxEl, 'dmx_show')
+            clearFn()
         })
     })
     if (setting.ocrType === 'baidu') addClass(boxEl, 'dmx_show')
     akEl.value = setting.baidu_orc_ak || ''
     skEl.value = setting.baidu_orc_sk || ''
-    akEl.onblur = () => setSetting('baidu_orc_ak', akEl.value)
-    skEl.onblur = () => setSetting('baidu_orc_sk', skEl.value)
+    akEl.onblur = () => {
+        setSetting('baidu_orc_ak', akEl.value)
+        clearFn()
+    }
+    skEl.onblur = () => {
+        setSetting('baidu_orc_sk', skEl.value)
+        clearFn()
+    }
 }
 
 function searchListSetting() {
