@@ -90,7 +90,7 @@
       "description": "停止播放声音"
     },
     "clipboardTrans": {
-      "description": "剪切板内容翻译"
+      "description": "剪贴板内容翻译"
     }
   }
 }
