@@ -86,6 +86,9 @@
         "default": "Ctrl+Shift+A"
       }
     },
+    "stopPlayAudio": {
+      "description": "停止播放声音"
+    },
     "clipboardTrans": {
       "description": "剪切板内容翻译"
     }

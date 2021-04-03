@@ -120,6 +120,10 @@ B.commands.onCommand.addListener(function (command) {
         openTransWindow()
     } else if (command === 'cropImage') {
         cropImageSendMsg()
+    } else if (command === 'stopPlayAudio') {
+        let a = window._Audio
+        if (a) a.pause()
+        if (B.tts && B.tts.stop) B.tts.stop()
     } else if (command === 'clipboardTrans') {
         clipboardTrans()
     } else if (command === 'toggleScribble') {
