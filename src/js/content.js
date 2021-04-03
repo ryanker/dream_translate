@@ -931,11 +931,12 @@ function addHistory(dQuery) {
 }
 
 function focusLast(el) {
-    // setTimeout(() => el.focus(), 50)
-    el.focus()
-    let range = window.getSelection()
-    range.selectAllChildren(el)
-    range.collapseToEnd() // 光标移到结尾
+    setTimeout(() => {
+        el.focus()
+        let range = window.getSelection()
+        range.selectAllChildren(el)
+        range.collapseToEnd() // 光标移到结尾
+    }, 200)
 }
 
 function I(id) {
