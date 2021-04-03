@@ -57,6 +57,7 @@ function init() {
     setBindValue('translateOCR', setting.translateOCR || 'CHN_ENG')
     setBindValue('ocrType', setting.ocrType)
     setBindValue('translateThin', setting.translateThin)
+    setBindValue('hideOriginal', setting.hideOriginal)
     setBindValue('dictionaryList', setting.dictionaryList)
     setBindValue('dictionarySoundList', setting.dictionarySoundList)
     setBindValue('dictionaryReader', setting.dictionaryReader)

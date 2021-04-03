@@ -385,6 +385,15 @@ function initTranslate() {
     })
     isPopup && focusLast(inputEl) // 光标移到结尾
 
+    // 隐藏原文框，减少占用空间
+    if (setting.hideOriginal) {
+        if (!isPopup && !isFullscreen) { // 排除弹窗
+            // translateEl.style.display = 'none'
+            inputEl.style.display = 'none'
+            E('.dmx_main_trans').style.paddingTop = '0'
+        }
+    }
+
     // 初始值
     let source = dialogConf.source
     let target = dialogConf.target

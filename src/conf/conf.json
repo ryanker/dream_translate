@@ -18,6 +18,7 @@
     "translateOCR": "",
     "ocrType": "auto",
     "translateThin": "",
+    "hideOriginal": "",
     "dictionaryList": [
       "youdao",
       "bing",
