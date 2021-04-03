@@ -794,6 +794,14 @@ function soundIconHTML(lan, lanArr, type) {
 }
 
 function initQuery(text, clientX, clientY) {
+    // Unicode property escapes 正则表达式:
+    // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions/Unicode_Property_Escapes
+    // https://www.unicode.org/Public/UCD/latest/ucd/PropertyValueAliases.txt
+    // https://tc39.es/ecma262/#table-nonbinary-unicode-properties
+    // https://keqingrong.github.io/blog/2020-01-29-regexp-unicode-property-escapes
+    if (setting.excludeChinese && /\p{Script=Han}/u.test(text)) return // 排除中文
+    if (setting.excludeSymbol && /^[\p{S}\p{P}^$.*+\-?=!:|\\/！？。；－＿～﹏，：、·;-…,"“”﹃﹄「」﹁﹂『』﹃﹄（）［］〔〕【】《》〈〉()\[\]{}\s]+$/u.test(text)) return // 排除纯符合
+
     if (window.textRepeat !== text) {
         window.textRepeat = text
         sendBgMessage({action: 'textTmp', text, formTitle: document.title, formUrl: location.href}) // 发送到后台缓存起来

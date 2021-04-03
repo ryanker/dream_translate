@@ -1,6 +1,8 @@
 {
   "setting": {
     "scribble": "direct",
+    "excludeChinese": "",
+    "excludeSymbol": "",
     "position": "fixed",
     "allowSelect": "",
     "autoCopy": "",

@@ -46,6 +46,8 @@ function init() {
 
     // 设置值 & 绑定事件
     setBindValue('scribble', setting.scribble)
+    setBindValue('excludeChinese', setting.excludeChinese)
+    setBindValue('excludeSymbol', setting.excludeSymbol)
     setBindValue('position', setting.position)
     setBindValue('allowSelect', setting.allowSelect)
     setBindValue('autoCopy', setting.autoCopy)
