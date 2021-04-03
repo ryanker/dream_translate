@@ -214,7 +214,8 @@ function googleTranslate() {
         },
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
+                if (!this.token.tkk) await sleep(2000) // 第一次没获取到 tkk, 等待 2 秒后再次尝试
                 if (!this.token.tkk) return reject('google tkk empty!')
                 // 备用 See:
                 // https://cloud.google.com/text-to-speech
