@@ -31,7 +31,7 @@ Sec-Fetch-Site: same-origin`
         },
         trans(q, srcLan, tarLan) {
             let eng = 0
-            if (srcLan === 'en') {
+            if (tarLan === 'zh') {
                 eng = 1
                 tarLan = 'zh'
             } else {

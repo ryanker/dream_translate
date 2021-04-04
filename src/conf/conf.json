@@ -19,6 +19,7 @@
     "ocrType": "auto",
     "translateThin": "",
     "hideOriginal": "",
+    "autoLanguage": "on",
     "dictionaryList": [
       "youdao",
       "bing",

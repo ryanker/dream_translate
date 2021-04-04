@@ -58,6 +58,7 @@ function init() {
     setBindValue('ocrType', setting.ocrType)
     setBindValue('translateThin', setting.translateThin)
     setBindValue('hideOriginal', setting.hideOriginal)
+    setBindValue('autoLanguage', setting.autoLanguage)
     setBindValue('dictionaryList', setting.dictionaryList)
     setBindValue('dictionarySoundList', setting.dictionarySoundList)
     setBindValue('dictionaryReader', setting.dictionaryReader)
