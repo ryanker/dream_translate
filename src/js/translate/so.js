@@ -30,14 +30,9 @@ Sec-Fetch-Site: same-origin`
             return {requestHeaders: details.requestHeaders.concat(requestHeadersFormat(s))}
         },
         trans(q, srcLan, tarLan) {
-            let eng = 0
-            if (tarLan === 'zh') {
-                eng = 1
-                tarLan = 'zh'
-            } else {
-                srcLan = 'zh'
-                tarLan = 'en'
-            }
+            if (/\p{Script=Han}/u.test(q)) srcLan = 'zh'
+            tarLan = srcLan === 'zh' ? 'en' : 'zh'
+            let eng = srcLan === 'en' ? 1 : 0
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
                 this.addListenerRequest()
@@ -56,13 +51,13 @@ Sec-Fetch-Site: same-origin`
                 })
             })
         },
-        unify(r, q, srcLan, tarLan) {
+        unify(r, text, srcLan, tarLan) {
             // console.log('so:', r, q, srcLan, tarLan)
-            let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: null, data: []}
+            let ret = {text, srcLan, tarLan, lanTTS: null, data: []}
             let data = r && r.data
             if (data) {
                 this.data = data
-                if (data.fanyi) ret.data.push({srcText: q, tarText: data.fanyi})
+                if (data.fanyi) ret.data.push({srcText: text, tarText: data.fanyi})
             }
             return ret
         },
