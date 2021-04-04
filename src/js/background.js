@@ -448,20 +448,23 @@ function minCss(s) {
     return s
 }
 
+async function autoLang(text) {
+    let lang = 'en' // 默认值
+    await httpPost({
+        url: `https://fanyi.baidu.com/langdetect`,
+        body: `query=${encodeURIComponent(text)}`
+    }).then(r => {
+        if (r && r.lan) lang = r.lan
+    }).catch(err => {
+        debug(err)
+    })
+    return lang
+}
+
 async function autoPlayTTS(tabId, text, lang) {
     let list = conf.translateTTSList || {}
     let arr = setting.translateTTSList || []
-    if (lang === 'auto') {
-        lang = 'en' // 默认值
-        await httpPost({
-            url: `https://fanyi.baidu.com/langdetect`,
-            body: `query=${encodeURIComponent(text)}`
-        }).then(r => {
-            if (r && r.lan) lang = r.lan
-        }).catch(err => {
-            debug(err)
-        })
-    }
+    if (lang === 'auto') lang = await autoLang(text)
     for (let name of arr) {
         let message = {action: 'playSound', nav: 'translate', name, type: 'source', status: 'end'}
         await sandFgMessage(tabId, Object.assign({}, message, {status: 'start'}))
