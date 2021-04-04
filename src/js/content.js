@@ -1000,7 +1000,8 @@ function sendBgMessage(message) {
         }).catch(err => {
             debug('sendBgMessage error:', err)
             dmxAlert('梦想翻译已更新，请刷新页面激活。', 'error')
-            reject(err)
+            // reject(err)
+            resolve()
         })
     })
 }
