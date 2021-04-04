@@ -432,7 +432,7 @@ function initDictionary() {
         e.key === 'Enter' && butEl.click()
         if (isPopup) _setTimeout('dictionary', () => butEl.click(), 1000) // 定时自动开始查词
     })
-    inpEl.focus()
+    setTimeout(() => inpEl.focus(), 100)
 }
 
 function initSearch() {
@@ -462,7 +462,7 @@ function initSearch() {
     inpEl.addEventListener('keyup', function (e) {
         e.key === 'Enter' && butEl.click()
     })
-    inpEl.focus()
+    setTimeout(() => inpEl.focus(), 100)
 
     // 创建按钮
     let s = ''
