@@ -135,8 +135,11 @@ B.commands.onCommand.addListener(function (command) {
 
 async function runTranslate(tabId, m) {
     let {action, text, srcLan, tarLan} = m
-    if (setting.autoLanguage) {
+    if (srcLan === 'auto') {
         srcLan = await autoLang(text)
+        if (srcLan === tarLan) tarLan = srcLan === 'zh' ? 'en' : 'zh'
+    } else if (setting.autoLanguage) {
+        if (/\p{Script=Han}/u.test(text)) srcLan = 'zh'
         if (srcLan === tarLan) tarLan = srcLan === 'zh' ? 'en' : 'zh'
     }
     setting.translateList.forEach(name => {
