@@ -108,7 +108,7 @@ function initDialog() {
         cssText: dialogCSS,
         width: dialogConf.width,
         height: dialogConf.height,
-        minWidth: 500,
+        minWidth: 450,
         onResize: function (style) {
             const {width, height} = style
             if (width) dialogConf.width = width
