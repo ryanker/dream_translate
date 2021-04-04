@@ -133,8 +133,12 @@ B.commands.onCommand.addListener(function (command) {
     }
 })
 
-function runTranslate(tabId, m) {
+async function runTranslate(tabId, m) {
     let {action, text, srcLan, tarLan} = m
+    if (setting.autoLanguage) {
+        srcLan = await autoLang(text)
+        if (srcLan === tarLan) tarLan = srcLan === 'zh' ? 'en' : 'zh'
+    }
     setting.translateList.forEach(name => {
         sdkInit(`${name}Translate`).then(sd => {
             sd.query(text, srcLan, tarLan).then(result => {
