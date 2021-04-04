@@ -310,7 +310,7 @@ function searchListSetting() {
     }
 
     // 关闭设置
-    dialogEl.querySelector('.dialog_back').onclick = function () {
+    $('search_list_back').onclick = function () {
         dialogEl.style.display = 'none'
         rmClass(document.body, 'dmx_overflow_hidden')
     }
