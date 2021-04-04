@@ -132,7 +132,7 @@
   "dialogConf": {
     "width": 500,
     "height": 470,
-    "source": "en",
+    "source": "auto",
     "target": "zh",
     "action": "translate"
   }
