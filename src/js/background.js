@@ -299,10 +299,6 @@ function getOcrToken() {
     })
 }
 
-function getTimestamp() {
-    return Date.parse(new Date()) / 1000
-}
-
 function saveSearchText(s) {
     if (!s) s = searchText
     storageSyncSet({searchText: s})

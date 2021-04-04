@@ -257,6 +257,10 @@ function getVoices() {
     })
 }
 
+function getTimestamp() {
+    return Date.parse(new Date() + '') / 1000
+}
+
 function addClass(el, className) {
     if (!el || !className) return
     className = className.trim()

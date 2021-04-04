@@ -998,8 +998,12 @@ function sendBgMessage(message) {
         sendMessage(message).then(_ => {
             resolve()
         }).catch(err => {
+            // 减少错误提示框
+            if (getTimestamp() > (window.dmxUpdateDate || 0)) {
+                window.dmxUpdateDate = getTimestamp() + 5
+                dmxAlert('梦想翻译已更新，请刷新页面激活。', 'error')
+            }
             debug('sendBgMessage error:', err)
-            dmxAlert('梦想翻译已更新，请刷新页面激活。', 'error')
             // reject(err)
             resolve()
         })
