@@ -904,8 +904,8 @@ function mouseWords(e) {
     if (!textNode || textNode.nodeType !== 3) return
 
     let str = textNode.data
-    let before = (arr = str.slice(0, offset).match(/[a-z'’]+$/i)) ? arr[0] : ''
-    let after = (arr = str.slice(offset).match(/^[a-z'’]+/i)) ? arr[0] : ''
+    let before = (arr = str.slice(0, offset).match(/[a-z’]+$/i)) ? arr[0] : ''
+    let after = (arr = str.slice(offset).match(/^[a-z’]+/i)) ? arr[0] : ''
     if (before.length === 0 && after.length === 0) return
 
     let range = document.createRange()
