@@ -557,7 +557,7 @@ select {
 
 #local_tts_dialog select {
     float: left;
-    max-width: 220px;
+    max-width: 180px;
 }
 
 #local_tts_reset_setting {
