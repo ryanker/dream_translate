@@ -212,6 +212,11 @@ function initDialog() {
         sendMessage({action: 'onRecord'})
     })
 
+    // 鼠标停留取词
+    document.addEventListener('mousemove', (e) => {
+        if (setting.autoWords) _setTimeout('_mouseWords', () => mouseWords(e), 300)
+    })
+
     // 历史记录
     let hEl = I('dmx_history')
     let hlEl = hEl.querySelector('.dmx-icon-left')
@@ -802,6 +807,14 @@ function soundIconHTML(lan, lanArr, type) {
     return s
 }
 
+// 发送到后台缓存起来
+function sendBgCache(text) {
+    if (window.textRepeat !== text) {
+        window.textRepeat = text
+        sendBgMessage({action: 'textTmp', text, formTitle: document.title, formUrl: location.href})
+    }
+}
+
 function initQuery(text, clientX, clientY) {
     // Unicode property escapes 正则表达式:
     // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions/Unicode_Property_Escapes
@@ -811,10 +824,7 @@ function initQuery(text, clientX, clientY) {
     if (setting.excludeChinese && /\p{Script=Han}/u.test(text)) return // 排除中文
     if (setting.excludeSymbol && /^[\p{S}\p{P}^$.*+\-?=!:|\\/！？。；－＿～﹏，：、·;…,"“”﹃﹄「」﹁﹂『』﹃﹄（）［］〔〕【】《》〈〉()\[\]{}<>\s]+$/u.test(text)) return // 排除纯符合
 
-    if (window.textRepeat !== text) {
-        window.textRepeat = text
-        sendBgMessage({action: 'textTmp', text, formTitle: document.title, formUrl: location.href}) // 发送到后台缓存起来
-    }
+    sendBgCache(text)
     if (!text) {
         iconBut.style.display = 'none'
         return
@@ -843,10 +853,12 @@ function initQuery(text, clientX, clientY) {
 }
 
 function sendQuery(text) {
-    if (isClipboardRead) text = execPaste() // 自动读取粘贴板内容
-    if (!text && isPopup && setting.autoPaste === 'on') text = execPaste()
-    if (!text) text = textTmp
-    if (!text) return
+    if (!text) {
+        if (isClipboardRead) text = execPaste() // 自动读取粘贴板内容
+        if (!text && isPopup && setting.autoPaste === 'on') text = execPaste()
+        if (!text) text = textTmp
+        if (!text) return
+    }
     let el = I('dmx_navigate')
     let action = el.querySelector('.active') && el.querySelector('.active').getAttribute('action')
     if (!action) {
@@ -872,6 +884,47 @@ function sendQuery(text) {
     }
     showSearchSide(text)
     message && sendBgMessage(message)
+}
+
+function mouseWords(e) {
+    let x = e.clientX
+    let y = e.clientY
+    if (!x || !y) return
+
+    let textNode, offset, arr
+    if (document.caretPositionFromPoint) {
+        let p = document.caretPositionFromPoint(x, y)
+        textNode = p.offsetNode
+        offset = p.offset
+    } else if (document.caretRangeFromPoint) {
+        let p = document.caretRangeFromPoint(x, y)
+        textNode = p.startContainer
+        offset = p.startOffset
+    }
+    if (!textNode || textNode.nodeType !== 3) return
+
+    let str = textNode.data
+    let before = (arr = str.slice(0, offset).match(/[a-z']+$/i)) ? arr[0] : ''
+    let after = (arr = str.slice(offset).match(/^[a-z']+/i)) ? arr[0] : ''
+    if (before.length === 0 && after.length === 0) return
+
+    let range = document.createRange()
+    range.setStart(textNode, offset - before.length)
+    range.setEnd(textNode, offset + after.length)
+    let bcr = range.getBoundingClientRect()
+    if (x >= bcr.left && x <= bcr.right && y >= bcr.top && y <= bcr.bottom) {
+        let se = window.getSelection()
+        se.removeAllRanges()
+        se.addRange(range)
+
+        let text = before + after
+        if (text && window.textRepeat !== text) {
+            sendBgCache(text)
+            sendQuery(text) // 鼠标停留获取单词
+            showDialog()
+        }
+    }
+    range.detach()
 }
 
 function showSearchSide(text) {
