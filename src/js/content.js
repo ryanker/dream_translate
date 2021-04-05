@@ -811,7 +811,7 @@ function soundIconHTML(lan, lanArr, type) {
 function sendBgCache(text) {
     if (window.textRepeat !== text) {
         window.textRepeat = text
-        sendBgMessage({action: 'textTmp', text, formTitle: document.title, formUrl: location.href})
+        sendBgMessage({action: 'textTmp', text})
     }
 }
 
@@ -883,7 +883,10 @@ function sendQuery(text) {
         I(`search_input`).value = text
     }
     showSearchSide(text)
-    message && sendBgMessage(message)
+    if (message) {
+        message = Object.assign({formTitle: document.title, formUrl: location.href}, message)
+        sendBgMessage(message)
+    }
 }
 
 function mouseWords(e) {

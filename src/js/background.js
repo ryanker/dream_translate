@@ -80,6 +80,7 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     if (!tabId) tabId = 'popup'
 
     if (m.action === 'translate') {
+        createHistory(m) // 保存历史记录
         runTranslate(tabId, m)
     } else if (m.action === 'translateTTS') {
         runTranslateTTS(tabId, m)
@@ -108,7 +109,6 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
     } else if (m.action === 'onCapture') {
         setTimeout(_ => capturePic(sender.tab, m), 100)
     } else if (m.action === 'textTmp') {
-        createHistory(m) // 保存历史记录
         textTmp = m.text // 划词文字缓存
     }
 })
@@ -411,15 +411,27 @@ function sendAllowSelect() {
 // 保存历史记录
 function createHistory(m) {
     if (historyMax < 1) return // 如果为 0，则不再保存历史记录
-    let text = m.text || m.text.trim()
+    let {text, formUrl, formTitle} = m
+
+    // 空内容不保存
+    text = text.trim()
     if (!text) return
+
+    // 排除和最后一次记录相同内容
     if (window.lastHistory === text) return
-    if (m.formUrl.indexOf(B.root) === 0) return // 排除扩展内查询
+    window.lastHistory = text
+
+    // 排除扩展内查询
+    if (formUrl) {
+        if (formUrl.indexOf(B.root + 'html/favorite.html') === 0) return
+        if (formUrl.indexOf(B.root + 'html/history.html') === 0) return
+    }
+
     idb('history', 1, initHistory).then(db => {
         db.create('history', {
             content: text,
-            formTitle: m.formTitle,
-            formUrl: m.formUrl,
+            formTitle: formTitle || '',
+            formUrl: formUrl || '',
             createDate: new Date().toJSON(),
         }).then(() => {
             // 清理早期数据
@@ -433,7 +445,6 @@ function createHistory(m) {
             debug('history create error:', e)
         })
     })
-    window.lastHistory = text
 }
 
 // 历史记录设置
