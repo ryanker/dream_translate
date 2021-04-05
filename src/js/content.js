@@ -214,7 +214,7 @@ function initDialog() {
 
     // 鼠标停留取词
     document.addEventListener('mousemove', (e) => {
-        if (setting.autoWords) _setTimeout('_mouseWords', () => mouseWords(e), 300)
+        if (setting.autoWords && setting.scribble !== 'off') _setTimeout('_mouseWords', () => mouseWords(e), 300)
     })
 
     // 历史记录
