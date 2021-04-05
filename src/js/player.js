@@ -306,7 +306,8 @@ function playerRecord(id, options) {
             obj.ws.microphone.on('deviceReady', function (stream) {
                 obj.microphone = stream
                 setTimeout(() => {
-                    obj.recorder = window.RecordRTC(stream, {type: 'audio', disableLogs: true})
+                    let options = isFirefox ? {disableLogs: true} : {type: 'audio', disableLogs: true}
+                    obj.recorder = window.RecordRTC(stream, options)
                     obj.recorder.startRecording()
 
                     timeOutStart() // 定时器
