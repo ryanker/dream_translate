@@ -897,10 +897,12 @@ function mouseWords(e) {
     let textNode, offset, arr
     if (document.caretPositionFromPoint) {
         let p = document.caretPositionFromPoint(x, y)
+        if (!p) return
         textNode = p.offsetNode
         offset = p.offset
     } else if (document.caretRangeFromPoint) {
         let p = document.caretRangeFromPoint(x, y)
+        if (!p) return
         textNode = p.startContainer
         offset = p.startOffset
     }

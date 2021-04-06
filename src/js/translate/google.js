@@ -199,6 +199,16 @@ function googleTranslate() {
             arr && arr.forEach(v => {
                 if (v[0] && v[1]) ret.data.push({srcText: v[1], tarText: v[0]})
             })
+            if (r[1] && isArray(r[1])) {
+                let s = ''
+                if (arr[0][1]) s += `<div class="case_dd_head">${arr[0][1]}</div>`  // 查询的单词
+                s += `<div class="case_dd_parts">`
+                r[1].forEach(v => {
+                    if (v[0] && v[1]) s += `<p>${v[0] ? `<b>${v[0]}</b>` : ''}${v[1].join('；')}</p>`
+                })
+                s += `</div>`
+                ret.extra = `<div class="case_dd">${s}</div>`
+            }
             return ret
         },
         async query(q, srcLan, tarLan, noCache) {
