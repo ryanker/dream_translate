@@ -604,7 +604,11 @@ function importZip() {
                 let files = this.files
                 if (files.length < 1) return
                 let f = files[0]
-                if (f.type !== 'application/zip') return
+                // if (f.type !== 'application/zip') return // windows 系统识别类型为 application/x-zip-compressed，从而导致 bug
+                if (!f.type.includes('zip')) {
+                    dal('请选择正确的压缩包文件！', 'error')
+                    return
+                }
 
                 butEl.disabled = true
                 butEl.innerText = '正在导入...'
