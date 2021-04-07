@@ -145,7 +145,7 @@ function sogouTranslate() {
                 if (q.length > 5000) return reject('The text is too large!')
 
                 let url = `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
-                let pageId = 'iframe_soGou'
+                let pageId = 'fy_soGou'
                 openIframe(pageId, url, 60 * 1000)
                 httpGet(url, 'document').then(r => {
                     // 获取翻译结果
