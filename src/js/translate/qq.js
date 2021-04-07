@@ -72,7 +72,7 @@ function qqTranslate() {
                 onHeadersReceivedAddListener(onRemoveFrame, {urls: ["*://fanyi.qq.com/*"]})
 
                 // 打开首页，方便后面捕捉到最新 auth 链接，30 秒后关闭 iframe，减小内存占用
-                let pageId = 'iframe_qq'
+                let pageId = 'fy_qq'
                 openIframe(pageId, 'https://fanyi.qq.com/', 30 * 1000)
 
                 /*setTimeout(() => {
