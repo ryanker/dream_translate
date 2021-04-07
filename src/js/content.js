@@ -399,6 +399,9 @@ function initTranslate() {
         }
     }
 
+    // 隐藏截图框(在独立窗口的时候)
+    if (isFullscreen) cropEl.style.display = 'none'
+
     // 初始值
     let source = dialogConf.source
     let target = dialogConf.target
