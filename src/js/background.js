@@ -677,7 +677,7 @@ async function checkRetry(callback, times) {
     return p
 }
 
-function openBgPage(id, url, timeout) {
+/*function openBgPage(id, url, timeout) {
     isFirefox ? openIframe(id, url, timeout) : openPopup(id, url, timeout)
 }
 
@@ -685,7 +685,7 @@ function removeBgPage(id) {
     isFirefox ? removeIframe(id) : removePopup(id)
 }
 
-// 打开一个几乎不可见的 popup
+// 打开一个几乎不可见的 popup (此方法只在 macOS 下有用，在 windows 系统下无效，firefox 浏览器也无效)
 function openPopup(id, url, timeout) {
     timeout = timeout || 20 * 1000 // 默认 20 秒
     removePopup(id)
@@ -719,7 +719,7 @@ function cleanPopup(url) {
             }
         })
     })
-}
+}*/
 
 // 创建一个临时标签
 function createTmpTab(id, url, timeout) {
@@ -737,6 +737,13 @@ function removeTmpTab(id) {
     if (!tabId) return
     B.tabs.remove(tabId, () => B.runtime.lastError) // 关闭
     window[tabName] = null
+}
+
+// 强制刷新临时标签
+function reloadTmpTab(id) {
+    let tabName = `_tmp_tab_${id || 'one'}`
+    let tabId = window[tabName]
+    if (tabId) B.tabs.reload(tabId, {bypassCache: true}, () => B.runtime.lastError) // 重新加载
 }
 
 function openIframe(id, url, timeout) {

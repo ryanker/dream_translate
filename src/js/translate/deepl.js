@@ -71,7 +71,6 @@ function deeplTranslate() {
                                     this.isData = true // 表示有数据了
                                     resolve(res)
                                     _clearTimeout(outId)
-                                    removeTmpTab(pageId)
                                 }
                             } else {
                                 reject('DeepL error!')

@@ -22,7 +22,7 @@ function hjdictDictionary() {
             // 没有找到结果
             if (!el) {
                 let notEl = r.querySelector('.word-notfound-inner h2')
-                if (notEl) return {text: q, phonetic, sound, html: notEl.innerText}
+                if (notEl) return {text: q, phonetic, sound, html: notEl.innerText, error: true}
             }
 
             // 查询单词
@@ -81,29 +81,32 @@ function hjdictDictionary() {
             return new Promise((resolve, reject) => {
                 if (q.length > 100) return reject('The text is too large!')
                 let url = `https://www.hjdict.com/w/${encodeURIComponent(q)}`
-                let run = () => {
-                    let pageId = 'iframe_hjDict'
-                    openBgPage(pageId, url)
-                    setTimeout(() => {
-                        httpGet(url, 'document', null, true).then(r => {
-                            if (r) {
-                                resolve(this.unify(r, q))
-                                removeBgPage(pageId)
-                            } else {
-                                reject('hjdict.com error!')
-                            }
-                        }).catch(e => {
-                            reject(e)
-                        })
-                    }, 200)
-                }
-                if (this.isFirst) {
-                    onHeadersReceivedAddListener(onRemoveFrame, {urls: ["*://www.hjdict.com/*"]}) // 取消 Frame 嵌入限制
-                    setTimeout(run, 200)
-                    this.isFirst = false
-                } else {
-                    run()
-                }
+                httpGet(url, 'document', null, true).then(r => {
+                    if (r) {
+                        let d = this.unify(r, q)
+                        if (!d.error) {
+                            createTmpTab('hjDict', url)
+                            setTimeout(() => reloadTmpTab('hjDict'), 200)
+                            setTimeout(() => {
+                                httpGet(url, 'document', null, true).then(r => {
+                                    if (r) {
+                                        resolve(this.unify(r, q))
+                                    } else {
+                                        reject('hjdict.com empty!')
+                                    }
+                                }).catch(e => {
+                                    reject(e)
+                                })
+                            }, 500)
+                        } else {
+                            resolve(d)
+                        }
+                    } else {
+                        reject('hjdict.com error!')
+                    }
+                }).catch(e => {
+                    reject(e)
+                })
             })
         },
         link(q) {

@@ -168,7 +168,6 @@ function sogouTranslate() {
                     }
                     if (data) {
                         resolve(this.unify(data, q, srcLan, tarLan))
-                        // removeBgPage(pageId) // 关闭太快，会被 sogou 防火墙判定为恶意用户
                     } else {
                         reject('Get data is empty!')
                     }
