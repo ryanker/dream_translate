@@ -13,13 +13,15 @@ let listen, record, compare
 document.addEventListener('DOMContentLoaded', async function () {
     await idb('favorite', 1, initFavorite).then(r => db = r)
 
-    createCate()
-    updateCate()
-    deleteCate()
-    moveSentence()
-    deleteBatchSentence()
-    initCate()
-    selectAll()
+    initCate() // 加载分类
+    createCate() // 添加分类
+    updateCate() // 编辑分类
+    deleteCate() // 删除分类
+
+    selectAll() // 全选/取消全选
+    moveSentence() // 批量移动句子
+    deleteBatchSentence() // 批量删除句子
+
     exportZip() // 导出
     importZip() // 导入
     openSetting() // 设置
