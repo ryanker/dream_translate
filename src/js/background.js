@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
 
     // 初始数据库
-    idb('favorite', 1, initFavorite)
+    idb('favorite', 1, initFavorite) // 否则第一次安装时，"我的收藏"需要刷新一下才能正常看到数据。
 
     // 查看全部数据
     storageShowAll()
