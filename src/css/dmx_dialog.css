@@ -91,6 +91,7 @@ blockquote {
 }
 
 #dmx_dialog {
+    /*font-family: Roboto, 'Segoe UI', Arial, 'Microsoft Yahei', sans-serif;*/
     font-family: Helvetica Neue, PingFang SC, Microsoft YaHei, sans-serif;
     all: initial;
     position: fixed;
@@ -507,6 +508,10 @@ a:hover {
 
 #translate_input:focus {
     border-color: #409eff;
+}
+
+#translate_input.big {
+    min-height: 52px;
 }
 
 .language_box {
@@ -947,7 +952,7 @@ a:hover {
     display: block;
     width: 100%;
     height: 28px;
-    font-size: 18px;
+    font-size: 17px;
     outline: none;
     border: none;
 }

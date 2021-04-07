@@ -264,7 +264,7 @@ function initTranslate() {
         if (l.hasOwnProperty(k)) langList += `<u value="${k}">${l[k].zhName}</u>`
     }
     dialog.contentHTML(`<div class="dmx_main dmx_main_trans">
-    <div class="case" id="translate_input" contenteditable="true"></div>
+    <div class="case${isPopup || isFullscreen ? ' big' : ''}" id="translate_input" contenteditable="true"></div>
     <div class="language_box fx">
         <div id="language_source" class="language_button dmx-icon"></div>
         <div id="language_exchange"><i class="dmx-icon dmx-icon-exchange"></i></div>
