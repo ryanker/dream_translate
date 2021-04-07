@@ -7,10 +7,9 @@
  * @license MIT License
  */
 
-let conf, setting, bg = {}
+let conf, setting
 let searchText, searchList
 document.addEventListener('DOMContentLoaded', async function () {
-    if (!isFirefox) bg = B.getBackgroundPage()
     await fetch('../conf/conf.json').then(r => r.json()).then(r => {
         conf = r
     })
@@ -442,10 +441,10 @@ function clearSetting() {
 }
 
 function sendSetting(setting, updateIcon, resetDialog) {
-    if (isFirefox) {
+    if (B.getBackgroundPage) {
+        B.getBackgroundPage().saveSettingAll(setting, updateIcon, resetDialog)
+    } else {
         // firefox 在 iframe 下功能缺失，所以通过 message 处理
         sendMessage({action: 'saveSetting', setting, updateIcon, resetDialog})
-    } else {
-        bg.saveSettingAll(setting, updateIcon, resetDialog)
     }
 }
