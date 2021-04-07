@@ -91,6 +91,7 @@ blockquote {
 }
 
 #dmx_dialog {
+    font-family: Helvetica Neue, PingFang SC, Microsoft YaHei, sans-serif;
     all: initial;
     position: fixed;
     z-index: 999999999998;
@@ -328,7 +329,7 @@ blockquote {
     line-height: 30px;
     overflow: hidden;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 500;
     text-decoration: none;
     cursor: pointer;
 }
