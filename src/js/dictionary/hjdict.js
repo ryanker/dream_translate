@@ -84,7 +84,7 @@ function hjdictDictionary() {
                 httpGet(url, 'document', null, true).then(r => {
                     if (r) {
                         let d = this.unify(r, q)
-                        if (!d.error) {
+                        if (d.error) {
                             createTmpTab('hjDict', url)
                             setTimeout(() => reloadTmpTab('hjDict'), 200)
                             setTimeout(() => {
