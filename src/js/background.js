@@ -374,8 +374,8 @@ function openWindow(wid, width, height, url, reopen) {
 
         // 居中
         let screen = window.screen
-        o.left = left ? left : (screen.width - o.width) / 2
-        o.top = top ? top : (screen.height - o.height) / 2
+        o.left = left > 0 ? left : (screen.width - o.width) / 2
+        o.top = top > 0 ? top : (screen.height - o.height) / 2
 
         B.windows.create(o, w => window[name] = w.id)
     }
