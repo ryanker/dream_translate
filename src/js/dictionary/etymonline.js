@@ -17,7 +17,7 @@ function etymonlineDictionary() {
         unify(r, q) {
             // let el = r.querySelector('#root > div > div > div.main > div > div:nth-child(2) > div:nth-child(2) > object')
             let s = ''
-            r.querySelectorAll('#root div.main div[class^="word--"] > object').forEach(el => {
+            r.querySelectorAll('#root div.main div[class^="word--"]').forEach(el => {
                 cleanAttr(el, ['title', 'class'])
                 s += el.innerHTML
             })
