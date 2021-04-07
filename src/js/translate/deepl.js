@@ -35,12 +35,14 @@ function deeplTranslate() {
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
 
+                // 取消 Frame 嵌入限制
+                onHeadersReceivedAddListener(onRemoveFrame, {urls: ["*://*.deepl.com/*"]})
+
                 // popup 框
-                let pageId = 'iframe_DeepL'
-                let timeout = 20 * 1000
+                let pageId = 'fy_DeepL'
                 let url = `https://www.deepl.com/translator#${srcLan}/${tarLan}/${encodeURIComponent(q)}`
                 // console.log('url:', url)
-                isFirefox ? createTmpTab(pageId, url, timeout) : openPopup(pageId, url, timeout)
+                openIframe(pageId, url, 60 * 1000)
 
                 // 获取请求参数
                 let filter = {urls: ['*://*.deepl.com/jsonrpc*'], types: ['xmlhttprequest']} // 请求参数
@@ -86,9 +88,12 @@ function deeplTranslate() {
                 // 请求接口数据修改
                 function onBeforeSendHeaders(details) {
                     let h = details.requestHeaders
+                    h.push({name: 'Host', value: 'www.deepl.com'})
                     h.push({name: 'Origin', value: 'https://www.deepl.com'})
                     h.push({name: 'Referer', value: 'https://www.deepl.com/'})
-                    h.push({name: 'Sec-Fetch-Site', value: 'same-origin'})
+                    h.push({name: 'sec-fetch-dest', value: 'document'})
+                    h.push({name: 'sec-fetch-mode', value: 'navigate'})
+                    h.push({name: 'sec-fetch-site', value: 'same-origin'})
                     return {requestHeaders: h}
                 }
 

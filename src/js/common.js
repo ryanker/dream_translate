@@ -231,7 +231,8 @@ function onCompletedRemoveListener(callback) {
 function onRemoveFrame(details) {
     let headers = Object.assign([], details.responseHeaders)
     for (let i = 0; i < headers.length; i++) {
-        if (headers[i].name.toLowerCase().includes('frame-options')) {
+        let name = headers[i].name.toLowerCase()
+        if (name.includes('frame-options') || name.includes('content-security-policy')) {
             headers.splice(i, 1)
             break
         }
