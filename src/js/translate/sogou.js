@@ -146,7 +146,7 @@ function sogouTranslate() {
 
                 let url = `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
                 let pageId = 'iframe_soGou'
-                openBgPage(pageId, url)
+                openIframe(pageId, url, 60 * 1000)
                 httpGet(url, 'document').then(r => {
                     // 获取翻译结果
                     let data
