@@ -162,7 +162,7 @@ function initFavorite(e) {
         let d = new Date().toJSON()
         let row = {cateId: 0, cateName: '最新收藏', updateDate: d, createDate: d}
         db.transaction(['cate'], 'readwrite').objectStore('cate').add(row)
-    }, 500)
+    }, 100)
 }
 
 // 创建存储对象: 历史

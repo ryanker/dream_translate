@@ -52,6 +52,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         url && addMenu(name, name, url)
     })
 
+    // 初始数据库
+    idb('favorite', 1, initFavorite)
+
     // 查看全部数据
     storageShowAll()
 })
