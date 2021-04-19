@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
         addClass(record_box, 'dmx_hide')
         addClass(favorite_form, 'dmx_show')
 
+        if (bg.textTmp) sentenceInp.value = bg.textTmp
+
         let {url, blob} = audioSrc
         listen2 = playerListen('player_listen2')
         if (blob) listen2.loadBlob(blob)
