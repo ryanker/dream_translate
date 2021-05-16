@@ -872,6 +872,7 @@ function sendQuery(text) {
     if (!checkChange(action, text)) return
 
     let message = null
+    if (setting.cutHumpName === 'on' && action !== 'search') text = cutHumpName(text)
     if (action === 'translate') {
         let inputEl = I(`translate_input`)
         inputEl.innerText = text
@@ -890,6 +891,24 @@ function sendQuery(text) {
         message = Object.assign({formTitle: document.title, formUrl: location.href}, message)
         sendBgMessage(message)
     }
+}
+
+// 切分驼峰词组
+function cutHumpName(s) {
+    let isCapital = function (s) {
+        let c = s.charAt(0)
+        return c >= 'A' && c <= 'Z'
+    }
+    return s.replace(/\w+[A-Z]\w?/g, (...args) => {
+        let str = args[0]
+        let newStr = ''
+        for (let i = 0; i < str.length; i++) {
+            let l = str[i]
+            if (isCapital(l) && (i - 1 > 0 && !isCapital(str[i - 1]))) newStr += ' '
+            newStr += l
+        }
+        return newStr
+    })
 }
 
 function mouseWords(e) {

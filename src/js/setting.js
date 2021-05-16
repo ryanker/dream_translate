@@ -52,6 +52,7 @@ function init() {
     setBindValue('autoCopy', setting.autoCopy)
     setBindValue('autoPaste', setting.autoPaste)
     setBindValue('autoWords', setting.autoWords)
+    setBindValue('cutHumpName', setting.cutHumpName)
     setBindValue('translateList', setting.translateList)
     setBindValue('translateTTSList', setting.translateTTSList)
     setBindValue('translateOCR', setting.translateOCR || 'CHN_ENG')
