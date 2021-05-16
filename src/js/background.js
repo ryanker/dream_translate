@@ -317,7 +317,8 @@ function saveSettingAll(data, updateIcon, resetDialog) {
 }
 
 function changeBrowserIcon(scribble) {
-    setBrowserAction(scribble === 'off' ? 'OFF' : '')
+    B.browserAction.setIcon({path: `icon/128${scribble === 'off' ? '_off' : ''}.png`})
+    // setBrowserAction(scribble === 'off' ? 'OFF' : '')
 }
 
 function setBrowserAction(text) {
