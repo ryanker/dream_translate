@@ -130,8 +130,11 @@ B.commands.onCommand.addListener(function (command) {
     } else if (command === 'clipboardTrans') {
         clipboardTrans()
     } else if (command === 'toggleScribble') {
-        if (!window.scribbleTmp) window.scribbleTmp = setting.scribble === 'off' ? 'direct' : 'off';
-        [setting.scribble, window.scribbleTmp] = [window.scribbleTmp, setting.scribble] // 交换
+        let scribbleTmp = window.scribbleTmp || 'off'
+        if (['direct', 'clickIcon'].includes(setting.scribble)) scribbleTmp = 'off';
+        else if (setting.scribble === 'off' && scribbleTmp === 'off') scribbleTmp = 'direct';
+        [setting.scribble, scribbleTmp] = [scribbleTmp, setting.scribble] // 交换
+        window.scribbleTmp = scribbleTmp
         saveSettingAll(setting, true) // 保存
     }
 })
