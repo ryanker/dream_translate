@@ -47,6 +47,7 @@ function init() {
     setBindValue('scribble', setting.scribble)
     setBindValue('excludeChinese', setting.excludeChinese)
     setBindValue('excludeSymbol', setting.excludeSymbol)
+    setBindValue('excludeNumber', setting.excludeNumber)
     setBindValue('position', setting.position)
     setBindValue('allowSelect', setting.allowSelect)
     setBindValue('autoCopy', setting.autoCopy)

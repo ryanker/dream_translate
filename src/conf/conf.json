@@ -3,6 +3,7 @@
     "scribble": "direct",
     "excludeChinese": "",
     "excludeSymbol": "",
+    "excludeNumber": "",
     "position": "fixed",
     "allowSelect": "",
     "autoCopy": "",
