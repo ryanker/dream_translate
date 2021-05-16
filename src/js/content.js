@@ -904,7 +904,8 @@ function cutHumpName(s) {
         let newStr = ''
         for (let i = 0; i < str.length; i++) {
             let l = str[i]
-            if (isCapital(l) && (i - 1 > 0 && !isCapital(str[i - 1]))) newStr += ' '
+            if (l === '_') l = ' '
+            else if (isCapital(l) && (i - 1 > 0 && str[i - 1] !== '_' && !isCapital(str[i - 1]))) newStr += ' '
             newStr += l
         }
         return newStr
