@@ -1,22 +1,19 @@
 # 梦想划词翻译（Chrome & Firefox 扩展程序）
-- 为 Chrome 安装：[梦想划词翻译—聚合词典搜索 - Chrome 网上应用店](https://chrome.google.com/webstore/detail/odfgigmpkhhhieicogijogfobfipijjh)
-- 为 Firefox 安装：[梦想划词翻译—聚合词典搜索 – 下载 Firefox 扩展](https://addons.mozilla.org/zh-CN/firefox/addon/%E6%A2%A6%E6%83%B3%E5%88%92%E8%AF%8D%E7%BF%BB%E8%AF%91-%E8%81%9A%E5%90%88%E8%AF%8D%E5%85%B8%E6%90%9C%E7%B4%A2/)
-
-梦想划词翻译是为阅读和学习外语而开发的一款翻译和查词扩展程序，聚合数十款在线词典和数款在线翻译。
-
 这是一款精心雕琢并免费开源的划词翻译扩展，也是一款致力于改善「中国式哑巴英语」而设计的一款英语练习扩展程序。
 
+### 语言学习
 语言本身是一项技能，需要像游泳和骑自行车一样，通过实战练习才能掌握；应让「听说」变成身体的一种条件反射，而不是依靠死记硬背单词和语法规则来学习。如果有人说背诵「游泳说明书」就能学会游泳，那不是在开玩笑，就是在害人。
 
-### 学习深坑
 在中国式「填鸭式教育」体系下，使用着西方国家已淘汰几十年的「语法翻译法」教学英语，把英语这样的技能当成知识学习，已经把全民带入到一个错误的深渊。学生们为应付考试，学习英语时往往注重「背单词学语法」，而忽略了最重要的「听说」运用能力，很容易造成考完试不用，就忘光的现象。这样的错误学习方法造就了 90% 以上的学习失败率，大量的学生因为学不好英语，在高考前已经放弃了学习，从而人生轨迹也发生改变。
 
 而通过了「英语四六级考试」的同学们，口语表达能力还不如一个没上过学的「四五岁美国小朋友」。
 
 如果你对「正确学习英语的方法」感兴趣，请阅读《英语学习秘籍》，详见：https://mengxiang.net/post/english.html
 
-### 开发原因
-每当看到一些容易误导人的背单词学习英语广告，文章，视频，软件，就实在忍不住想做点什么，于是就有了这款程序。
+### 扩展安装
+- Chrome 安装：[梦想划词翻译—聚合词典搜索 - Chrome 网上应用店](https://chrome.google.com/webstore/detail/odfgigmpkhhhieicogijogfobfipijjh)
+- Edge 安装：[梦想划词翻译—聚合词典搜索 - Microsoft Edge 扩展商店](https://microsoftedge.microsoft.com/addons/detail/ogleeipbbcokpeabliinildngejmdneg)
+- Firefox 安装：[梦想划词翻译—聚合词典搜索 – Firefox 扩展商店](https://addons.mozilla.org/zh-CN/firefox/addon/dream_translate/)
 
 ### 程序特点
 考虑到程序的维护时间成本，本程序采用纯原生 javascript 开发，拥有更好的性能，同时占用内存更小，没有对各种技术栈的依赖，减少了 bug 的产生和维护时间的投入。
