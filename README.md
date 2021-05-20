@@ -1,4 +1,7 @@
 # 梦想划词翻译（Chrome & Firefox 扩展程序）
+- 为 Chrome 安装：[梦想划词翻译—聚合词典搜索 - Chrome 网上应用店](https://chrome.google.com/webstore/detail/odfgigmpkhhhieicogijogfobfipijjh)
+- 为 Firefox 安装：[梦想划词翻译—聚合词典搜索 – 下载 Firefox 扩展](https://addons.mozilla.org/zh-CN/firefox/addon/%E6%A2%A6%E6%83%B3%E5%88%92%E8%AF%8D%E7%BF%BB%E8%AF%91-%E8%81%9A%E5%90%88%E8%AF%8D%E5%85%B8%E6%90%9C%E7%B4%A2/)
+
 梦想划词翻译是为阅读和学习外语而开发的一款翻译和查词扩展程序，聚合数十款在线词典和数款在线翻译。
 
 这是一款精心雕琢并免费开源的划词翻译扩展，也是一款致力于改善「中国式哑巴英语」而设计的一款英语练习扩展程序。
