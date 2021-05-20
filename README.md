@@ -1,6 +1,11 @@
 # 梦想划词翻译（Chrome & Firefox 扩展程序）
 这是一款精心雕琢并免费开源的划词翻译扩展，也是一款致力于改善「中国式哑巴英语」而设计的一款英语练习扩展程序。
 
+### 扩展安装
+- Chrome 安装：[梦想划词翻译—聚合词典搜索 - Chrome 网上应用店](https://chrome.google.com/webstore/detail/odfgigmpkhhhieicogijogfobfipijjh)
+- Edge 安装：[梦想划词翻译—聚合词典搜索 - Microsoft Edge 扩展商店](https://microsoftedge.microsoft.com/addons/detail/ogleeipbbcokpeabliinildngejmdneg)
+- Firefox 安装：[梦想划词翻译—聚合词典搜索 – Firefox 扩展商店](https://addons.mozilla.org/zh-CN/firefox/addon/dream_translate/)
+
 ### 语言学习
 语言本身是一项技能，需要像游泳和骑自行车一样，通过实战练习才能掌握；应让「听说」变成身体的一种条件反射，而不是依靠死记硬背单词和语法规则来学习。如果有人说背诵「游泳说明书」就能学会游泳，那不是在开玩笑，就是在害人。
 
@@ -9,11 +14,6 @@
 而通过了「英语四六级考试」的同学们，口语表达能力还不如一个没上过学的「四五岁美国小朋友」。
 
 如果你对「正确学习英语的方法」感兴趣，请阅读《英语学习秘籍》，详见：https://mengxiang.net/post/english.html
-
-### 扩展安装
-- Chrome 安装：[梦想划词翻译—聚合词典搜索 - Chrome 网上应用店](https://chrome.google.com/webstore/detail/odfgigmpkhhhieicogijogfobfipijjh)
-- Edge 安装：[梦想划词翻译—聚合词典搜索 - Microsoft Edge 扩展商店](https://microsoftedge.microsoft.com/addons/detail/ogleeipbbcokpeabliinildngejmdneg)
-- Firefox 安装：[梦想划词翻译—聚合词典搜索 – Firefox 扩展商店](https://addons.mozilla.org/zh-CN/firefox/addon/dream_translate/)
 
 ### 程序特点
 考虑到程序的维护时间成本，本程序采用纯原生 javascript 开发，拥有更好的性能，同时占用内存更小，没有对各种技术栈的依赖，减少了 bug 的产生和维护时间的投入。
