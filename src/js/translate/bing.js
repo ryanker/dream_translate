@@ -14,6 +14,8 @@ function bingTranslate() {
             iid: '',
             num: 0,
             date: 0,
+            paramsToken: '',
+            paramsKey: 0,
             ttsToken: '',
             ttsRegion: '',
             ttsExpiry: 0,
@@ -106,9 +108,18 @@ function bingTranslate() {
                 httpGet('https://cn.bing.com/translator').then(r => {
                     let arr = r.match(/,IG:"([^"]+)",/)
                     let tArr = r.match(/_iid="([^"]+)"/)
+                    let paramsArr = r.match(/var params_RichTranslateHelper = \[(\d+),"([^"]+)",/)
                     if (!arr) return reject('bing IG empty!')
                     if (!tArr) return reject('bing IID empty!')
-                    let token = {ig: arr[1], iid: tArr[1], num: 0, date: Math.floor(Date.now() / 36e5)}
+                    if (!paramsArr) return reject('bing paramsArr empty!')
+                    let token = {
+                        ig: arr[1],
+                        iid: tArr[1],
+                        num: 0,
+                        paramsToken: paramsArr[2],
+                        paramsKey: paramsArr[1],
+                        date: Math.floor(Date.now() / 36e5)
+                    }
                     this.setToken(token)
                     resolve(token)
                 }).catch(e => {
@@ -126,8 +137,10 @@ function bingTranslate() {
                 let ig = this.token.ig
                 let iid = this.token.iid
                 let num = ++this.token.num
+                let paramsToken = this.token.paramsToken
+                let paramsKey = this.token.paramsKey
                 let url = `https://cn.bing.com/ttranslatev3?isVertical=1&&IG=${ig}&IID=${iid}.${num}`
-                let p = new URLSearchParams(`&fromLang=${srcLan}&text=${q}&to=${tarLan}`)
+                let p = new URLSearchParams(`&fromLang=${srcLan}&text=${q}&to=${tarLan}&token=${paramsToken}&key=${paramsKey}`)
                 httpPost({url: url, body: p.toString()}).then(r => {
                     if (r) {
                         resolve(this.unify(r, q, srcLan, tarLan))
@@ -201,18 +214,20 @@ function bingTranslate() {
                 let ig = this.token.ig
                 let iid = this.token.iid
                 let num = this.token.num
-                let token = this.token.ttsToken
-                let region = this.token.ttsRegion
+                let paramsToken = this.token.paramsToken
+                let paramsKey = this.token.paramsKey
+                let ttsToken = this.token.ttsToken
+                let ttsRegion = this.token.ttsRegion
                 let expiry = this.token.ttsExpiry
 
-                let ttsBlob = (q, token, region) => {
+                let ttsBlob = (q, ttsToken, ttsRegion) => {
                     httpPost({
-                        url: `https://${region}.tts.speech.microsoft.com/cognitiveservices/v1`,
+                        url: `https://${ttsRegion}.tts.speech.microsoft.com/cognitiveservices/v1`,
                         type: 'xml',
                         responseType: 'blob',
                         headers: [
                             {name: 'X-MICROSOFT-OutputFormat', value: 'audio-16khz-32kbitrate-mono-mp3'},
-                            {name: 'Authorization', value: `Bearer ${token}`},
+                            {name: 'Authorization', value: `Bearer ${ttsToken}`},
                         ],
                         body: `<speak version='1.0' xml:lang='${l.lang}'><voice xml:lang='${l.lang}' xml:gender='${l.gender}' name='${l.name}'><prosody rate='-20.00%'>${q}</prosody></voice></speak>`,
                     }).then(r => {
@@ -228,9 +243,13 @@ function bingTranslate() {
 
                 let t = Math.floor(Date.now() / 1000)
                 if (expiry - 60 > t) {
-                    ttsBlob(q, token, region)
+                    ttsBlob(q, ttsToken, ttsRegion)
                 } else {
-                    httpPost({url: `https://cn.bing.com/tfetspktok?isVertical=1&=&IG=${ig}&IID=${iid}.${num}`}).then(r => {
+                    let p = new URLSearchParams(`token=${paramsToken}&key=${paramsKey}`)
+                    httpPost({
+                        url: `https://cn.bing.com/tfetspktok?isVertical=1&=&IG=${ig}&IID=${iid}.${num}`,
+                        body: p.toString()
+                    }).then(r => {
                         if (r && r.token && r.region && r.expiry && r.statusCode === 200) {
                             this.setToken({ttsToken: r.token, ttsRegion: r.region, ttsExpiry: r.expiry * 1})
                             ttsBlob(q, r.token, r.region)
