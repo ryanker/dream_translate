@@ -113,7 +113,7 @@ function baiduTranslate() {
             let simple_means = getJSONValue(r, 'dict_result.simple_means')
             if (simple_means) {
                 s += `<div class="case_dd">`
-                let {word_name, symbols, word_means, exchange, tags} = simple_means
+                let {word_name, symbols, word_means, exchange, memory_skill, tags} = simple_means
                 if (word_name) s += `<div class="case_dd_head">${word_name}</div>`  // 查询的单词
 
                 let getIconHTML = function (type, text, title) {
@@ -180,6 +180,11 @@ function baiduTranslate() {
                         s += `<b>${exchangeObj[k] || '其他'}</b><u>${wordStr}</u>`
                     }
                     s += `</div>`
+                }
+
+                // 记忆技巧
+                if (memory_skill) {
+                    s += `<div class="case_dd_parts"><b>记忆技巧：</b>${memory_skill}</div>`
                 }
 
                 // 单词标签
