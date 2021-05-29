@@ -164,9 +164,7 @@ async function runTranslate(tabId, m) {
     })
 
     // 自动朗读
-    setTimeout(() => {
-        autoPlayTTS(tabId, text, srcLan).then(_ => null)
-    }, 300)
+    autoPlayTTS(tabId, text, srcLan).then(_ => null)
 }
 
 function runTranslateTTS(tabId, m) {
