@@ -44,7 +44,11 @@ function init() {
     settingBoxHTML('setting_dictionary_sound_list', 'dictionarySoundList', dictionarySoundList)
 
     // 初始可替换的本机朗读参数
-    initLocalSoundReplace()
+    if (isFirefox) {
+        $('local_box').style.display = 'none'
+    } else {
+        initLocalSoundReplace()
+    }
 
     // 设置值 & 绑定事件
     setBindValue('scribble', setting.scribble)
