@@ -124,9 +124,7 @@ B.commands.onCommand.addListener(function (command) {
     } else if (command === 'cropImage') {
         cropImageSendMsg()
     } else if (command === 'stopPlayAudio') {
-        let a = window._Audio
-        if (a) a.pause()
-        if (B.tts && B.tts.stop) B.tts.stop()
+        stopAudio()
     } else if (command === 'clipboardTrans') {
         clipboardTrans()
     } else if (command === 'toggleScribble') {
@@ -498,6 +496,7 @@ async function autoPlayTTS(tabId, text, lang) {
 
 function playTTS(name, text, lang) {
     return new Promise((resolve, reject) => {
+        stopAudio()
         sdkInit(`${name}Translate`).then(sd => {
             sd.tts(text, lang).then(val => {
                 if (name === 'local') return resolve()
@@ -567,6 +566,12 @@ async function autoPlayAudio(tabId, text) {
 function getSoundUrl(arr, type) {
     for (let v of arr) if (v.type === type && !v.isWoman) return v.url
     return ''
+}
+
+function stopAudio() {
+    let a = window._Audio
+    if (a) a.pause()
+    if (B.tts && B.tts.stop) B.tts.stop()
 }
 
 function playAudio(url) {
