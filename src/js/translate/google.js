@@ -172,12 +172,24 @@ function googleTranslate() {
         trans(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh-CN'
-            return new Promise((resolve, reject) => {
+            return new Promise(async (resolve, reject) => {
                 if (q.length > 1000) return reject('The text is too large!')
                 if (!this.token.tkk) return reject('google tkk empty!')
                 let tk = this.sign(q, this.token.tkk)
-                let url = `https://translate.google.cn/translate_a/single?client=webapp&sl=${srcLan}&tl=${tarLan}&hl=${navigator.language}&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=sos&dt=ss&dt=t&otf=1&ssel=0&tsel=0&kc=1&tk=${tk}&q=${encodeURIComponent(q)}`
-                httpGet(url, 'json').then(r => {
+
+                let apiResponse, url
+                // 接口 1
+                // url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${srcLan}&tl=${tarLan}&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=sos&dt=ss&dt=t&q=${encodeURIComponent(q)}&tk=${tk}`
+                // await httpGet(url, 'json').then(r => {
+                //     apiResponse = r
+                // }).catch(function (e) {
+                //     // reject(e)
+                // })
+                // if (apiResponse) return resolve(this.unify(apiResponse, q, srcLan, tarLan))
+
+                // 接口 2
+                url = `https://translate.google.cn/translate_a/single?client=gtx&sl=${srcLan}&tl=${tarLan}&hl=${navigator.language}&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=sos&dt=ss&dt=t&otf=1&ssel=0&tsel=0&kc=1&tk=${tk}&q=${encodeURIComponent(q)}`
+                await httpGet(url, 'json').then(r => {
                     if (r) {
                         resolve(this.unify(r, q, srcLan, tarLan))
                     } else {
