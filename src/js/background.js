@@ -172,7 +172,7 @@ function runTranslateTTS(tabId, m) {
     let tList = conf.translateTTSList
     let {name, type, text, lang} = m
     let message = {action: 'playSound', nav: 'translate', name, type, status: 'end'}
-    playTTS(name, text, lang).then(() => {
+    playTTS(name === setting.localSoundReplace ? 'local' : name, text, lang).then(() => {
         sandFgMessage(tabId, message)
     }).catch(err => {
         debug(`${name} sound error:`, err)

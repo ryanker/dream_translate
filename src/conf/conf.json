@@ -18,6 +18,7 @@
     "translateTTSList": [
       "google"
     ],
+    "localSoundReplace": "",
     "translateOCR": "",
     "ocrType": "auto",
     "translateThin": "",
@@ -67,7 +68,7 @@
     "qq": "腾讯朗读",
     "sogou": "搜狗朗读",
     "frdic": "欧陆朗读",
-    "local": "本地朗读"
+    "local": "本机朗读"
   },
   "dictionaryList": {
     "youdao": "有道词典",

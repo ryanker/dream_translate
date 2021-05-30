@@ -43,6 +43,9 @@ function init() {
     settingBoxHTML('setting_dictionary_list', 'dictionaryList', conf.dictionaryList)
     settingBoxHTML('setting_dictionary_sound_list', 'dictionarySoundList', dictionarySoundList)
 
+    // 初始可替换的本机朗读参数
+    initLocalSoundReplace()
+
     // 设置值 & 绑定事件
     setBindValue('scribble', setting.scribble)
     setBindValue('excludeChinese', setting.excludeChinese)
@@ -56,6 +59,7 @@ function init() {
     setBindValue('cutHumpName', setting.cutHumpName)
     setBindValue('translateList', setting.translateList)
     setBindValue('translateTTSList', setting.translateTTSList)
+    setBindValue('localSoundReplace', setting.localSoundReplace)
     setBindValue('translateOCR', setting.translateOCR || 'CHN_ENG')
     setBindValue('ocrType', setting.ocrType)
     setBindValue('translateThin', setting.translateThin)
@@ -77,7 +81,7 @@ function init() {
     // 绑定是否显示"朗读"参数
     bindShow('setting_dictionary_reader', 'dictionarySoundList', setting.dictionarySoundList)
 
-    // 本地 TTS 设置
+    // 本机 TTS 设置
     localTtsSetting()
     searchListSetting()
 
@@ -103,6 +107,15 @@ function initSearch() {
 
     // 绑定右键菜单设置
     bindSearchMenus()
+}
+
+function initLocalSoundReplace() {
+    let s = '<option value="">默认</option>'
+    let list = conf.translateList
+    Object.keys(list).forEach(k => {
+        s += `<option value="${k}">${list[k]}朗读</option>`
+    })
+    N('localSoundReplace')[0].innerHTML = s
 }
 
 function getSearchKey(s) {
@@ -336,7 +349,7 @@ function localTtsSetting() {
     // 打开设置
     let i = document.createElement('i')
     i.className = 'dmx-icon dmx-icon-setting'
-    i.title = '本地朗读设置'
+    i.title = '本机朗读设置'
     i.onclick = function (e) {
         e.preventDefault()
         dialogEl.style.display = 'block'

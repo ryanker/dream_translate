@@ -323,8 +323,8 @@ function $(id) {
     return document.getElementById(id)
 }
 
-function N(id) {
-    return document.getElementsByName(id)
+function N(name) {
+    return document.getElementsByName(name)
 }
 
 function S(s) {
