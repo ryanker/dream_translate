@@ -386,7 +386,7 @@ function initTranslate() {
         textTmp = this.innerText
     })
     inputEl.addEventListener('keyup', function () {
-        if (isPopup) _setTimeout('translate', () => translateEl.click(), 1000) // 定时自动开始翻译
+        if (isPopup && setting.autoConfirm) _setTimeout('translate', () => translateEl.click(), 2000) // 定时自动开始翻译
     })
     isPopup && focusLast(inputEl) // 光标移到结尾
 

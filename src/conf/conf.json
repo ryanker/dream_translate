@@ -24,6 +24,7 @@
     "translateThin": "",
     "hideOriginal": "",
     "autoLanguage": "on",
+    "autoConfirm": "on",
     "dictionaryList": [
       "youdao",
       "bing",
