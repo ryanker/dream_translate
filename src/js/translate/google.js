@@ -149,6 +149,7 @@ function googleTranslate() {
             this.langMapInvert = invertObject(this.langMap)
             let str = localStorage.getItem('googleToken')
             if (str) this.token = JSON.parse(str)
+            onHeadersReceivedAddListener(onRemoveCross, {urls: ["*://translate.google.cn/translate_tts*"]})
             return this
         },
         setToken(options) {
@@ -245,7 +246,8 @@ function googleTranslate() {
                 // https://cloud.google.com/translate/docs/basic/translating-text#translate_translate_text-drest
                 let getUrl = (s) => {
                     let tk = this.sign(s, this.token.tkk)
-                    return `https://translate.google.cn/translate_tts?ie=UTF-8&q=${encodeURIComponent(s)}&tl=${lan}&total=1&idx=0&textlen=${s.length}&tk=${tk}&client=webapp&prev=input`
+                    // return `https://translate.google.cn/translate_tts?ie=UTF-8&q=${encodeURIComponent(s)}&tl=${lan}&total=1&idx=0&textlen=${s.length}&tk=${tk}&client=webapp&prev=input`
+                    return `https://translate.google.cn/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&tl=${lan}&q=${encodeURIComponent(s)}&textlen=${s.length}`
                 }
                 let r = []
                 let arr = sliceStr(q, 128)
