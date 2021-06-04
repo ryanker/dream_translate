@@ -773,7 +773,7 @@ function resultSound(m) {
         if (sEl) addClass(sEl, 'active')
     } else {
         let dEl = el.querySelectorAll(`[data-type=${type}]`)
-        rmClassD(dEl, 'active')
+        if (dEl) rmClassD(dEl, 'active')
     }
     addClass(I('dmx_voice'), 'dmx_show')
 }
