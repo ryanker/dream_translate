@@ -59,6 +59,7 @@ function init() {
     setBindValue('allowSelect', setting.allowSelect)
     setBindValue('autoCopy', setting.autoCopy)
     setBindValue('autoPaste', setting.autoPaste)
+    setBindValue('autoChange', setting.autoChange)
     setBindValue('autoWords', setting.autoWords)
     setBindValue('cutHumpName', setting.cutHumpName)
     setBindValue('translateList', setting.translateList)

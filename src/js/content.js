@@ -818,6 +818,21 @@ function sendBgCache(text) {
     }
 }
 
+// 自动切换翻译或词典
+function autoChangeAction(text) {
+    if (!setting.autoChange) return
+    let arr = text.match(/\s+/g)
+    let isWord = !arr || arr.length < 3 // 是否为单词活词组
+
+    A('#dmx_navigate > u').forEach(el => rmClass(el, 'active')) // 去掉选中
+    let onEl = E(`#dmx_navigate > u[action="${isWord ? 'dictionary' : 'translate'}"]`)
+    if (onEl) {
+        // 选中翻译或词典
+        addClass(onEl, 'active')
+        onEl.click()
+    }
+}
+
 function initQuery(text, clientX, clientY) {
     // Unicode property escapes 正则表达式:
     // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Regular_Expressions/Unicode_Property_Escapes
@@ -843,6 +858,7 @@ function initQuery(text, clientX, clientY) {
 
     if (setting.scribble === 'off') return
     if (setting.scribble === 'direct') {
+        autoChangeAction(text) // 自动切换翻译或词典
         sendQuery(text) // 划词查询
         showDialog(clientX + 30, clientY - 60)
     } else if (setting.scribble === 'clickIcon') {
