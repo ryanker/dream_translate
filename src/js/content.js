@@ -765,7 +765,7 @@ function resultLink(m) {
 
 function resultSound(m) {
     let {nav, name, type, status, error} = m
-    if (error) dmxAlert(error, 'error')
+    // if (error) dmxAlert(error, 'error') // 播放声音出错提示
     let el = I(`${name}_${nav}_case`)
     if (!el) return
     if (status === 'start') {
