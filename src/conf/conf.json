@@ -16,9 +16,7 @@
       "google",
       "youdao"
     ],
-    "translateTTSList": [
-      "google"
-    ],
+    "translateTTSList": [],
     "localSoundReplace": "",
     "translateOCR": "",
     "ocrType": "auto",
