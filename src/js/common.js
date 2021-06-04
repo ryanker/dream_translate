@@ -232,9 +232,9 @@ function onRemoveFrame(details) {
     let headers = Object.assign([], details.responseHeaders)
     for (let i = 0; i < headers.length; i++) {
         let name = headers[i].name.toLowerCase()
-        if (name.includes('frame-options') || name.includes('content-security-policy') || name.includes('cross-origin-resource-policy')) {
+        if (name.includes('frame-options') || name.includes('content-security-policy')) {
             headers.splice(i, 1)
-            break
+            // break
         }
     }
     return {responseHeaders: headers}
@@ -246,7 +246,7 @@ function onRemoveCross(details) {
         let name = headers[i].name.toLowerCase()
         if (name.includes('cross-origin-resource-policy') || name.includes('cross-origin-opener-policy')) {
             headers.splice(i, 1)
-            break
+            // break
         }
     }
     return {responseHeaders: headers}
