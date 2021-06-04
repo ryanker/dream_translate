@@ -239,13 +239,13 @@ function googleTranslate() {
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'
             return new Promise(async (resolve, reject) => {
-                if (!this.token.tkk) await sleep(1000) // 第一次没获取到 tkk, 等待 1 秒后再次尝试
-                if (!this.token.tkk) return reject('google tkk empty!')
+                // if (!this.token.tkk) await sleep(1000) // 第一次没获取到 tkk, 等待 1 秒后再次尝试
+                // if (!this.token.tkk) return reject('google tkk empty!')
                 // 备用 See:
                 // https://cloud.google.com/text-to-speech
                 // https://cloud.google.com/translate/docs/basic/translating-text#translate_translate_text-drest
                 let getUrl = (s) => {
-                    let tk = this.sign(s, this.token.tkk)
+                    // let tk = this.sign(s, this.token.tkk)
                     // return `https://translate.google.cn/translate_tts?ie=UTF-8&q=${encodeURIComponent(s)}&tl=${lan}&total=1&idx=0&textlen=${s.length}&tk=${tk}&client=webapp&prev=input`
                     return `https://translate.google.cn/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&tl=${lan}&q=${encodeURIComponent(s)}&textlen=${s.length}`
                 }
