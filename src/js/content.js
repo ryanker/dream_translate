@@ -1060,15 +1060,21 @@ function setDialogConf(name, value) {
 
 function allowUserSelect() {
     dmxAlert('解除页面限制完成', 'success')
-    if (window.dmxAllowUserSelect) return
-    window.dmxAllowUserSelect = true
-    let sty = document.createElement('style')
-    sty.textContent = `* {-webkit-user-select:text!important;-moz-user-select:text!important;user-select:text!important}`
-    document.head.appendChild(sty)
+    let styleEl = document.getElementById('_dream_style_all')
+    if (!styleEl) {
+        let sEl = document.createElement('style')
+        sEl.id = '_dream_style_all'
+        sEl.textContent = `* {-webkit-user-select:text!important;-moz-user-select:text!important;user-select:text!important}`
+        document.head.appendChild(sEl)
+    }
 
     let onAllow = function (el, event) {
         if (el.getAttribute && el.getAttribute(event)) el.setAttribute(event, () => true)
     }
+    onAllow(document, 'oncontextmenu')
+    onAllow(document, 'onselectstart')
+
+    // 清除再添加，排除重复事件
     let onClean = function (e) {
         e.stopPropagation()
         let el = e.target
@@ -1077,8 +1083,8 @@ function allowUserSelect() {
             el = el.parentNode
         }
     }
-    onAllow(document, 'oncontextmenu')
-    onAllow(document, 'onselectstart')
+    document.removeEventListener('contextmenu', onClean, true)
+    document.removeEventListener('selectstart', onClean, true)
     document.addEventListener('contextmenu', onClean, true)
     document.addEventListener('selectstart', onClean, true)
 }
