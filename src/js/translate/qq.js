@@ -226,7 +226,7 @@ Sec-Fetch-Site: same-origin`
             })
         },
         link(q, srcLan, tarLan) {
-            return `https://fanyi.qq.com/?tn=dream_translate`
+            return `https://fanyi.qq.com/?d_sl=${srcLan}&d_tl=${tarLan}&d_text=${encodeURIComponent(q)}`
         },
     }
 }

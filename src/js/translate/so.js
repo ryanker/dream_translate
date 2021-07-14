@@ -84,7 +84,7 @@ Sec-Fetch-Site: same-origin`
             })
         },
         link(q, srcLan, tarLan) {
-            return `https://fanyi.so.com/?tn=dream_translate#${q}`
+            return `https://fanyi.so.com/?src=dream_translate#${q}`
         },
     }
 }

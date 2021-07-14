@@ -116,7 +116,7 @@ sec-fetch-site: same-origin`
             })
         },
         link(q, srcLan, tarLan) {
-            return `https://translate.alibaba.com/?tn=dream_translate`
+            return `https://translate.alibaba.com/?d_sl=${srcLan}&d_tl=${tarLan}&d_text=${encodeURIComponent(q)}`
         },
     }
 }
