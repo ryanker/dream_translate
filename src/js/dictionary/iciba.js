@@ -25,7 +25,7 @@ function icibaDictionary() {
             if (jEl) {
                 try {
                     data = JSON.parse(jEl.textContent)
-                    if (data) basic = getJSONValue(data, 'props.initialDvaState.word.wordInfo.baesInfo', {})
+                    if (data) basic = getJSONValue(data, 'props.pageProps.initialReduxState.word.wordInfo.baesInfo', {})
                 } catch (e) {
                 }
             }
