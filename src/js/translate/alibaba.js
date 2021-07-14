@@ -28,17 +28,17 @@ function alibabaTranslate() {
         pairMap: {
             "auto": ["en"],
             "en": ["zh", "ru", "es", "fr", "ar", "tr", "pt", "th", "id", "vi"],
-            "zh": ["en"],
+            "zh": ["en", "vi"],
             "ru": ["en", "es", "tr", "it", "fr", "pt"],
             "es": ["en", "ru", "tr", "it", "fr", "pt"],
             "fr": ["en", "ru", "tr", "it", "es", "pt"],
-            "ar": ["en"],
+            "ar": ["en", "zh"],
             "tr": ["en", "ru", "fr", "it", "es", "pt"],
             "pt": ["en", "ru", "fr", "it", "es", "tr"],
             "it": ["en", "ru", "fr", "pt", "es", "tr"],
-            "th": ["en"],
-            "id": ["en"],
-            "vi": ["en"]
+            "th": ["en", "zh"],
+            "id": ["en", "zh"],
+            "vi": ["en", "zh"]
         },
         init() {
             this.langMapInvert = invertObject(this.langMap)
