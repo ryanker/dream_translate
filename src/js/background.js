@@ -245,7 +245,7 @@ async function getOcrText(tabId, base64) {
     await getOcrToken().then(token => {
         access_token = token
     }).catch(err => {
-        sendTabMessage(tabId, {action: 'onAlert', message: err, type: 'error'})
+        sandFgMessage(tabId, {action: 'onAlert', message: err, type: 'error'})
     })
     if (!access_token) return
 
@@ -258,12 +258,12 @@ async function getOcrText(tabId, base64) {
         if (wordsRes && wordsRes.length > 0) {
             let text = ''
             for (let v of wordsRes) text += v.words + '\n'
-            sendTabMessage(tabId, {action: 'contextMenus', text: text.trim()})
+            sandFgMessage(tabId, {action: 'contextMenus', text: text.trim()})
         } else {
-            sendTabMessage(tabId, {action: 'onAlert', message: '百度图片识别失败', type: 'error'})
+            sandFgMessage(tabId, {action: 'onAlert', message: '百度图片识别失败', type: 'error'})
         }
     }).catch(e => {
-        sendTabMessage(tabId, {action: 'onAlert', message: '百度图片识别 API 出错', type: 'error'})
+        sandFgMessage(tabId, {action: 'onAlert', message: '百度图片识别 API 出错', type: 'error'})
         debug('baidu ocr error:', e)
     })
 }
