@@ -380,7 +380,22 @@ function initTranslate() {
     inputEl.addEventListener('paste', function (e) {
         e.stopPropagation()
         e.preventDefault()
-        this.innerText = (e.clipboardData || window.clipboardData).getData('Text')
+        let d = e.clipboardData || window.clipboardData
+        if (d && d.items.length > 0) {
+            let f = d.items[0].getAsFile()
+            if (f && f.type.indexOf('image') === 0) {
+                // 如果粘贴内容是图片，进行图片文字识别
+                let fr = new FileReader()
+                fr.readAsDataURL(f)
+                fr.onload = function (e) {
+                    let base64 = e.target.result
+                    sendBgMessage({action: 'img2text', base64})
+                }
+            } else {
+                // 如果是文本，则清理一下
+                this.innerText = d.getData('Text')
+            }
+        }
     })
     inputEl.addEventListener('blur', function () {
         textTmp = this.innerText

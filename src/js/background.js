@@ -111,6 +111,8 @@ B.onMessage.addListener(function (m, sender, sendResponse) {
         saveSearchText(m.searchText)
     } else if (m.action === 'onCapture') {
         setTimeout(_ => capturePic(sender.tab, m), 100)
+    } else if (m.action === 'img2text') {
+        getOcrText(tabId, m.base64).catch()
     } else if (m.action === 'textTmp') {
         textTmp = m.text // 划词文字缓存
     }
@@ -236,7 +238,8 @@ function capturePic(tab, m) {
     })
 }
 
-async function getOcrText(tabId, b) {
+// 图片文字识别
+async function getOcrText(tabId, base64) {
     // 获取 token
     let access_token = ''
     await getOcrToken().then(token => {
@@ -248,7 +251,8 @@ async function getOcrText(tabId, b) {
 
     // see https://cloud.baidu.com/doc/OCR/s/zk3h7xz52
     let url = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=' + access_token
-    let p = new URLSearchParams(`image=${encodeURIComponent(b.substr(b.indexOf(",") + 1))}&detect_language=true&language_type=${setting.translateOCR || 'CHN_ENG'}`)
+    let b = base64.substr(base64.indexOf(",") + 1)
+    let p = new URLSearchParams(`image=${encodeURIComponent(b)}&detect_language=true&language_type=${setting.translateOCR || 'CHN_ENG'}`)
     httpPost({url, body: p.toString()}).then(r => {
         let wordsRes = getJSONValue(r, 'words_result')
         if (wordsRes && wordsRes.length > 0) {
