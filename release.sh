@@ -3,7 +3,7 @@
 DIST=./dist
 DIST2=./dist_firefox
 
-# ======== Chrome Edge ========
+# ======== Chrome & Edge ========
 # 拷贝
 echo "cp to ... $DIST"
 mkdir -p $DIST
