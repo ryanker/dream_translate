@@ -83,26 +83,9 @@ function hjdictDictionary() {
                 let url = `https://www.hjdict.com/w/${encodeURIComponent(q)}`
                 httpGet(url, 'document', null, true).then(r => {
                     if (r) {
-                        let d = this.unify(r, q)
-                        if (d.error) {
-                            createTmpTab('hjDict', url)
-                            setTimeout(() => reloadTmpTab('hjDict'), 200)
-                            setTimeout(() => {
-                                httpGet(url, 'document', null, true).then(r => {
-                                    if (r) {
-                                        resolve(this.unify(r, q))
-                                    } else {
-                                        reject('hjdict.com empty!')
-                                    }
-                                }).catch(e => {
-                                    reject(e)
-                                })
-                            }, 500)
-                        } else {
-                            resolve(d)
-                        }
+                        resolve(this.unify(r, q))
                     } else {
-                        reject('hjdict.com error!')
+                        reject('hjdict.com empty!')
                     }
                 }).catch(e => {
                     reject(e)
