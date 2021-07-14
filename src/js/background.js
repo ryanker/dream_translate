@@ -222,7 +222,7 @@ function cropImageSendMsg() {
 function capturePic(tab, m) {
     B.tabs.captureVisibleTab(tab.windowId, {}, function (data) {
         let im = document.createElement("img")
-        im.onload = async function () {
+        im.onload = function () {
             let ca = document.createElement("canvas")
             ca.width = m.width
             ca.height = m.height
@@ -230,34 +230,37 @@ function capturePic(tab, m) {
             let t = im.height / m.innerHeight
             ca2d.drawImage(im, m.startX * t, m.startY * t, m.width * t, m.height * t, 0, 0, m.width, m.height)
             let b = ca.toDataURL("image/jpeg")
-
-            // 获取 token
-            let access_token = ''
-            await getOcrToken().then(token => {
-                access_token = token
-            }).catch(err => {
-                sendTabMessage(tab.id, {action: 'onAlert', message: err, type: 'error'})
-            })
-            if (!access_token) return
-
-            // see https://cloud.baidu.com/doc/OCR/s/zk3h7xz52
-            let url = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=' + access_token
-            let p = new URLSearchParams(`image=${encodeURIComponent(b.substr(b.indexOf(",") + 1))}&detect_language=true&language_type=${setting.translateOCR || 'CHN_ENG'}`)
-            httpPost({url, body: p.toString()}).then(r => {
-                let wordsRes = getJSONValue(r, 'words_result')
-                if (wordsRes && wordsRes.length > 0) {
-                    let text = ''
-                    for (let v of wordsRes) text += v.words + '\n'
-                    sendTabMessage(tab.id, {action: 'contextMenus', text: text.trim()})
-                } else {
-                    sendTabMessage(tab.id, {action: 'onAlert', message: '百度图片识别失败', type: 'error'})
-                }
-            }).catch(e => {
-                sendTabMessage(tab.id, {action: 'onAlert', message: '百度图片识别 API 出错', type: 'error'})
-                debug('baidu ocr error:', e)
-            })
+            getOcrText(tab.id, b).catch()
         }
         im.src = data
+    })
+}
+
+async function getOcrText(tabId, b) {
+    // 获取 token
+    let access_token = ''
+    await getOcrToken().then(token => {
+        access_token = token
+    }).catch(err => {
+        sendTabMessage(tabId, {action: 'onAlert', message: err, type: 'error'})
+    })
+    if (!access_token) return
+
+    // see https://cloud.baidu.com/doc/OCR/s/zk3h7xz52
+    let url = 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic?access_token=' + access_token
+    let p = new URLSearchParams(`image=${encodeURIComponent(b.substr(b.indexOf(",") + 1))}&detect_language=true&language_type=${setting.translateOCR || 'CHN_ENG'}`)
+    httpPost({url, body: p.toString()}).then(r => {
+        let wordsRes = getJSONValue(r, 'words_result')
+        if (wordsRes && wordsRes.length > 0) {
+            let text = ''
+            for (let v of wordsRes) text += v.words + '\n'
+            sendTabMessage(tabId, {action: 'contextMenus', text: text.trim()})
+        } else {
+            sendTabMessage(tabId, {action: 'onAlert', message: '百度图片识别失败', type: 'error'})
+        }
+    }).catch(e => {
+        sendTabMessage(tabId, {action: 'onAlert', message: '百度图片识别 API 出错', type: 'error'})
+        debug('baidu ocr error:', e)
     })
 }
 
