@@ -1079,7 +1079,7 @@ function allowUserSelect() {
     if (!styleEl) {
         let sEl = document.createElement('style')
         sEl.id = '_dream_style_all'
-        sEl.textContent = `* {-webkit-user-select:text!important;-moz-user-select:text!important;user-select:text!important}`
+        sEl.textContent = `* {-webkit-user-select:text!important;-moz-user-select:text!important;user-select:text!important;pointer-events:auto!important;}`
         document.head.appendChild(sEl)
     }
 
