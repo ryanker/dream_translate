@@ -340,9 +340,10 @@ function playerInit(key, type) {
             } else {
                 days++
             }
+            practiceDate = new Date().toJSON()
             row.records = records
             row.days = days
-            practiceDate = new Date().toJSON()
+            row.practiceDate = practiceDate
             db.update('sentence', row.id, {records, days, practiceDate})
         }
     }
