@@ -173,6 +173,7 @@ function baiduTranslate() {
                     }
                     s += `<div class="case_dd_exchange">`
                     for (let [k, v] of Object.entries(exchange)) {
+                        if (!v) continue
                         let wordStr = ''
                         v.forEach(word => {
                             if (word) wordStr += `<a data-search="true">${word}</a>`
