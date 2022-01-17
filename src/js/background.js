@@ -737,11 +737,10 @@ function cleanPopup(url) {
 
 // 创建一个临时标签
 function createTmpTab(id, url, timeout) {
-    timeout = timeout || 20 * 1000 // 默认 20 秒
     let tabName = `_tmp_tab_${id || 'one'}`
     removeTmpTab(id) // 关闭
     B.tabs.create({active: false, url}, tab => window[tabName] = tab.id)
-    _setTimeout(id, () => removeTmpTab(tabName), timeout)  // 定时关闭窗口，减少内存占用
+    if (timeout > 1000) _setTimeout(id, () => removeTmpTab(id), timeout)  // 定时关闭窗口，减少内存占用
 }
 
 // 关闭临时标签

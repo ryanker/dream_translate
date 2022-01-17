@@ -60,79 +60,53 @@ function qqTranslate() {
             let str = localStorage.getItem('qqToken')
             if (str) this.token = JSON.parse(str)
             this.getCookieAll()
+
+            // 30s刷新页面
+            setInterval(() => {
+                this.getToken().catch(err => debug('qq getToken error:', err))
+            }, 30 * 1000)
             return this
         },
         setToken(options) {
             this.token = Object.assign(this.token, options)
             localStorage.setItem('qqToken', JSON.stringify(this.token))
         },
-        openHomeByIframe() {
-            return new Promise((resolve) => {
-                // 取消 Frame 嵌入限制
-                onHeadersReceivedAddListener(onRemoveFrame, {urls: ["*://fanyi.qq.com/*"]})
-
-                // 打开首页，方便后面捕捉到最新 auth 链接，30 秒后关闭 iframe，减小内存占用
-                let pageId = 'fy_qq'
-                openIframe(pageId, 'https://fanyi.qq.com/', 30 * 1000)
-
-                /*setTimeout(() => {
-                    this.getCookieAll(() => {
-                        let qtk = this.getCookie('qtk')
-                        let qtv = this.getCookie('qtv')
-                        let token = {qtv, qtk}
-                        this.setToken(token)
-                        resolve(token)
-                    })
-                }, 1000)*/
-                setTimeout(resolve, 2000)
-            })
-        },
         getToken() {
             return new Promise((resolve, reject) => {
-                // 2021.1.8 修正改版
-                // 2021.4.7 优化版
-                // todo: 腾讯做的不怎么样，还老改版，浪费时间。收购了搜狗，看样子这个部门要被合并掉了！
-                let qtv = this.token.qtv
-                let qtk = this.token.qtk
-                let body = ''
-                if (qtv && qtk) body = `qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}`
-                let url = localStorage['qqAuthUrl'] || 'https://fanyi.qq.com/api/reauth1232f'
-                httpPost({url, body: body}).then(r => {
-                    if (r) {
-                        let token = {qtv: r.qtv, qtk: r.qtk}
-                        this.setToken(token)
-                        this.setCookie('qtk', r.qtk)
-                        this.setCookie('qtv', r.qtv)
-                        resolve(token)
-                    } else {
-                        reject('qq reaauth error!')
-                    }
+                httpGet('https://fanyi.qq.com/').then(r => {
+                    let arr = r.match(/var reauthuri = "(.+)";/)
+                    if (!arr) return reject('qq reauthuri empty!')
+                    let reauthuri = arr[1]
+
+                    let qtv = this.token.qtv
+                    let qtk = this.token.qtk
+                    let body = ''
+                    if (qtv && qtk) body = `qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}`
+                    httpPost({url: 'https://fanyi.qq.com/api/' + reauthuri, body: body}).then(r => {
+                        if (r) {
+                            let token = {qtv: r.qtv, qtk: r.qtk}
+                            this.setToken(token)
+                            this.setCookie('qtk', r.qtk)
+                            this.setCookie('qtv', r.qtv)
+                            resolve(token)
+                        } else {
+                            reject('qq reaauth error!')
+                        }
+                    }).catch(e => {
+                        reject(e)
+                    })
                 }).catch(e => {
                     reject(e)
                 })
-                /*httpGet('https://fanyi.qq.com/').then(r => {
-                    let arr = r.match(/var qtv = "([^"]+)";/)
-                    let tArr = r.match(/var qtk = "([^"]+)";/)
-                    if (!arr) return reject('qq gtk empty!')
-                    if (!tArr) return reject('qq token empty!')
-                    let token = {qtv: arr[1], qtk: tArr[1], date: Math.floor(Date.now() / 36e5)}
-                    this.setToken(token)
-                    resolve(token)
-                }).catch(e => {
-                    reject(e)
-                })*/
             })
         },
         rep(s) {
             return s.replace(/\+/g, '%2B')
         },
-        addListenerRequest() {
-            onBeforeSendHeadersAddListener(this.onChangeHeaders, {urls: ['*://fanyi.qq.com/api/*']})
-        },
-        removeListenerRequest() {
-            onBeforeSendHeadersRemoveListener(this.onChangeHeaders)
-        },
-        onChangeHeaders(details) {
+        // addListenerRequest() {
+        //     onBeforeSendHeadersAddListener(this.onChangeHeaders, {urls: ['*://fanyi.qq.com/api/*']})
+        // },
+        /*onChangeHeaders(details) {
             // 获取最新 auth 链接
             if (details.url && details.url.includes('auth')) {
                 localStorage['qqAuthUrl'] = details.url
@@ -145,14 +119,7 @@ Sec-Fetch-Dest: empty
 Sec-Fetch-Mode: cors
 Sec-Fetch-Site: same-origin`
             return {requestHeaders: details.requestHeaders.concat(requestHeadersFormat(s))}
-        },
-        onRequest() {
-            if (this.timeoutId) {
-                clearTimeout(this.timeoutId)
-                this.timeoutId = null
-            }
-            this.timeoutId = setTimeout(this.removeListenerRequest, 30000)
-        },
+        },*/
         trans(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh'
@@ -162,16 +129,14 @@ Sec-Fetch-Site: same-origin`
                 let qtv = this.token.qtv
                 let qtk = this.token.qtk
                 let uuid = 'translate_uuid' + (new Date).getTime()
-                let p = `source=${srcLan}&target=${tarLan}&sourceText=${encodeURIComponent(q)}&qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}&sessionUuid=${uuid}`
+                let p = `source=${srcLan}&target=${tarLan}&sourceText=${encodeURIComponent(q)}&qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}&ticket=&randstr=&sessionUuid=${uuid}`
                 httpPost({url: 'https://fanyi.qq.com/api/translate', body: p}).then(r => {
-                    this.removeListenerRequest()
                     if (r) {
                         resolve(this.unify(r, q, srcLan, tarLan))
                     } else {
                         reject('qq translate error!')
                     }
                 }).catch(e => {
-                    this.removeListenerRequest()
                     reject(e)
                 })
             })
@@ -192,12 +157,9 @@ Sec-Fetch-Site: same-origin`
             return ret
         },
         async query(q, srcLan, tarLan) {
-            this.addListenerRequest()
-            return checkRetry(async (i) => {
-                if (i === 1) await this.openHomeByIframe()
-                await this.getToken().catch(err => debug('qq getToken error:', err))
+            return checkRetry(async () => {
                 return this.trans(q, srcLan, tarLan)
-            })
+            }, 2)
         },
         setCookie(name, value) {
             let domain = 'fanyi.qq.com'
@@ -219,7 +181,6 @@ Sec-Fetch-Site: same-origin`
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'
             return new Promise((resolve) => {
-                this.onRequest()
                 let guid = this.getCookie('fy_guid')
                 // todo: 腾讯 TTS 服务很不稳定
                 resolve(`https://fanyi.qq.com/api/tts?platform=PC_Website&lang=${lan}&text=${encodeURIComponent(q)}&guid=${guid}`)
