@@ -157,7 +157,7 @@ function sogouTranslate() {
                         let s = el.textContent
                         if (!s) continue
                         let arr = s.match(/window\.__INITIAL_STATE__=(.*?);\(function\(\){var s;/m)
-                        if (arr.length < 2) continue
+                        if (!arr || arr.length < 2) continue
                         try {
                             data = JSON.parse(arr[1])
                             if (data) break
@@ -284,7 +284,7 @@ function sogouTranslate() {
             return {text, srcLan, tarLan, lanTTS: null, data, extra: s}
         },
         async query(q, srcLan, tarLan) {
-            return checkRetry(() => this.trans(q, srcLan, tarLan))
+            return checkRetry(() => this.trans(q, srcLan, tarLan), 2)
         },
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'
