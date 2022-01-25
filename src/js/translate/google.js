@@ -11,6 +11,9 @@ function googleTranslate() {
     return {
         token: {
             tkk: '',
+            tk1: '',
+            tk2: '',
+            tk3: '',
         },
         langMap: {
             "auto": "auto",
@@ -170,6 +173,25 @@ function googleTranslate() {
                 })
             })
         },
+        getTokenNew() {
+            return new Promise((resolve, reject) => {
+                httpGet('https://translate.google.cn', 'text').then(r => {
+                    let arr1 = r.match(/"FdrFJe":"(.*?)"/)
+                    if (!arr1) return reject('google tk1 empty!')
+                    let arr2 = r.match(/"cfb2h":"(.*?)"/)
+                    if (!arr2) return reject('google tk2 empty!')
+                    let arr3 = r.match(/"SNlM0e":"(.*?)"/)
+
+                    let token = {tk1: arr1[1], tk2: arr2[1]}
+                    if (arr3 && arr3[1]) token.tk3 = arr3[1]
+                    token.date = Date.now()
+                    this.setToken(token)
+                    resolve(token)
+                }).catch(function (e) {
+                    reject(e)
+                })
+            })
+        },
         trans(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh-CN'
@@ -187,6 +209,45 @@ function googleTranslate() {
                         reject('google translate error!')
                     }
                 }).catch(function (e) {
+                    reject(e)
+                })
+            })
+        },
+        transNew(q, srcLan, tarLan) {
+            srcLan = this.langMap[srcLan] || 'auto'
+            tarLan = this.langMap[tarLan] || 'zh-CN'
+            return new Promise(async (resolve, reject) => {
+                if (q.length > 1000) return reject('The text is too large!')
+
+                let t = this.token
+                if (!t.tk1) return reject('google tk1 empty!')
+                if (!t.tk2) return reject('google tk2 empty!')
+
+                let req = JSON.stringify([[["MkEWBc", JSON.stringify([[q, srcLan, tarLan, !0], [null]]), null, "generic"]]])
+                let p = new URLSearchParams(`f.req=${req}&at=${t.tk3 || ''}`)
+                let rid = Math.floor(1e3 + 9e3 * Math.random())
+                this.addListenerRequest()
+                httpPost({
+                    url: `https://translate.google.cn/_/TranslateWebserverUi/data/batchexecute?rpcids=MkEWBc&f.sid=${t.tk1}&bl=${t.tk2}&hl=zh-CN&soc-app=1&soc-platform=1&soc-device=1&_reqid=${rid}&rt=c`,
+                    body: p.toString(),
+                    responseType: 'text'
+                }).then(r => {
+                    this.removeListenerRequest()
+                    if (!r) return reject('google translate error!')
+
+                    let arr = r.split('\n')
+                    if (!arr[3]) return reject('google translate error No.1!')
+
+                    let arr2 = JSON.parse(arr[3])
+                    if (!arr2[0] || !arr2[0][2]) return reject('google translate error No.2!')
+
+                    let arr3 = JSON.parse(arr2[0][2])
+                    // console.log(arr3)
+                    // console.log(JSON.stringify(arr3))
+
+                    resolve(this.unifyNew(arr3, q, srcLan, tarLan))
+                }).catch(e => {
+                    this.removeListenerRequest()
                     reject(e)
                 })
             })
@@ -214,16 +275,80 @@ function googleTranslate() {
             }
             return ret
         },
+        unifyNew(r, q, srcLan, tarLan) {
+            // console.log('google:', r, q, srcLan, tarLan)
+            let rt = getJSONValue(r, '2')
+            let arr1 = getJSONValue(r, '0.4')
+            let arr2 = getJSONValue(r, '1.0.0.5')
+            // console.log(rt, arr1, arr2)
+            if (srcLan === 'auto' && rt[3]) srcLan = rt[3]
+            let map = this.langMapInvert
+            srcLan = map[srcLan] || 'auto'
+            tarLan = map[tarLan] || ''
+            let ret = {text: q, srcLan: srcLan, tarLan: tarLan, lanTTS: null, data: []}
+
+            let i = 0
+            arr1 && arr1.forEach(v => {
+                let srcText = v[0].trim()
+                let tarText = getJSONValue(arr2, `${i}.0`)
+                if (srcText && tarText) {
+                    ret.data.push({srcText, tarText})
+                    i++
+                }
+            })
+
+            // 单词详情
+            let arr3 = getJSONValue(r, '3.5.0')
+            if (!setting.translateThin && arr3 && isArray(arr3)) {
+                let word = getJSONValue(r, '3.0')
+                let s = ''
+                if (word) s += `<div class="case_dd_head">${word}</div>`  // 查询的单词
+                s += `<div class="case_dd_parts">`
+                arr3.forEach(v => {
+                    if (v[0] && v[1]) {
+                        if (v[1] && isArray(v[1])) {
+                            let a2 = []
+                            v[1].forEach(v2 => {
+                                a2.push(v2[0])
+                            })
+                            s += `<p>${v[0] ? `<b>${v[0]}</b>` : ''}${a2.join('；')}</p>`
+                        }
+                    }
+                })
+                s += `</div>`
+                ret.extra = `<div class="case_dd">${s}</div>`
+            }
+            return ret
+        },
         async query(q, srcLan, tarLan, noCache) {
             return checkRetry(async (i) => {
-                let t = Math.floor(Date.now() / 36e5)
-                let d = this.token.tkk
-                if (i > 0) noCache = true
-                if (noCache || !d || Number(d.split('.')[0]) !== t) {
-                    await this.getToken().catch(err => console.warn(err))
+                if (i === 1) {
+                    let t = Math.floor(Date.now() / 36e5)
+                    let d = this.token.tkk
+                    if (i > 0) noCache = true
+                    if (noCache || !d || Number(d.split('.')[0]) !== t) {
+                        await this.getToken().catch(err => console.warn(err))
+                    }
+                    return this.trans(q, srcLan, tarLan)
+                } else {
+                    if (Date.now() - this.token.date > 3e5) {
+                        await this.getTokenNew().catch(err => console.warn(err))
+                    }
+                    return this.transNew(q, srcLan, tarLan)
                 }
-                return this.trans(q, srcLan, tarLan)
             })
+        },
+        addListenerRequest() {
+            onBeforeSendHeadersAddListener(this.onChangeHeaders,
+                {urls: ['*://translate.google.cn/*'], types: ['xmlhttprequest']})
+        },
+        removeListenerRequest() {
+            onBeforeSendHeadersRemoveListener(this.onChangeHeaders)
+        },
+        onChangeHeaders(details) {
+            let s = `origin: https://translate.google.com
+referer: https://translate.google.com`
+            return {requestHeaders: details.requestHeaders.concat(requestHeadersFormat(s))}
         },
         tts(q, lan) {
             lan = this.langMap[lan] || 'en'
