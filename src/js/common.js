@@ -662,6 +662,13 @@ function _clearTimeout(tid) {
     }
 }
 
+function encodeURI(s) {
+    s = encodeURIComponent(s)
+    s = s.replace(/#/g, '%23')
+    s = s.replace(/&/g, '%26')
+    return s
+}
+
 function debug(...data) {
     isDebug && console.log('[DMX DEBUG]', ...data)
 }

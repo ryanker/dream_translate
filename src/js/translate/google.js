@@ -200,8 +200,8 @@ function googleTranslate() {
                 if (!this.token.tkk) return reject('google tkk empty!')
                 let tk = this.sign(q, this.token.tkk)
 
-                // let url = `https://translate.google.cn/translate_a/single?client=webapp&sl=${srcLan}&tl=${tarLan}&hl=${navigator.language}&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=sos&dt=ss&dt=t&otf=1&ssel=0&tsel=0&kc=1&tk=${tk}&q=${encodeURIComponent(q)}`
-                let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${srcLan}&tl=${tarLan}&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=sos&dt=ss&dt=t&otf=1&ssel=0&tsel=0&kc=1&&q=${encodeURIComponent(q)}&tk=${tk}`
+                // let url = `https://translate.google.cn/translate_a/single?client=webapp&sl=${srcLan}&tl=${tarLan}&hl=${navigator.language}&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=sos&dt=ss&dt=t&otf=1&ssel=0&tsel=0&kc=1&tk=${tk}&q=${encodeURI(q)}`
+                let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${srcLan}&tl=${tarLan}&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=sos&dt=ss&dt=t&otf=1&ssel=0&tsel=0&kc=1&&q=${encodeURI(q)}&tk=${tk}`
                 await httpGet(url, 'json').then(r => {
                     if (r) {
                         resolve(this.unify(r, q, srcLan, tarLan))
@@ -361,9 +361,9 @@ referer: https://translate.google.com`
                 let getUrl = (s) => {
                     // 2021.6.4 google TTS 官方接口调整后，声音变的比以前难听多了，耳朵有点难受。
                     // let tk = this.sign(s, this.token.tkk)
-                    // return `https://translate.google.cn/translate_tts?ie=UTF-8&q=${encodeURIComponent(s)}&tl=${lan}&total=1&idx=0&textlen=${s.length}&tk=${tk}&client=webapp&prev=input`
-                    return `https://translate.googleapis.com/translate_tts?client=gtx&tl=${lan}&ie=UTF-8&q=${encodeURIComponent(s)}`
-                    // return `https://translate.google.cn/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&tl=${lan}&q=${encodeURIComponent(s)}&textlen=${s.length}`
+                    // return `https://translate.google.cn/translate_tts?ie=UTF-8&q=${encodeURI(s)}&tl=${lan}&total=1&idx=0&textlen=${s.length}&tk=${tk}&client=webapp&prev=input`
+                    return `https://translate.googleapis.com/translate_tts?client=gtx&tl=${lan}&ie=UTF-8&q=${encodeURI(s)}`
+                    // return `https://translate.google.cn/translate_tts?ie=UTF-8&total=1&idx=0&client=tw-ob&tl=${lan}&q=${encodeURI(s)}&textlen=${s.length}`
                 }
                 let r = []
                 let arr = sliceStr(q, 128)
@@ -376,7 +376,7 @@ referer: https://translate.google.com`
         link(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh-CN'
-            return `https://translate.google.cn/?sl=${srcLan}&tl=${tarLan}&text=${encodeURIComponent(q)}&op=translate`
+            return `https://translate.google.cn/?sl=${srcLan}&tl=${tarLan}&text=${encodeURI(q)}&op=translate`
         },
     }
 }
