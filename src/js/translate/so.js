@@ -36,8 +36,8 @@ Sec-Fetch-Site: same-origin`
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
                 this.addListenerRequest()
-                let url = `https://fanyi.so.com/index/search?eng=${eng}&validate=&ignore_trans=0&query=${encodeURIComponent(q)}`
-                let p = new URLSearchParams(`eng=${eng}&validate=&ignore_trans=0&query=${encodeURIComponent(q)}`)
+                let url = `https://fanyi.so.com/index/search?eng=${eng}&validate=&ignore_trans=0&query=${encodeURI(q)}`
+                let p = new URLSearchParams(`eng=${eng}&validate=&ignore_trans=0&query=${encodeURI(q)}`)
                 httpPost({url: url, body: p.toString()}).then(r => {
                     this.removeListenerRequest()
                     if (r) {

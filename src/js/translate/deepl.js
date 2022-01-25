@@ -40,7 +40,7 @@ function deeplTranslate() {
 
                 // popup 框
                 let pageId = 'fy_DeepL'
-                let url = `https://www.deepl.com/translator#${srcLan}/${tarLan}/${encodeURIComponent(q)}`
+                let url = `https://www.deepl.com/translator#${srcLan}/${tarLan}/${encodeURI(q)}`
                 // console.log('url:', url)
                 openIframe(pageId, url, 60 * 1000)
 
@@ -142,7 +142,7 @@ function deeplTranslate() {
             lan = this.langMap[lan] || 'en'
             return new Promise((resolve) => {
                 let getUrl = (s) => {
-                    return `https://fanyi.sogou.com/reventondc/synthesis?text=${encodeURIComponent(s)}&speed=1&lang=${lan}&from=translateweb&speaker=4`
+                    return `https://fanyi.sogou.com/reventondc/synthesis?text=${encodeURI(s)}&speed=1&lang=${lan}&from=translateweb&speaker=4`
                 }
                 let r = []
                 let arr = sliceStr(q, 128)
@@ -155,7 +155,7 @@ function deeplTranslate() {
         link(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh'
-            return `https://www.deepl.com/translator#${srcLan}/${tarLan}/${encodeURIComponent(q)}`
+            return `https://www.deepl.com/translator#${srcLan}/${tarLan}/${encodeURI(q)}`
         },
     }
 }

@@ -129,7 +129,7 @@ Sec-Fetch-Site: same-origin`
                 let qtv = this.token.qtv
                 let qtk = this.token.qtk
                 let uuid = 'translate_uuid' + (new Date).getTime()
-                let p = `source=${srcLan}&target=${tarLan}&sourceText=${encodeURIComponent(q)}&qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}&ticket=&randstr=&sessionUuid=${uuid}`
+                let p = `source=${srcLan}&target=${tarLan}&sourceText=${encodeURI(q)}&qtv=${this.rep(qtv)}&qtk=${this.rep(qtk)}&ticket=&randstr=&sessionUuid=${uuid}`
                 httpPost({url: 'https://fanyi.qq.com/api/translate', body: p}).then(r => {
                     if (r) {
                         resolve(this.unify(r, q, srcLan, tarLan))
@@ -183,11 +183,11 @@ Sec-Fetch-Site: same-origin`
             return new Promise((resolve) => {
                 let guid = this.getCookie('fy_guid')
                 // todo: 腾讯 TTS 服务很不稳定
-                resolve(`https://fanyi.qq.com/api/tts?platform=PC_Website&lang=${lan}&text=${encodeURIComponent(q)}&guid=${guid}`)
+                resolve(`https://fanyi.qq.com/api/tts?platform=PC_Website&lang=${lan}&text=${encodeURI(q)}&guid=${guid}`)
             })
         },
         link(q, srcLan, tarLan) {
-            return `https://fanyi.qq.com/?d_sl=${srcLan}&d_tl=${tarLan}&d_text=${encodeURIComponent(q)}`
+            return `https://fanyi.qq.com/?d_sl=${srcLan}&d_tl=${tarLan}&d_text=${encodeURI(q)}`
         },
     }
 }

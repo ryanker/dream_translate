@@ -476,7 +476,7 @@ async function autoLang(text) {
     let lang = 'en' // 默认值
     await httpPost({
         url: `https://fanyi.baidu.com/langdetect`,
-        body: `query=${encodeURIComponent(text)}`
+        body: `query=${encodeURI(text)}`
     }).then(r => {
         if (r && r.lan) lang = r.lan
     }).catch(err => {

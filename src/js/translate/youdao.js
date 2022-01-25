@@ -287,9 +287,9 @@ function youdaoTranslate() {
                 if (!inArray(lan, this.lanTTS)) return reject('This language is not supported!')
                 let lanArr = {en: "eng", zh: 'zh-CHS', jp: "jap", kor: "ko", fra: "fr"}
                 let le = lanArr[lan] || lanArr.en
-                // resolve(`https://tts.youdao.com/fanyivoice?word=${encodeURIComponent(q)}&le=eng&keyfrom=speaker-target`)
+                // resolve(`https://tts.youdao.com/fanyivoice?word=${encodeURI(q)}&le=eng&keyfrom=speaker-target`)
                 let getUrl = (s) => {
-                    return `https://dict.youdao.com/dictvoice?audio=${encodeURIComponent(s)}&le=${le}`
+                    return `https://dict.youdao.com/dictvoice?audio=${encodeURI(s)}&le=${le}`
                 }
                 let r = []
                 let arr = sliceStr(q, 128)
@@ -300,7 +300,7 @@ function youdaoTranslate() {
             })
         },
         link(q, srcLan, tarLan) {
-            return `https://fanyi.youdao.com/?d_sl=${srcLan}&d_tl=${tarLan}&d_text=${encodeURIComponent(q)}`
+            return `https://fanyi.youdao.com/?d_sl=${srcLan}&d_tl=${tarLan}&d_text=${encodeURI(q)}`
         },
     }
 }

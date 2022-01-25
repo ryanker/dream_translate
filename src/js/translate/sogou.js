@@ -82,7 +82,7 @@ function sogouTranslate() {
                 onHeadersReceivedAddListener(onRemoveFrame, {urls: ["*://fanyi.sogou.com/*"]})
 
                 // Frame 请求
-                let url = `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
+                let url = `https://fanyi.sogou.com/?keyword=${encodeURI(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
                 openIframe('iframe_soGou', url)
 
                 // 获取请求参数
@@ -144,7 +144,7 @@ function sogouTranslate() {
             return new Promise((resolve, reject) => {
                 if (q.length > 5000) return reject('The text is too large!')
 
-                let url = `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
+                let url = `https://fanyi.sogou.com/?keyword=${encodeURI(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
                 let pageId = 'fy_soGou'
                 openIframe(pageId, url, 60 * 1000)
                 httpGet(url, 'document').then(r => {
@@ -290,7 +290,7 @@ function sogouTranslate() {
             lan = this.langMap[lan] || 'en'
             return new Promise((resolve) => {
                 let getUrl = (s) => {
-                    return `https://fanyi.sogou.com/reventondc/synthesis?text=${encodeURIComponent(s)}&speed=1&lang=${lan}&from=translateweb&speaker=1`
+                    return `https://fanyi.sogou.com/reventondc/synthesis?text=${encodeURI(s)}&speed=1&lang=${lan}&from=translateweb&speaker=1`
                 }
                 let r = []
                 let arr = sliceStr(q, 128)
@@ -303,7 +303,7 @@ function sogouTranslate() {
         link(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh-CHS'
-            return `https://fanyi.sogou.com/?keyword=${encodeURIComponent(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
+            return `https://fanyi.sogou.com/?keyword=${encodeURI(q)}&transfrom=${srcLan}&transto=${tarLan}&model=general`
         },
     }
 }

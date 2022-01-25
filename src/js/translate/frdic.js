@@ -76,7 +76,7 @@ function frdicTranslate() {
                 }
             }
             let fix = function (s) {
-                return encodeURIComponent(s).replace(/[!'()]/g, escape).replace(/\*/g, "%2A")
+                return encodeURI(s).replace(/[!'()]/g, escape).replace(/\*/g, "%2A")
             }
             return fix(Base64.encode(s))
         },

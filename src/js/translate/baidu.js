@@ -118,7 +118,7 @@ function baiduTranslate() {
 
                 let getIconHTML = function (type, text, title) {
                     let lan = type === 'uk' ? 'uk' : 'en'
-                    let src = `https://fanyi.baidu.com/gettts?lan=${lan}&text=${encodeURIComponent(text)}&spd=3&source=web`
+                    let src = `https://fanyi.baidu.com/gettts?lan=${lan}&text=${encodeURI(text)}&spd=3&source=web`
                     return `<i class="dmx-icon dmx_ripple" data-type="${type}" data-src-mp3="${src}" title="${title}"></i>`
                 }
                 let hasParts = false
@@ -219,7 +219,7 @@ function baiduTranslate() {
                 srcLan = 'en' // 默认值
                 await httpPost({
                     url: `https://fanyi.baidu.com/langdetect`,
-                    body: `query=${encodeURIComponent(q)}`
+                    body: `query=${encodeURI(q)}`
                 }).then(r => {
                     if (r.lan) srcLan = r.lan
                 }).catch(err => {
@@ -246,7 +246,7 @@ function baiduTranslate() {
                 if (lan === 'yue') lan = 'cte' // 粤语
                 // https://tts.baidu.com/text2audio?tex=%E6%98%8E(ming2)%E7%99%BD(bai2)&cuid=baike&lan=ZH&ctp=1&pdt=31&vol=9&spd=4&per=4100
                 let getUrl = (s) => {
-                    return `https://fanyi.baidu.com/gettts?lan=${lan}&text=${encodeURIComponent(s)}&spd=3&source=web`
+                    return `https://fanyi.baidu.com/gettts?lan=${lan}&text=${encodeURI(s)}&spd=3&source=web`
                 }
                 let r = []
                 let arr = sliceStr(q, 128)
@@ -257,7 +257,7 @@ function baiduTranslate() {
             })
         },
         link(q, srcLan, tarLan) {
-            return `https://fanyi.baidu.com/#${srcLan}/${tarLan}/${encodeURIComponent(q)}`
+            return `https://fanyi.baidu.com/#${srcLan}/${tarLan}/${encodeURI(q)}`
         },
     }
 }

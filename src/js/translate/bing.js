@@ -263,7 +263,7 @@ function bingTranslate() {
             })
         },
         link(q, srcLan, tarLan) {
-            return `https://cn.bing.com/translator?d_sl=${srcLan}&d_tl=${tarLan}&d_text=${encodeURIComponent(q)}`
+            return `https://cn.bing.com/translator?d_sl=${srcLan}&d_tl=${tarLan}&d_text=${encodeURI(q)}`
         },
     }
 }
