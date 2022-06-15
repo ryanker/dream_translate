@@ -71,7 +71,7 @@ DeepL翻译 https://www.deepl.com/translator (维基百科：专家认为它比 
 
 金山词典 https://www.iciba.com
 
-欧陆词典 https://dict.eudic.net
+欧路词典 https://dict.eudic.net
 
 人人词典 https://www.91dict.com
 
@@ -84,7 +84,7 @@ DeepL翻译 https://www.deepl.com/translator (维基百科：专家认为它比 
 
 剑桥词典 https://dictionary.cambridge.org
 
-韦伯词典 https://www.merriam-webster.com
+韦氏词典 https://www.merriam-webster.com
 
 柯林斯词典 https://www.collinsdictionary.com
 
