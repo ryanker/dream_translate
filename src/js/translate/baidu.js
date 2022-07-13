@@ -51,7 +51,7 @@ function baiduTranslate() {
         getToken() {
             return new Promise((resolve, reject) => {
                 httpGet('https://fanyi.baidu.com/').then(r => {
-                    let arr = r.match(/window\.gtk\s=\s'([^']+)';/)
+                    let arr = r.match(/window\.gtk\s=\s['"]([^'"]+)['"];/)
                     let tArr = r.match(/token:\s'([^']+)'/)
                     if (!arr) return reject('baidu gtk empty!')
                     if (!tArr) return reject('baidu token empty!')
