@@ -222,7 +222,10 @@ function sogouTranslate() {
                 }
                 let ph_uk = '', ph_us = '', ph_mp3 = ''
                 phonetic.forEach(v => {
-                    if (!v.text || !v.type || !v.filename) return
+                    if (!v.text || !v.type) return
+                    if (!v.filename) {
+                        v.filename = `/reventondc/synthesis?text=${encodeURI(text)}&speed=1&lang=${srcLan}&from=translateweb`
+                    }
                     if (v.type === 'uk') ph_uk = v.text
                     if (v.type === 'usa') ph_us = v.text
                     ph_mp3 += getIconHTML(v.type, v.filename)
