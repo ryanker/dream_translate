@@ -232,16 +232,16 @@ function sogouTranslate() {
 
             // 搜狗用的牛津词典 (上一个版本，层级太深，这次改版简化了。)
             let wordCard = getJSONValue(r, 'textTranslate.translateData.wordCard')
-            if (isObject(wordCard) && wordCard.usual_Dict) {
+            if (isObject(wordCard) && wordCard.usualDict) {
                 s += `<div class="case_dd">`
                 s += `<div class="case_dd_head">${text}</div>`  // 查询的单词
                 s += phStr
 
                 // 释义
-                let {usual_Dict, exchange, levelList} = wordCard
-                if (usual_Dict && usual_Dict.length > 0) {
+                let {usualDict, exchange, levelList} = wordCard
+                if (usualDict && usualDict.length > 0) {
                     s += `<div class="case_dd_parts">`
-                    usual_Dict.forEach(v => {
+                    usualDict.forEach(v => {
                         s += `<p>${v.pos ? `<b>${v.pos}</b>` : ''}${isArray(v.values) ? v.values.join('；') : v.values}</p>`
                     })
                     s += `</div>`
