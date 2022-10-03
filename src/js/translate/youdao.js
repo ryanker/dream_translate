@@ -191,7 +191,7 @@ function youdaoTranslate() {
                     let arr = r.match(/<script.*?src="(http[^"]+fanyi\.min\.js)"/)
                     if (arr) {
                         httpGet(arr[1]).then(r => {
-                            let tArr = r.match(/sign:n\.md5\("fanyideskweb"\+e\+i\+"([^"]+)"\)/)
+                            let tArr = r.match(/sign: n\.md5\("fanyideskweb" \+ e \+ i \+ "([^"]+)"\)/)
                             if (tArr) {
                                 let token = {token: tArr[1], date: Math.floor(Date.now() / 36e5)}
                                 this.setToken(token)
