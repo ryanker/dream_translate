@@ -152,7 +152,7 @@ function googleTranslate() {
             this.langMapInvert = invertObject(this.langMap)
             let str = localStorage.getItem('googleToken')
             if (str) this.token = JSON.parse(str)
-            onHeadersReceivedAddListener(onRemoveCross, {urls: ["*://translate.google.cn/translate_tts*"]})
+            onHeadersReceivedAddListener(onRemoveCross, {urls: ["*://translate.google.com/translate_tts*"]})
             return this
         },
         setToken(options) {
@@ -161,7 +161,7 @@ function googleTranslate() {
         },
         getToken() {
             return new Promise((resolve, reject) => {
-                httpGet('https://translate.google.cn/translate_a/element.js', 'text').then(r => {
+                httpGet('https://translate.google.com/translate_a/element.js', 'text').then(r => {
                     // let arr = r.match(/tkk:'(\d+\.\d+)'/)
                     let arr = r.match(/_ctkk='(\d+\.\d+)'/)
                     if (!arr) return reject('google tkk empty!')
@@ -175,7 +175,7 @@ function googleTranslate() {
         },
         getTokenNew() {
             return new Promise((resolve, reject) => {
-                httpGet('https://translate.google.cn', 'text').then(r => {
+                httpGet('https://translate.google.com', 'text').then(r => {
                     let arr1 = r.match(/"FdrFJe":"(.*?)"/)
                     if (!arr1) return reject('google tk1 empty!')
                     let arr2 = r.match(/"cfb2h":"(.*?)"/)
@@ -228,7 +228,7 @@ function googleTranslate() {
                 let rid = Math.floor(1e3 + 9e3 * Math.random())
                 this.addListenerRequest()
                 httpPost({
-                    url: `https://translate.google.cn/_/TranslateWebserverUi/data/batchexecute?rpcids=MkEWBc&f.sid=${t.tk1}&bl=${t.tk2}&hl=zh-CN&soc-app=1&soc-platform=1&soc-device=1&_reqid=${rid}&rt=c`,
+                    url: `https://translate.google.com/_/TranslateWebserverUi/data/batchexecute?rpcids=MkEWBc&f.sid=${t.tk1}&bl=${t.tk2}&hl=zh-CN&soc-app=1&soc-platform=1&soc-device=1&_reqid=${rid}&rt=c`,
                     body: p.toString(),
                     responseType: 'text'
                 }).then(r => {
@@ -340,7 +340,7 @@ function googleTranslate() {
         },
         addListenerRequest() {
             onBeforeSendHeadersAddListener(this.onChangeHeaders,
-                {urls: ['*://translate.google.cn/*'], types: ['xmlhttprequest']})
+                {urls: ['*://translate.google.com/*'], types: ['xmlhttprequest']})
         },
         removeListenerRequest() {
             onBeforeSendHeadersRemoveListener(this.onChangeHeaders)
@@ -376,7 +376,7 @@ referer: https://translate.google.com`
         link(q, srcLan, tarLan) {
             srcLan = this.langMap[srcLan] || 'auto'
             tarLan = this.langMap[tarLan] || 'zh-CN'
-            return `https://translate.google.cn/?sl=${srcLan}&tl=${tarLan}&text=${encodeURI(q)}&op=translate`
+            return `https://translate.google.com/?sl=${srcLan}&tl=${tarLan}&text=${encodeURI(q)}&op=translate`
         },
     }
 }
