@@ -894,6 +894,7 @@ function sendQuery(text) {
         if (!text) text = textTmp
         if (!text) return
     }
+    text=text.replace(/\u0002/g,"")
     let el = I('dmx_navigate')
     let action = el.querySelector('.active') && el.querySelector('.active').getAttribute('action')
     if (!action) {
